@@ -1,0 +1,7 @@
+packages:
+  - "clients/*"
+  - "packages/*"
+  - "servers/*"
+
+hoistPattern:
+  - "*"

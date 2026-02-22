@@ -1,0 +1,20 @@
+{
+  "name": "api",
+  "type": "module",
+  "scripts": {
+    "dev": "bun dev",
+    "build": "bun build.ts"
+  },
+  "dependencies": {
+    "@hono/node-server": "^1.14.1",
+    "@hono/zod-validator": "^0.4.3",
+    "@types/react": "19.0.7",
+    "hono": "^4.10.4",
+    "react": "19.0.0",
+    "zod": "^3.24.3"
+  },
+  "devDependencies": {
+    "@types/node": "^20.11.17",
+    "tsx": "^4.7.1"
+  }
+}
