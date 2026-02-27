@@ -299,9 +299,9 @@ interface AuthLayoutProps {
 ## Styling
 
 All components use Tailwind CSS classes and are compatible with your design system. They use:
-- Card components from `@ui/components/ui/card`
-- Button components from `@ui/components/ui/button`
-- Input components from `@ui/components/ui/input`
-- Label components from `@ui/components/ui/label`
+- Card components from `@design-system/components/ui/card`
+- Button components from `@design-system/components/ui/button`
+- Input components from `@design-system/components/ui/input`
+- Label components from `@design-system/components/ui/label`
 
 The components are fully responsive and support dark mode through Tailwind's dark mode utility classes.

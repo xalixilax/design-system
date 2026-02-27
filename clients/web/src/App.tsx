@@ -1,5 +1,5 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { Button } from "@ui/components/ui/Button";
+import { Button } from "@design-system/components/ui/Button";
 import { type InferRequestType, type InferResponseType, hc } from "hono/client";
 import { useState } from "react";
 
@@ -7,7 +7,7 @@ import { useState } from "react";
 import type { AppType } from "../../../servers/api/src/index";
 
 /** For global style */
-import "@ui/styles/global.css";
+import "@design-system/styles/global.css";
 
 /** Using content from other packages */
 import { helloWorld } from "@shared/lib/utils";

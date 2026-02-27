@@ -3,7 +3,7 @@ import type { StorybookConfig } from "@storybook/react-vite";
 const config: StorybookConfig = {
   stories: [
     { titlePrefix: "Client Web", directory: "../../../clients/web/src" },
-    { titlePrefix: "Design System", directory: "../node_modules/@astus/design-system/src" },
+    { titlePrefix: "Design System", directory: "../../design-system/src" },
   ],
   addons: [
     "storybook-addon-pseudo-states",
@@ -18,6 +18,14 @@ const config: StorybookConfig = {
   framework: {
     name: "@storybook/react-vite",
     options: {},
+  },
+  viteFinal: (config) => {
+    config.server = {
+      ...config.server,
+      host: true,
+      allowedHosts: true,
+    };
+    return config;
   },
 };
 

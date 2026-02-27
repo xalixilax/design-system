@@ -3,7 +3,7 @@
   "compilerOptions": {
     "jsx": "react-jsx",
     "paths": {
-      "@ui/*": ["../../packages/ui/src/*"],
+      "@design-system/*": ["../design-system/src/*"],
     }
   },
   "includes": [".storybook"]

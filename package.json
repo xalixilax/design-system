@@ -13,7 +13,9 @@
     "ui": "pnpm --filter ui",
     "api": "pnpm --filter api",
     "db": "pnpm --filter db",
-    "check": "pnpm biome check . --write"
+    "check": "pnpm biome check . --write",
+    "check:tokens": "node ./scripts/checkLegacyCssVars.mjs",
+    "storybook": "pnpm --filter storybook-doc storybook"  
   },
   "keywords": [],
   "author": "",

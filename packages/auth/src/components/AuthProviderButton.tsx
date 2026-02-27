@@ -1,4 +1,4 @@
-import { Button } from "@ui/components/ui/button";
+import { Button } from "@design-system/components/ui/button";
 
 interface AuthProviderButtonProps {
   provider:

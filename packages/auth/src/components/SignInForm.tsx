@@ -1,5 +1,5 @@
 import * as React from "react";
-import { Button } from "@ui/components/ui/button";
+import { Button } from "@design-system/components/ui/button";
 import {
   Card,
   CardContent,
@@ -7,9 +7,9 @@ import {
   CardFooter,
   CardHeader,
   CardTitle,
-} from "@ui/components/ui/card";
-import { Label } from "@ui/components/ui/label";
-import { Input } from "@ui/components/ui/input";
+} from "@design-system/components/ui/card";
+import { Label } from "@design-system/components/ui/label";
+import { Input } from "@design-system/components/ui/input";
 
 interface SignInFormProps {
   onSubmit: (email: string, password: string) => void | Promise<void>;
