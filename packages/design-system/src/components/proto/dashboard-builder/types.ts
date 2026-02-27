@@ -22,3 +22,13 @@ export type DashboardBounds = {
   columns: number;
   rows: number;
 };
+
+export type SplitPlacement =
+  | {
+    orientation: "vertical";
+    side: "left" | "right";
+  }
+  | {
+    orientation: "horizontal";
+    side: "top" | "bottom";
+  };

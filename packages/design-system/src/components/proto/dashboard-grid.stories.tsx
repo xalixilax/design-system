@@ -164,7 +164,6 @@ function InteractiveDashboardStory({
         onAddSection={() => actions.addSection()}
         onAddSectionAt={actions.addSectionAt}
         onSplitSectionWithNew={actions.splitSectionWithNew}
-        onMoveSection={actions.moveSection}
         onSwapSections={actions.swapSections}
         onResizeSection={actions.resizeSection}
         onResizeBoundary={actions.resizeBoundary}

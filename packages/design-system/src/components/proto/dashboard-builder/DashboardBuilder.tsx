@@ -15,7 +15,24 @@ import {
   DASHBOARD_SECTION_ITEM_TYPE,
   DashboardSectionItem,
 } from "./DashboardSectionItem";
-import type { DashboardBounds, DashboardCard, DashboardSection } from "./types";
+import type {
+  DashboardBounds,
+  DashboardCard,
+  DashboardSection,
+  SplitPlacement,
+} from "./types";
+import {
+  applySplitPreviewToSection,
+  buildSplitPreview,
+  findNearestPlacementPreview,
+  getSplitPlacementFromPreview,
+  type NewSectionPreview,
+} from "./utils/new-section-preview";
+import {
+  buildBoundaryGuides,
+  buildSeparators,
+  type SeparatorPreview,
+} from "./utils/separators";
 
 type DashboardDragItem = {
   kind: "section";
@@ -35,38 +52,6 @@ type NewSectionDragItem = {
   templateH: number;
 };
 
-type NewSectionPreview =
-  | {
-      mode: "split";
-      hoveredSectionId: string;
-      x: number;
-      y: number;
-      w: number;
-      h: number;
-    }
-  | {
-      mode: "place";
-      x: number;
-      y: number;
-      w: number;
-      h: number;
-    };
-
-type SeparatorPreview = {
-  key: string;
-  orientation: "vertical" | "horizontal";
-  boundary: number;
-  rangeStart: number;
-  rangeEnd: number;
-  sectionId: string;
-  neighborSectionId: string;
-  direction: "e" | "s";
-  offsetX: number;
-  offsetY: number;
-  length: number;
-  localResizable: boolean;
-};
-
 type ResizeDragSession = {
   mode: "boundary" | "segment";
   separator: SeparatorPreview;
@@ -80,612 +65,7 @@ type ResizeDragSession = {
   consumedRows: number;
 };
 
-type BoundaryGuide = {
-  key: string;
-  orientation: "vertical" | "horizontal";
-  boundary: number;
-  offsetX: number;
-  offsetY: number;
-  length: number;
-};
-
 const GRID_PADDING_PX = 8;
-
-function rectanglesOverlap(
-  left: { x: number; y: number; w: number; h: number },
-  right: { x: number; y: number; w: number; h: number },
-) {
-  return (
-    left.x < right.x + right.w &&
-    left.x + left.w > right.x &&
-    left.y < right.y + right.h &&
-    left.y + left.h > right.y
-  );
-}
-
-function findNearestPlacementPreview(
-  x: number,
-  y: number,
-  w: number,
-  h: number,
-  sections: DashboardSection[],
-  bounds: DashboardBounds,
-) {
-  const maxX = Math.max(1, bounds.columns - w + 1);
-  const maxY = Math.max(1, bounds.rows - h + 1);
-  const clampedX = Math.min(Math.max(1, x), maxX);
-  const clampedY = Math.min(Math.max(1, y), maxY);
-
-  let best: { x: number; y: number; w: number; h: number } | null = null;
-  let bestDistance = Number.POSITIVE_INFINITY;
-
-  for (let row = 1; row <= maxY; row += 1) {
-    for (let column = 1; column <= maxX; column += 1) {
-      const candidate = { x: column, y: row, w, h };
-      if (sections.some((section) => rectanglesOverlap(candidate, section))) {
-        continue;
-      }
-
-      const distance = Math.abs(column - clampedX) + Math.abs(row - clampedY);
-      if (distance < bestDistance) {
-        bestDistance = distance;
-        best = candidate;
-      }
-    }
-  }
-
-  return best;
-}
-
-function buildSplitPreview(
-  section: DashboardSection,
-  cursorColumn: number,
-  cursorRow: number,
-): NewSectionPreview | null {
-  const minW = section.minW ?? 2;
-  const minH = section.minH ?? 2;
-  const canSplitVertically = section.w >= minW * 2;
-  const canSplitHorizontally = section.h >= minH * 2;
-
-  if (!canSplitVertically && !canSplitHorizontally) {
-    return null;
-  }
-
-  const useVertical =
-    section.w >= section.h ? canSplitVertically : !canSplitHorizontally;
-
-  if (useVertical) {
-    const leftWidth = Math.floor(section.w / 2);
-    const rightWidth = section.w - leftWidth;
-    const dropOnLeft = cursorColumn < section.x + section.w / 2;
-
-    return dropOnLeft
-      ? {
-          mode: "split",
-          hoveredSectionId: section.id,
-          x: section.x,
-          y: section.y,
-          w: leftWidth,
-          h: section.h,
-        }
-      : {
-          mode: "split",
-          hoveredSectionId: section.id,
-          x: section.x + leftWidth,
-          y: section.y,
-          w: rightWidth,
-          h: section.h,
-        };
-  }
-
-  const topHeight = Math.floor(section.h / 2);
-  const bottomHeight = section.h - topHeight;
-  const dropOnTop = cursorRow < section.y + section.h / 2;
-
-  return dropOnTop
-    ? {
-        mode: "split",
-        hoveredSectionId: section.id,
-        x: section.x,
-        y: section.y,
-        w: section.w,
-        h: topHeight,
-      }
-    : {
-        mode: "split",
-        hoveredSectionId: section.id,
-        x: section.x,
-        y: section.y + topHeight,
-        w: section.w,
-        h: bottomHeight,
-      };
-}
-
-function applySplitPreviewToSection(
-  section: DashboardSection,
-  preview: Extract<NewSectionPreview, { mode: "split" }>,
-) {
-  if (section.id !== preview.hoveredSectionId) {
-    return section;
-  }
-
-  const isVerticalSplit = preview.h === section.h && preview.w < section.w;
-  if (isVerticalSplit) {
-    const previewOnLeft = preview.x === section.x;
-    return previewOnLeft
-      ? {
-          ...section,
-          x: section.x + preview.w,
-          w: section.w - preview.w,
-        }
-      : {
-          ...section,
-          w: section.w - preview.w,
-        };
-  }
-
-  const isHorizontalSplit = preview.w === section.w && preview.h < section.h;
-  if (isHorizontalSplit) {
-    const previewOnTop = preview.y === section.y;
-    return previewOnTop
-      ? {
-          ...section,
-          y: section.y + preview.h,
-          h: section.h - preview.h,
-        }
-      : {
-          ...section,
-          h: section.h - preview.h,
-        };
-  }
-
-  return section;
-}
-
-function rangesOverlap(
-  startA: number,
-  endA: number,
-  startB: number,
-  endB: number,
-) {
-  return startA < endB && endA > startB;
-}
-
-function isValidLocalLayout(
-  sections: DashboardSection[],
-  bounds: DashboardBounds,
-) {
-  const occupancy = new Uint8Array(bounds.columns * bounds.rows);
-
-  for (const section of sections) {
-    const minW = section.minW ?? 2;
-    const minH = section.minH ?? 2;
-
-    if (
-      section.w < minW ||
-      section.h < minH ||
-      section.x < 1 ||
-      section.y < 1 ||
-      section.x + section.w - 1 > bounds.columns ||
-      section.y + section.h - 1 > bounds.rows
-    ) {
-      return false;
-    }
-
-    for (let row = section.y; row < section.y + section.h; row += 1) {
-      for (
-        let column = section.x;
-        column < section.x + section.w;
-        column += 1
-      ) {
-        const index = (row - 1) * bounds.columns + (column - 1);
-        occupancy[index] = (occupancy[index] ?? 0) + 1;
-      }
-    }
-  }
-
-  for (const cell of occupancy) {
-    if (cell !== 1) {
-      return false;
-    }
-  }
-
-  return true;
-}
-
-function canResizeSegmentPair(
-  sections: DashboardSection[],
-  bounds: DashboardBounds,
-  sectionId: string,
-  neighborSectionId: string,
-  direction: "e" | "s",
-) {
-  const section = sections.find((candidate) => candidate.id === sectionId);
-  const neighbor = sections.find(
-    (candidate) => candidate.id === neighborSectionId,
-  );
-
-  if (!section || !neighbor) {
-    return false;
-  }
-
-  const participants =
-    direction === "e"
-      ? (() => {
-          const boundary = section.x + section.w;
-          const leftIds = new Set<string>([section.id]);
-          const rightIds = new Set<string>([neighbor.id]);
-
-          let changed = true;
-          while (changed) {
-            changed = false;
-
-            for (const candidate of sections) {
-              if (
-                !leftIds.has(candidate.id) &&
-                candidate.x + candidate.w === boundary &&
-                sections.some(
-                  (right) =>
-                    rightIds.has(right.id) &&
-                    rangesOverlap(
-                      candidate.y,
-                      candidate.y + candidate.h,
-                      right.y,
-                      right.y + right.h,
-                    ),
-                )
-              ) {
-                leftIds.add(candidate.id);
-                changed = true;
-              }
-
-              if (
-                !rightIds.has(candidate.id) &&
-                candidate.x === boundary &&
-                sections.some(
-                  (left) =>
-                    leftIds.has(left.id) &&
-                    rangesOverlap(
-                      candidate.y,
-                      candidate.y + candidate.h,
-                      left.y,
-                      left.y + left.h,
-                    ),
-                )
-              ) {
-                rightIds.add(candidate.id);
-                changed = true;
-              }
-            }
-          }
-
-          return { leftIds, rightIds };
-        })()
-      : (() => {
-          const boundary = section.y + section.h;
-          const topIds = new Set<string>([section.id]);
-          const bottomIds = new Set<string>([neighbor.id]);
-
-          let changed = true;
-          while (changed) {
-            changed = false;
-
-            for (const candidate of sections) {
-              if (
-                !topIds.has(candidate.id) &&
-                candidate.y + candidate.h === boundary &&
-                sections.some(
-                  (bottom) =>
-                    bottomIds.has(bottom.id) &&
-                    rangesOverlap(
-                      candidate.x,
-                      candidate.x + candidate.w,
-                      bottom.x,
-                      bottom.x + bottom.w,
-                    ),
-                )
-              ) {
-                topIds.add(candidate.id);
-                changed = true;
-              }
-
-              if (
-                !bottomIds.has(candidate.id) &&
-                candidate.y === boundary &&
-                sections.some(
-                  (top) =>
-                    topIds.has(top.id) &&
-                    rangesOverlap(
-                      candidate.x,
-                      candidate.x + candidate.w,
-                      top.x,
-                      top.x + top.w,
-                    ),
-                )
-              ) {
-                bottomIds.add(candidate.id);
-                changed = true;
-              }
-            }
-          }
-
-          return { topIds, bottomIds };
-        })();
-
-  const deltas = [-1, 1];
-
-  for (const delta of deltas) {
-    const next =
-      direction === "e" &&
-      "leftIds" in participants &&
-      "rightIds" in participants
-        ? sections.map((candidate) => {
-            if (participants.leftIds.has(candidate.id)) {
-              return { ...candidate, w: candidate.w + delta };
-            }
-
-            if (participants.rightIds.has(candidate.id)) {
-              return {
-                ...candidate,
-                x: candidate.x + delta,
-                w: candidate.w - delta,
-              };
-            }
-
-            return candidate;
-          })
-        : direction === "s" &&
-            "topIds" in participants &&
-            "bottomIds" in participants
-          ? sections.map((candidate) => {
-              if (participants.topIds.has(candidate.id)) {
-                return { ...candidate, h: candidate.h + delta };
-              }
-
-              if (participants.bottomIds.has(candidate.id)) {
-                return {
-                  ...candidate,
-                  y: candidate.y + delta,
-                  h: candidate.h - delta,
-                };
-              }
-
-              return candidate;
-            })
-          : sections;
-
-    if (isValidLocalLayout(next, bounds)) {
-      return true;
-    }
-  }
-
-  return false;
-}
-
-function buildSeparators(
-  sections: DashboardSection[],
-  bounds: DashboardBounds,
-  columnSize: number,
-  rowSize: number,
-  gap: number,
-) {
-  const separators: SeparatorPreview[] = [];
-
-  for (const section of sections) {
-    const eastBoundary = section.x + section.w;
-    if (eastBoundary <= bounds.columns) {
-      const neighbors = sections.filter(
-        (candidate) =>
-          candidate.id !== section.id &&
-          candidate.x === eastBoundary &&
-          rangesOverlap(
-            section.y,
-            section.y + section.h,
-            candidate.y,
-            candidate.y + candidate.h,
-          ),
-      );
-
-      for (const neighbor of neighbors) {
-        const canMove =
-          section.w > (section.minW ?? 2) || neighbor.w > (neighbor.minW ?? 2);
-        if (!canMove) {
-          continue;
-        }
-
-        const segmentStart = Math.max(section.y, neighbor.y);
-        const segmentEnd = Math.min(
-          section.y + section.h,
-          neighbor.y + neighbor.h,
-        );
-        const segmentLengthRows = segmentEnd - segmentStart;
-        if (segmentLengthRows <= 0) {
-          continue;
-        }
-
-        const offsetX = (eastBoundary - 1) * (columnSize + gap) - gap / 2;
-        const offsetY = (segmentStart - 1) * (rowSize + gap);
-        const length =
-          segmentLengthRows * rowSize + (segmentLengthRows - 1) * gap;
-        separators.push({
-          key: `${section.id}-e-${neighbor.id}-${segmentStart}-${segmentEnd}`,
-          orientation: "vertical",
-          boundary: eastBoundary,
-          rangeStart: segmentStart,
-          rangeEnd: segmentEnd,
-          sectionId: section.id,
-          neighborSectionId: neighbor.id,
-          direction: "e",
-          offsetX: offsetX + GRID_PADDING_PX,
-          offsetY: offsetY + GRID_PADDING_PX,
-          length,
-          localResizable: canResizeSegmentPair(
-            sections,
-            bounds,
-            section.id,
-            neighbor.id,
-            "e",
-          ),
-        });
-      }
-    }
-
-    const southBoundary = section.y + section.h;
-    if (southBoundary <= bounds.rows) {
-      const neighbors = sections.filter(
-        (candidate) =>
-          candidate.id !== section.id &&
-          candidate.y === southBoundary &&
-          rangesOverlap(
-            section.x,
-            section.x + section.w,
-            candidate.x,
-            candidate.x + candidate.w,
-          ),
-      );
-
-      for (const neighbor of neighbors) {
-        const canMove =
-          section.h > (section.minH ?? 2) || neighbor.h > (neighbor.minH ?? 2);
-        if (!canMove) {
-          continue;
-        }
-
-        const segmentStart = Math.max(section.x, neighbor.x);
-        const segmentEnd = Math.min(
-          section.x + section.w,
-          neighbor.x + neighbor.w,
-        );
-        const segmentLengthColumns = segmentEnd - segmentStart;
-        if (segmentLengthColumns <= 0) {
-          continue;
-        }
-
-        const offsetX = (segmentStart - 1) * (columnSize + gap);
-        const offsetY = (southBoundary - 1) * (rowSize + gap) - gap / 2;
-        const length =
-          segmentLengthColumns * columnSize + (segmentLengthColumns - 1) * gap;
-        separators.push({
-          key: `${section.id}-s-${neighbor.id}-${segmentStart}-${segmentEnd}`,
-          orientation: "horizontal",
-          boundary: southBoundary,
-          rangeStart: segmentStart,
-          rangeEnd: segmentEnd,
-          sectionId: section.id,
-          neighborSectionId: neighbor.id,
-          direction: "s",
-          offsetX: offsetX + GRID_PADDING_PX,
-          offsetY: offsetY + GRID_PADDING_PX,
-          length,
-          localResizable: canResizeSegmentPair(
-            sections,
-            bounds,
-            section.id,
-            neighbor.id,
-            "s",
-          ),
-        });
-      }
-    }
-  }
-
-  return separators;
-}
-
-function buildBoundaryGuides(
-  separators: SeparatorPreview[],
-  columnSize: number,
-  rowSize: number,
-  gap: number,
-) {
-  const guides: BoundaryGuide[] = [];
-  const grouped = new Map<
-    string,
-    {
-      orientation: "vertical" | "horizontal";
-      boundary: number;
-      ranges: Array<{ start: number; end: number }>;
-    }
-  >();
-
-  for (const separator of separators) {
-    const key = `${separator.orientation}-${separator.boundary}`;
-    const existing = grouped.get(key);
-
-    if (existing) {
-      existing.ranges.push({
-        start: separator.rangeStart,
-        end: separator.rangeEnd,
-      });
-      continue;
-    }
-
-    grouped.set(key, {
-      orientation: separator.orientation,
-      boundary: separator.boundary,
-      ranges: [{ start: separator.rangeStart, end: separator.rangeEnd }],
-    });
-  }
-
-  for (const [groupKey, group] of grouped.entries()) {
-    const sortedRanges = [...group.ranges].sort(
-      (left, right) => left.start - right.start,
-    );
-    const mergedRanges: Array<{ start: number; end: number }> = [];
-
-    for (const range of sortedRanges) {
-      const lastRange = mergedRanges.at(-1);
-      if (!lastRange) {
-        mergedRanges.push({ ...range });
-        continue;
-      }
-
-      if (range.start <= lastRange.end) {
-        lastRange.end = Math.max(lastRange.end, range.end);
-        continue;
-      }
-
-      mergedRanges.push({ ...range });
-    }
-
-    for (const mergedRange of mergedRanges) {
-      if (group.orientation === "vertical") {
-        const offsetX = (group.boundary - 1) * (columnSize + gap) - gap / 2;
-        const segmentLengthRows = mergedRange.end - mergedRange.start;
-        const offsetY = (mergedRange.start - 1) * (rowSize + gap);
-        const length =
-          segmentLengthRows * rowSize + (segmentLengthRows - 1) * gap;
-
-        guides.push({
-          key: `${groupKey}-${mergedRange.start}-${mergedRange.end}`,
-          orientation: "vertical",
-          boundary: group.boundary,
-          offsetX: offsetX + GRID_PADDING_PX,
-          offsetY: offsetY + GRID_PADDING_PX,
-          length,
-        });
-        continue;
-      }
-
-      const offsetY = (group.boundary - 1) * (rowSize + gap) - gap / 2;
-      const segmentLengthColumns = mergedRange.end - mergedRange.start;
-      const offsetX = (mergedRange.start - 1) * (columnSize + gap);
-      const length =
-        segmentLengthColumns * columnSize + (segmentLengthColumns - 1) * gap;
-
-      guides.push({
-        key: `${groupKey}-${mergedRange.start}-${mergedRange.end}`,
-        orientation: "horizontal",
-        boundary: group.boundary,
-        offsetX: offsetX + GRID_PADDING_PX,
-        offsetY: offsetY + GRID_PADDING_PX,
-        length,
-      });
-    }
-  }
-
-  return guides;
-}
 
 function NewSectionDragButton({ disabled }: { disabled: boolean }) {
   const [, dragRef] = useDrag<NewSectionDragItem>(
@@ -740,10 +120,8 @@ export type DashboardBuilderCanvasProps = {
   ) => void;
   onSplitSectionWithNew: (
     hoveredSectionId: string,
-    cursorX: number,
-    cursorY: number,
+    placement: SplitPlacement,
   ) => void;
-  onMoveSection: (sectionId: string, x: number, y: number) => void;
   onSwapSections: (
     draggedSectionId: string,
     hoveredSectionId: string,
@@ -785,7 +163,6 @@ export function DashboardBuilderCanvas({
   onAddSection,
   onAddSectionAt,
   onSplitSectionWithNew,
-  onMoveSection,
   onSwapSections,
   onResizeSection,
   onResizeBoundary,
@@ -965,12 +342,9 @@ export function DashboardBuilderCanvas({
 
         if (newSectionPreview?.mode === "split") {
           setPendingPreviewClearTargetCount(sections.length + 1);
-          const splitCursorX = newSectionPreview.x + newSectionPreview.w / 2;
-          const splitCursorY = newSectionPreview.y + newSectionPreview.h / 2;
           onSplitSectionWithNew(
             newSectionPreview.hoveredSectionId,
-            splitCursorX,
-            splitCursorY,
+            getSplitPlacementFromPreview(newSectionPreview),
           );
           return;
         }
@@ -1013,8 +387,20 @@ export function DashboardBuilderCanvas({
         );
 
         if (hoveredSection) {
+          const splitPreview = buildSplitPreview(
+            hoveredSection,
+            cursorColumn,
+            cursorRow,
+          );
+          if (splitPreview?.mode !== "split") {
+            return;
+          }
+
           setPendingPreviewClearTargetCount(sections.length + 1);
-          onSplitSectionWithNew(hoveredSection.id, cursorColumn, cursorRow);
+          onSplitSectionWithNew(
+            hoveredSection.id,
+            getSplitPlacementFromPreview(splitPreview),
+          );
           return;
         }
 
@@ -1031,7 +417,6 @@ export function DashboardBuilderCanvas({
       gap,
       onAddSectionAt,
       isLayoutEditing,
-      onMoveSection,
       onSplitSectionWithNew,
       onSwapSections,
       sections,
@@ -1070,12 +455,14 @@ export function DashboardBuilderCanvas({
     columnSize,
     rowSize,
     gap,
+    GRID_PADDING_PX,
   );
   const boundaryGuides = buildBoundaryGuides(
     separators,
     columnSize,
     rowSize,
     gap,
+    GRID_PADDING_PX,
   );
   const previewedSections =
     newSectionPreview?.mode === "split"
