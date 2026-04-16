@@ -25,11 +25,11 @@ export const decorators = [
     },
     defaultTheme: "light",
   }),
-  (Story) => (
-    <div className="flex flex-col  items-center justify-center h-full p-8">
-      <Story />
-    </div>
-  ),
+  // (Story) => (
+  //   <div className="flex flex-col  items-center justify-center h-full p-8">
+  //     <Story />
+  //   </div>
+  // ),
 ];
 
 // biome-ignore lint/style/noDefaultExport: Required by Storybook

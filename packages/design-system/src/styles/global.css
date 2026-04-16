@@ -6,173 +6,173 @@
 @custom-variant dark (&:is(.dark *));
 
 :root {
-  --ds-color-brand-500: oklch(0.205 0 0);
-  --ds-color-brand-400: oklch(0.35 0 0);
-  --ds-color-brand-300: oklch(0.5 0 0);
+  --color-brand-500: oklch(0.205 0 0);
+  --color-brand-400: oklch(0.35 0 0);
+  --color-brand-300: oklch(0.5 0 0);
 
-  --ds-color-text-strong: oklch(0.145 0 0);
-  --ds-color-text-weak: oklch(0.556 0 0);
+  --color-text-strong: oklch(0.145 0 0);
+  --color-text-weak: oklch(0.556 0 0);
 
-  --ds-color-stroke-strong: oklch(0.922 0 0);
-  --ds-color-stroke-weak: oklch(0.95 0 0);
+  --color-stroke-strong: oklch(0.922 0 0);
+  --color-stroke-weak: oklch(0.95 0 0);
 
-  --ds-color-fill-canvas: oklch(1 0 0);
-  --ds-color-fill-subtle: oklch(0.97 0 0);
-  --ds-color-fill-raised: oklch(1 0 0);
+  --color-fill-canvas: oklch(1 0 0);
+  --color-fill-subtle: oklch(0.97 0 0);
+  --color-fill-raised: oklch(1 0 0);
 
-  --ds-color-danger-500: oklch(0.577 0.245 27.325);
-  --ds-color-danger-100: oklch(0.985 0.01 22);
+  --color-danger-500: oklch(0.577 0.245 27.325);
+  --color-danger-100: oklch(0.985 0.01 22);
 
-  --ds-color-chart-1: oklch(0.646 0.222 41.116);
-  --ds-color-chart-2: oklch(0.6 0.118 184.704);
-  --ds-color-chart-3: oklch(0.398 0.07 227.392);
-  --ds-color-chart-4: oklch(0.828 0.189 84.429);
-  --ds-color-chart-5: oklch(0.769 0.188 70.08);
+  --color-chart-1: oklch(0.646 0.222 41.116);
+  --color-chart-2: oklch(0.6 0.118 184.704);
+  --color-chart-3: oklch(0.398 0.07 227.392);
+  --color-chart-4: oklch(0.828 0.189 84.429);
+  --color-chart-5: oklch(0.769 0.188 70.08);
 
-  --ds-semantic-background: var(--ds-color-fill-canvas);
-  --ds-semantic-foreground: var(--ds-color-text-strong);
-  --ds-semantic-card: var(--ds-color-fill-raised);
-  --ds-semantic-card-foreground: var(--ds-color-text-strong);
-  --ds-semantic-popover: var(--ds-color-fill-raised);
-  --ds-semantic-popover-foreground: var(--ds-color-text-strong);
-  --ds-semantic-primary: var(--ds-color-brand-500);
-  --ds-semantic-primary-foreground: var(--ds-color-fill-canvas);
-  --ds-semantic-secondary: var(--ds-color-fill-subtle);
-  --ds-semantic-secondary-foreground: var(--ds-color-text-strong);
-  --ds-semantic-muted: var(--ds-color-fill-subtle);
-  --ds-semantic-muted-foreground: var(--ds-color-text-weak);
-  --ds-semantic-accent: var(--ds-color-fill-subtle);
-  --ds-semantic-accent-foreground: var(--ds-color-text-strong);
-  --ds-semantic-destructive: var(--ds-color-danger-500);
-  --ds-semantic-destructive-foreground: var(--ds-color-fill-canvas);
-  --ds-semantic-border: var(--ds-color-stroke-strong);
-  --ds-semantic-input: var(--ds-color-stroke-strong);
-  --ds-semantic-ring: var(--ds-color-brand-300);
+  --semantic-background: var(--color-fill-canvas);
+  --semantic-foreground: var(--color-text-strong);
+  --semantic-card: var(--color-fill-raised);
+  --semantic-card-foreground: var(--color-text-strong);
+  --semantic-popover: var(--color-fill-raised);
+  --semantic-popover-foreground: var(--color-text-strong);
+  --semantic-primary: var(--color-brand-500);
+  --semantic-primary-foreground: var(--color-fill-canvas);
+  --semantic-secondary: var(--color-fill-subtle);
+  --semantic-secondary-foreground: var(--color-text-strong);
+  --semantic-muted: var(--color-fill-subtle);
+  --semantic-muted-foreground: var(--color-text-weak);
+  --semantic-accent: var(--color-fill-subtle);
+  --semantic-accent-foreground: var(--color-text-strong);
+  --semantic-destructive: var(--color-danger-500);
+  --semantic-destructive-foreground: var(--color-fill-canvas);
+  --semantic-border: var(--color-stroke-strong);
+  --semantic-input: var(--color-stroke-strong);
+  --semantic-ring: var(--color-brand-300);
 
-  --ds-semantic-sidebar: var(--ds-color-fill-subtle);
-  --ds-semantic-sidebar-foreground: var(--ds-color-text-strong);
-  --ds-semantic-sidebar-primary: var(--ds-color-brand-500);
-  --ds-semantic-sidebar-primary-foreground: var(--ds-color-fill-canvas);
-  --ds-semantic-sidebar-accent: var(--ds-color-fill-subtle);
-  --ds-semantic-sidebar-accent-foreground: var(--ds-color-text-strong);
-  --ds-semantic-sidebar-border: var(--ds-color-stroke-strong);
-  --ds-semantic-sidebar-ring: var(--ds-color-brand-300);
+  --semantic-sidebar: var(--color-fill-subtle);
+  --semantic-sidebar-foreground: var(--color-text-strong);
+  --semantic-sidebar-primary: var(--color-brand-500);
+  --semantic-sidebar-primary-foreground: var(--color-fill-canvas);
+  --semantic-sidebar-accent: var(--color-fill-subtle);
+  --semantic-sidebar-accent-foreground: var(--color-text-strong);
+  --semantic-sidebar-border: var(--color-stroke-strong);
+  --semantic-sidebar-ring: var(--color-brand-300);
 
-  --ds-radius-sm: 0.5rem;
-  --ds-radius-md: 1rem;
-  --ds-radius-lg: 2rem;
+  --radius-sm: 0.5rem;
+  --radius-md: 1rem;
+  --radius-lg: 2rem;
 
-  --ds-space-2xs: 0.25rem;
-  --ds-space-xs: 0.5rem;
-  --ds-space-sm: 0.75rem;
-  --ds-space-md: 1rem;
-  --ds-space-lg: 1.5rem;
-  --ds-space-xl: 2rem;
-  --ds-space-2xl: 3rem;
+  --space-2xs: 0.25rem;
+  --space-xs: 0.5rem;
+  --space-sm: 0.75rem;
+  --space-md: 1rem;
+  --space-lg: 1.5rem;
+  --space-xl: 2rem;
+  --space-2xl: 3rem;
 }
 
 .dark {
-  --ds-color-brand-500: oklch(0.985 0 0);
-  --ds-color-brand-400: oklch(0.86 0 0);
-  --ds-color-brand-300: oklch(0.708 0 0);
+  --color-brand-500: oklch(0.985 0 0);
+  --color-brand-400: oklch(0.86 0 0);
+  --color-brand-300: oklch(0.708 0 0);
 
-  --ds-color-text-strong: oklch(0.985 0 0);
-  --ds-color-text-weak: oklch(0.708 0 0);
+  --color-text-strong: oklch(0.985 0 0);
+  --color-text-weak: oklch(0.708 0 0);
 
-  --ds-color-stroke-strong: oklch(0.269 0 0);
-  --ds-color-stroke-weak: oklch(0.32 0 0);
+  --color-stroke-strong: oklch(0.269 0 0);
+  --color-stroke-weak: oklch(0.32 0 0);
 
-  --ds-color-fill-canvas: oklch(0.145 0 0);
-  --ds-color-fill-subtle: oklch(0.269 0 0);
-  --ds-color-fill-raised: oklch(0.205 0 0);
+  --color-fill-canvas: oklch(0.145 0 0);
+  --color-fill-subtle: oklch(0.269 0 0);
+  --color-fill-raised: oklch(0.205 0 0);
 
-  --ds-color-danger-500: oklch(0.396 0.141 25.723);
-  --ds-color-danger-100: oklch(0.637 0.237 25.331);
+  --color-danger-500: oklch(0.396 0.141 25.723);
+  --color-danger-100: oklch(0.637 0.237 25.331);
 
-  --ds-color-chart-1: oklch(0.488 0.243 264.376);
-  --ds-color-chart-2: oklch(0.696 0.17 162.48);
-  --ds-color-chart-3: oklch(0.769 0.188 70.08);
-  --ds-color-chart-4: oklch(0.627 0.265 303.9);
-  --ds-color-chart-5: oklch(0.645 0.246 16.439);
+  --color-chart-1: oklch(0.488 0.243 264.376);
+  --color-chart-2: oklch(0.696 0.17 162.48);
+  --color-chart-3: oklch(0.769 0.188 70.08);
+  --color-chart-4: oklch(0.627 0.265 303.9);
+  --color-chart-5: oklch(0.645 0.246 16.439);
 
-  --ds-semantic-background: var(--ds-color-fill-canvas);
-  --ds-semantic-foreground: var(--ds-color-text-strong);
-  --ds-semantic-card: var(--ds-color-fill-canvas);
-  --ds-semantic-card-foreground: var(--ds-color-text-strong);
-  --ds-semantic-popover: var(--ds-color-fill-canvas);
-  --ds-semantic-popover-foreground: var(--ds-color-text-strong);
-  --ds-semantic-primary: var(--ds-color-brand-500);
-  --ds-semantic-primary-foreground: var(--ds-color-fill-canvas);
-  --ds-semantic-secondary: var(--ds-color-fill-subtle);
-  --ds-semantic-secondary-foreground: var(--ds-color-text-strong);
-  --ds-semantic-muted: var(--ds-color-fill-subtle);
-  --ds-semantic-muted-foreground: var(--ds-color-text-weak);
-  --ds-semantic-accent: var(--ds-color-fill-subtle);
-  --ds-semantic-accent-foreground: var(--ds-color-text-strong);
-  --ds-semantic-destructive: var(--ds-color-danger-500);
-  --ds-semantic-destructive-foreground: var(--ds-color-danger-100);
-  --ds-semantic-border: var(--ds-color-stroke-strong);
-  --ds-semantic-input: var(--ds-color-stroke-strong);
-  --ds-semantic-ring: var(--ds-color-brand-300);
+  --semantic-background: var(--color-fill-canvas);
+  --semantic-foreground: var(--color-text-strong);
+  --semantic-card: var(--color-fill-canvas);
+  --semantic-card-foreground: var(--color-text-strong);
+  --semantic-popover: var(--color-fill-canvas);
+  --semantic-popover-foreground: var(--color-text-strong);
+  --semantic-primary: var(--color-brand-500);
+  --semantic-primary-foreground: var(--color-fill-canvas);
+  --semantic-secondary: var(--color-fill-subtle);
+  --semantic-secondary-foreground: var(--color-text-strong);
+  --semantic-muted: var(--color-fill-subtle);
+  --semantic-muted-foreground: var(--color-text-weak);
+  --semantic-accent: var(--color-fill-subtle);
+  --semantic-accent-foreground: var(--color-text-strong);
+  --semantic-destructive: var(--color-danger-500);
+  --semantic-destructive-foreground: var(--color-danger-100);
+  --semantic-border: var(--color-stroke-strong);
+  --semantic-input: var(--color-stroke-strong);
+  --semantic-ring: var(--color-brand-300);
 
-  --ds-semantic-sidebar: var(--ds-color-fill-raised);
-  --ds-semantic-sidebar-foreground: var(--ds-color-text-strong);
-  --ds-semantic-sidebar-primary: var(--ds-color-chart-1);
-  --ds-semantic-sidebar-primary-foreground: var(--ds-color-text-strong);
-  --ds-semantic-sidebar-accent: var(--ds-color-fill-subtle);
-  --ds-semantic-sidebar-accent-foreground: var(--ds-color-text-strong);
-  --ds-semantic-sidebar-border: var(--ds-color-stroke-strong);
-  --ds-semantic-sidebar-ring: var(--ds-color-brand-300);
+  --semantic-sidebar: var(--color-fill-raised);
+  --semantic-sidebar-foreground: var(--color-text-strong);
+  --semantic-sidebar-primary: var(--color-chart-1);
+  --semantic-sidebar-primary-foreground: var(--color-text-strong);
+  --semantic-sidebar-accent: var(--color-fill-subtle);
+  --semantic-sidebar-accent-foreground: var(--color-text-strong);
+  --semantic-sidebar-border: var(--color-stroke-strong);
+  --semantic-sidebar-ring: var(--color-brand-300);
 }
 
 @theme inline {
-  --color-background: var(--ds-semantic-background);
-  --color-foreground: var(--ds-semantic-foreground);
-  --color-card: var(--ds-semantic-card);
-  --color-card-foreground: var(--ds-semantic-card-foreground);
-  --color-popover: var(--ds-semantic-popover);
-  --color-popover-foreground: var(--ds-semantic-popover-foreground);
-  --color-primary: var(--ds-semantic-primary);
-  --color-primary-foreground: var(--ds-semantic-primary-foreground);
-  --color-secondary: var(--ds-semantic-secondary);
-  --color-secondary-foreground: var(--ds-semantic-secondary-foreground);
-  --color-muted: var(--ds-semantic-muted);
-  --color-muted-foreground: var(--ds-semantic-muted-foreground);
-  --color-accent: var(--ds-semantic-accent);
-  --color-accent-foreground: var(--ds-semantic-accent-foreground);
-  --color-destructive: var(--ds-semantic-destructive);
-  --color-destructive-foreground: var(--ds-semantic-destructive-foreground);
-  --color-border: var(--ds-semantic-border);
-  --color-input: var(--ds-semantic-input);
-  --color-ring: var(--ds-semantic-ring);
-  --color-chart-1: var(--ds-color-chart-1);
-  --color-chart-2: var(--ds-color-chart-2);
-  --color-chart-3: var(--ds-color-chart-3);
-  --color-chart-4: var(--ds-color-chart-4);
-  --color-chart-5: var(--ds-color-chart-5);
-  --radius-sm: var(--ds-radius-sm);
-  --radius-md: var(--ds-radius-md);
-  --radius-lg: var(--ds-radius-lg);
-  --radius-xl: calc(var(--ds-radius-lg) + 0.5rem);
-  --spacing-2xs: var(--ds-space-2xs);
-  --spacing-xs: var(--ds-space-xs);
-  --spacing-sm: var(--ds-space-sm);
-  --spacing-md: var(--ds-space-md);
-  --spacing-lg: var(--ds-space-lg);
-  --spacing-xl: var(--ds-space-xl);
-  --spacing-2xl: var(--ds-space-2xl);
-  --color-sidebar: var(--ds-semantic-sidebar);
-  --color-sidebar-foreground: var(--ds-semantic-sidebar-foreground);
-  --color-sidebar-primary: var(--ds-semantic-sidebar-primary);
+  --color-background: var(--semantic-background);
+  --color-foreground: var(--semantic-foreground);
+  --color-card: var(--semantic-card);
+  --color-card-foreground: var(--semantic-card-foreground);
+  --color-popover: var(--semantic-popover);
+  --color-popover-foreground: var(--semantic-popover-foreground);
+  --color-primary: var(--semantic-primary);
+  --color-primary-foreground: var(--semantic-primary-foreground);
+  --color-secondary: var(--semantic-secondary);
+  --color-secondary-foreground: var(--semantic-secondary-foreground);
+  --color-muted: var(--semantic-muted);
+  --color-muted-foreground: var(--semantic-muted-foreground);
+  --color-accent: var(--semantic-accent);
+  --color-accent-foreground: var(--semantic-accent-foreground);
+  --color-destructive: var(--semantic-destructive);
+  --color-destructive-foreground: var(--semantic-destructive-foreground);
+  --color-border: var(--semantic-border);
+  --color-input: var(--semantic-input);
+  --color-ring: var(--semantic-ring);
+  --color-chart-1: var(--color-chart-1);
+  --color-chart-2: var(--color-chart-2);
+  --color-chart-3: var(--color-chart-3);
+  --color-chart-4: var(--color-chart-4);
+  --color-chart-5: var(--color-chart-5);
+  --radius-sm: var(--radius-sm);
+  --radius-md: var(--radius-md);
+  --radius-lg: var(--radius-lg);
+  --radius-xl: calc(var(--radius-lg) + 0.5rem);
+  --spacing-2xs: var(--space-2xs);
+  --spacing-xs: var(--space-xs);
+  --spacing-sm: var(--space-sm);
+  --spacing-md: var(--space-md);
+  --spacing-lg: var(--space-lg);
+  --spacing-xl: var(--space-xl);
+  --spacing-2xl: var(--space-2xl);
+  --color-sidebar: var(--semantic-sidebar);
+  --color-sidebar-foreground: var(--semantic-sidebar-foreground);
+  --color-sidebar-primary: var(--semantic-sidebar-primary);
   --color-sidebar-primary-foreground: var(
-    --ds-semantic-sidebar-primary-foreground
+    --semantic-sidebar-primary-foreground
   );
-  --color-sidebar-accent: var(--ds-semantic-sidebar-accent);
+  --color-sidebar-accent: var(--semantic-sidebar-accent);
   --color-sidebar-accent-foreground: var(
-    --ds-semantic-sidebar-accent-foreground
+    --semantic-sidebar-accent-foreground
   );
-  --color-sidebar-border: var(--ds-semantic-sidebar-border);
-  --color-sidebar-ring: var(--ds-semantic-sidebar-ring);
+  --color-sidebar-border: var(--semantic-sidebar-border);
+  --color-sidebar-ring: var(--semantic-sidebar-ring);
 }
 
 @layer base {
