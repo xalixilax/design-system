@@ -17,6 +17,7 @@
   "devDependencies": {
     "@astus/design-system": "link:C:/astus/new_citadelle/packages/design-system",
     "@chromatic-com/storybook": "4",
+    "@mdx-js/react": "^3.1.1",
     "@storybook/addon-a11y": "9.0.4",
     "@storybook/addon-docs": "9.0.4",
     "@storybook/addon-onboarding": "9.0.4",
