@@ -1,0 +1,20 @@
+{
+  "version": 1,
+  "skills": {
+    "hooks-pattern": {
+      "source": "patternsdev/skills",
+      "sourceType": "github",
+      "computedHash": "4e5c7539e93ce14810f0b9ee8d0b5945245c787c8b7430f47a36ae393890301d"
+    },
+    "react-useeffect-avoid": {
+      "source": "flpbalada/my-opencode-config",
+      "sourceType": "github",
+      "computedHash": "23749c64166673d8e7d19c87ca4fe93bacf934d573ff47c62a37bf0bd2bfafe7"
+    },
+    "simplify": {
+      "source": "brianlovin/claude-config",
+      "sourceType": "github",
+      "computedHash": "322a20071306ede626dc73ac05182b08c97b60781e23ec3fbf23f85a4d27d111"
+    }
+  }
+}

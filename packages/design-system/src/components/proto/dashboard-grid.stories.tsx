@@ -6,7 +6,7 @@ import {
   DashboardBuilder,
   type DashboardSection,
   useDashboardLayout,
-} from "./dashboard-builder";
+} from "./resizeable-layout/resizeableLayout";
 
 type StoryArgs = {
   columns: number;
