@@ -1,6 +1,7 @@
 import { PanelLeft, PanelRight, X } from "lucide-react";
 import {
   BottomPanel,
+  BottomPanelTrigger,
   BottomResizeHandle,
   CenterPanel,
   ResizableLayoutFrame,
@@ -10,10 +11,9 @@ import {
   SidebarTrigger,
   Sidepanel,
   SidepanelContent,
-  SidepanelTrigger,
   SidepanelResizeHandle,
+  SidepanelTrigger,
   TopPanel,
-  BottomPanelTrigger,
 } from "./resizeableLayout";
 
 function ResizablePortalLayoutStory() {

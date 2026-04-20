@@ -1,5 +1,4 @@
 import { createAuthClient } from "better-auth/react";
-import type { Auth } from "./server";
 
 /**
  * Better Auth Client for React

@@ -25,10 +25,10 @@ export type DashboardBounds = {
 
 export type SplitPlacement =
   | {
-    orientation: "vertical";
-    side: "left" | "right";
-  }
+      orientation: "vertical";
+      side: "left" | "right";
+    }
   | {
-    orientation: "horizontal";
-    side: "top" | "bottom";
-  };
+      orientation: "horizontal";
+      side: "top" | "bottom";
+    };

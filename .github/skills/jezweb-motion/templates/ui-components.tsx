@@ -14,18 +14,18 @@
  * For Next.js App Router, add "use client" directive at top of file.
  */
 
-import { motion, AnimatePresence } from "motion/react"
-import { useState, ReactNode, useRef } from "react"
+import { AnimatePresence, motion } from "motion/react";
+import { type ReactNode, useRef, useState } from "react";
 
 // ============================================================================
 // COMPONENT 1: Modal Dialog
 // ============================================================================
 
 interface ModalProps {
-  isOpen: boolean
-  onClose: () => void
-  title: string
-  children: ReactNode
+  isOpen: boolean;
+  onClose: () => void;
+  title: string;
+  children: ReactNode;
 }
 
 export function Modal({ isOpen, onClose, title, children }: ModalProps) {
@@ -67,9 +67,7 @@ export function Modal({ isOpen, onClose, title, children }: ModalProps) {
             </div>
 
             {/* Content */}
-            <div className="text-gray-700 dark:text-gray-300">
-              {children}
-            </div>
+            <div className="text-gray-700 dark:text-gray-300">{children}</div>
 
             {/* Footer */}
             <div className="mt-6 flex justify-end gap-2">
@@ -86,7 +84,7 @@ export function Modal({ isOpen, onClose, title, children }: ModalProps) {
         </>
       )}
     </AnimatePresence>
-  )
+  );
 }
 
 /**
@@ -115,10 +113,10 @@ export function Modal({ isOpen, onClose, title, children }: ModalProps) {
 // ============================================================================
 
 interface AccordionItemProps {
-  title: string
-  children: ReactNode
-  isOpen: boolean
-  onToggle: () => void
+  title: string;
+  children: ReactNode;
+  isOpen: boolean;
+  onToggle: () => void;
 }
 
 export function AccordionItem({ title, children, isOpen, onToggle }: AccordionItemProps) {
@@ -131,10 +129,7 @@ export function AccordionItem({ title, children, isOpen, onToggle }: AccordionIt
         whileHover={{ backgroundColor: "rgba(0, 0, 0, 0.02)" }}
       >
         <span className="font-semibold">{title}</span>
-        <motion.span
-          animate={{ rotate: isOpen ? 180 : 0 }}
-          transition={{ duration: 0.3 }}
-        >
+        <motion.span animate={{ rotate: isOpen ? 180 : 0 }} transition={{ duration: 0.3 }}>
           ▼
         </motion.span>
       </motion.button>
@@ -149,40 +144,38 @@ export function AccordionItem({ title, children, isOpen, onToggle }: AccordionIt
         transition={{ duration: 0.3 }}
         style={{ overflow: "hidden" }}
       >
-        <div className="p-4 text-gray-700 dark:text-gray-300">
-          {children}
-        </div>
+        <div className="p-4 text-gray-700 dark:text-gray-300">{children}</div>
       </motion.div>
     </div>
-  )
+  );
 }
 
 interface AccordionProps {
   items: Array<{
-    id: string
-    title: string
-    content: ReactNode
-  }>
-  allowMultiple?: boolean
+    id: string;
+    title: string;
+    content: ReactNode;
+  }>;
+  allowMultiple?: boolean;
 }
 
 export function Accordion({ items, allowMultiple = false }: AccordionProps) {
-  const [openItems, setOpenItems] = useState<Set<string>>(new Set())
+  const [openItems, setOpenItems] = useState<Set<string>>(new Set());
 
   const handleToggle = (id: string) => {
     setOpenItems((prev) => {
-      const next = new Set(prev)
+      const next = new Set(prev);
       if (next.has(id)) {
-        next.delete(id)
+        next.delete(id);
       } else {
         if (!allowMultiple) {
-          next.clear()
+          next.clear();
         }
-        next.add(id)
+        next.add(id);
       }
-      return next
-    })
-  }
+      return next;
+    });
+  };
 
   return (
     <div className="border border-gray-200 dark:border-gray-700 rounded-lg overflow-hidden">
@@ -197,7 +190,7 @@ export function Accordion({ items, allowMultiple = false }: AccordionProps) {
         </AccordionItem>
       ))}
     </div>
-  )
+  );
 }
 
 /**
@@ -218,25 +211,25 @@ export function Accordion({ items, allowMultiple = false }: AccordionProps) {
 
 interface CarouselProps {
   images: Array<{
-    id: string
-    url: string
-    alt: string
-  }>
+    id: string;
+    url: string;
+    alt: string;
+  }>;
 }
 
 export function Carousel({ images }: CarouselProps) {
-  const [currentIndex, setCurrentIndex] = useState(0)
-  const [direction, setDirection] = useState(0) // 1 = next, -1 = prev
+  const [currentIndex, setCurrentIndex] = useState(0);
+  const [direction, setDirection] = useState(0); // 1 = next, -1 = prev
 
   const handleNext = () => {
-    setDirection(1)
-    setCurrentIndex((prev) => (prev + 1) % images.length)
-  }
+    setDirection(1);
+    setCurrentIndex((prev) => (prev + 1) % images.length);
+  };
 
   const handlePrev = () => {
-    setDirection(-1)
-    setCurrentIndex((prev) => (prev - 1 + images.length) % images.length)
-  }
+    setDirection(-1);
+    setCurrentIndex((prev) => (prev - 1 + images.length) % images.length);
+  };
 
   const variants = {
     enter: (direction: number) => ({
@@ -251,7 +244,7 @@ export function Carousel({ images }: CarouselProps) {
       x: direction < 0 ? 1000 : -1000,
       opacity: 0,
     }),
-  }
+  };
 
   return (
     <div className="relative w-full h-96 overflow-hidden bg-gray-100 dark:bg-gray-800 rounded-lg">
@@ -291,8 +284,8 @@ export function Carousel({ images }: CarouselProps) {
           <motion.button
             key={index}
             onClick={() => {
-              setDirection(index > currentIndex ? 1 : -1)
-              setCurrentIndex(index)
+              setDirection(index > currentIndex ? 1 : -1);
+              setCurrentIndex(index);
             }}
             animate={{
               scale: index === currentIndex ? 1.2 : 1,
@@ -303,7 +296,7 @@ export function Carousel({ images }: CarouselProps) {
         ))}
       </div>
     </div>
-  )
+  );
 }
 
 /**
@@ -322,17 +315,14 @@ export function Carousel({ images }: CarouselProps) {
 // ============================================================================
 
 interface DragCarouselProps {
-  items: ReactNode[]
+  items: ReactNode[];
 }
 
 export function DragCarousel({ items }: DragCarouselProps) {
-  const constraintsRef = useRef<HTMLDivElement>(null)
+  const constraintsRef = useRef<HTMLDivElement>(null);
 
   return (
-    <div
-      ref={constraintsRef}
-      className="overflow-hidden bg-gray-100 dark:bg-gray-800 rounded-lg p-4"
-    >
+    <div ref={constraintsRef} className="overflow-hidden bg-gray-100 dark:bg-gray-800 rounded-lg p-4">
       <motion.div
         drag="x"
         dragConstraints={constraintsRef}
@@ -351,7 +341,7 @@ export function DragCarousel({ items }: DragCarouselProps) {
         ))}
       </motion.div>
     </div>
-  )
+  );
 }
 
 /**
@@ -371,17 +361,17 @@ export function DragCarousel({ items }: DragCarouselProps) {
 // ============================================================================
 
 interface Tab {
-  id: string
-  label: string
-  content: ReactNode
+  id: string;
+  label: string;
+  content: ReactNode;
 }
 
 interface TabsProps {
-  tabs: Tab[]
+  tabs: Tab[];
 }
 
 export function Tabs({ tabs }: TabsProps) {
-  const [activeTab, setActiveTab] = useState(tabs[0].id)
+  const [activeTab, setActiveTab] = useState(tabs[0].id);
 
   return (
     <div>
@@ -421,7 +411,7 @@ export function Tabs({ tabs }: TabsProps) {
         </motion.div>
       </AnimatePresence>
     </div>
-  )
+  );
 }
 
 /**
@@ -441,32 +431,27 @@ export function Tabs({ tabs }: TabsProps) {
 // ============================================================================
 
 interface DropdownProps {
-  trigger: ReactNode
+  trigger: ReactNode;
   items: Array<{
-    label: string
-    onClick: () => void
-  }>
+    label: string;
+    onClick: () => void;
+  }>;
 }
 
 export function Dropdown({ trigger, items }: DropdownProps) {
-  const [isOpen, setIsOpen] = useState(false)
+  const [isOpen, setIsOpen] = useState(false);
 
   return (
     <div className="relative">
       {/* Trigger */}
-      <div onClick={() => setIsOpen(!isOpen)}>
-        {trigger}
-      </div>
+      <div onClick={() => setIsOpen(!isOpen)}>{trigger}</div>
 
       {/* Menu */}
       <AnimatePresence>
         {isOpen && (
           <>
             {/* Backdrop to close on click outside */}
-            <div
-              className="fixed inset-0 z-10"
-              onClick={() => setIsOpen(false)}
-            />
+            <div className="fixed inset-0 z-10" onClick={() => setIsOpen(false)} />
 
             {/* Dropdown */}
             <motion.div
@@ -481,8 +466,8 @@ export function Dropdown({ trigger, items }: DropdownProps) {
                   key={index}
                   whileHover={{ backgroundColor: "rgba(0, 0, 0, 0.05)" }}
                   onClick={() => {
-                    item.onClick()
-                    setIsOpen(false)
+                    item.onClick();
+                    setIsOpen(false);
                   }}
                   className="w-full text-left px-4 py-2 first:rounded-t-lg last:rounded-b-lg"
                 >
@@ -494,7 +479,7 @@ export function Dropdown({ trigger, items }: DropdownProps) {
         )}
       </AnimatePresence>
     </div>
-  )
+  );
 }
 
 /**
@@ -515,10 +500,10 @@ export function Dropdown({ trigger, items }: DropdownProps) {
 // ============================================================================
 
 interface ToastProps {
-  message: string
-  type?: "success" | "error" | "info"
-  isVisible: boolean
-  onClose: () => void
+  message: string;
+  type?: "success" | "error" | "info";
+  isVisible: boolean;
+  onClose: () => void;
 }
 
 export function Toast({ message, type = "info", isVisible, onClose }: ToastProps) {
@@ -526,7 +511,7 @@ export function Toast({ message, type = "info", isVisible, onClose }: ToastProps
     success: "bg-green-500",
     error: "bg-red-500",
     info: "bg-blue-500",
-  }
+  };
 
   return (
     <AnimatePresence>
@@ -550,7 +535,7 @@ export function Toast({ message, type = "info", isVisible, onClose }: ToastProps
         </motion.div>
       )}
     </AnimatePresence>
-  )
+  );
 }
 
 /**
@@ -578,8 +563,8 @@ export function Toast({ message, type = "info", isVisible, onClose }: ToastProps
 // ============================================================================
 
 export function UIComponentsDemo() {
-  const [isModalOpen, setIsModalOpen] = useState(false)
-  const [showToast, setShowToast] = useState(false)
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [showToast, setShowToast] = useState(false);
 
   return (
     <div className="max-w-4xl mx-auto p-8 space-y-12">
@@ -588,17 +573,10 @@ export function UIComponentsDemo() {
       {/* Modal */}
       <section>
         <h2 className="text-2xl font-bold mb-4">1. Modal Dialog</h2>
-        <button
-          onClick={() => setIsModalOpen(true)}
-          className="px-4 py-2 bg-blue-600 text-white rounded"
-        >
+        <button onClick={() => setIsModalOpen(true)} className="px-4 py-2 bg-blue-600 text-white rounded">
           Open Modal
         </button>
-        <Modal
-          isOpen={isModalOpen}
-          onClose={() => setIsModalOpen(false)}
-          title="Example Modal"
-        >
+        <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} title="Example Modal">
           <p>This is a modal with smooth animations.</p>
         </Modal>
       </section>
@@ -656,11 +634,7 @@ export function UIComponentsDemo() {
       <section>
         <h2 className="text-2xl font-bold mb-4">6. Dropdown Menu</h2>
         <Dropdown
-          trigger={
-            <button className="px-4 py-2 bg-gray-600 text-white rounded">
-              Open Menu
-            </button>
-          }
+          trigger={<button className="px-4 py-2 bg-gray-600 text-white rounded">Open Menu</button>}
           items={[
             { label: "Profile", onClick: () => alert("Profile clicked") },
             { label: "Settings", onClick: () => alert("Settings clicked") },
@@ -672,10 +646,7 @@ export function UIComponentsDemo() {
       {/* Toast */}
       <section>
         <h2 className="text-2xl font-bold mb-4">7. Toast Notification</h2>
-        <button
-          onClick={() => setShowToast(true)}
-          className="px-4 py-2 bg-green-600 text-white rounded"
-        >
+        <button onClick={() => setShowToast(true)} className="px-4 py-2 bg-green-600 text-white rounded">
           Show Toast
         </button>
         <Toast
@@ -686,7 +657,7 @@ export function UIComponentsDemo() {
         />
       </section>
     </div>
-  )
+  );
 }
 
 /**

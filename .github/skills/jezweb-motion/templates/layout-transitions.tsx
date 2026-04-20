@@ -14,8 +14,8 @@
  * For Next.js App Router, add "use client" directive at top of file.
  */
 
-import { motion, LayoutGroup } from "motion/react"
-import { useState, ReactNode } from "react"
+import { LayoutGroup, motion } from "motion/react";
+import { type ReactNode, useState } from "react";
 
 // ============================================================================
 // PATTERN 1: Basic Layout Animation
@@ -26,15 +26,13 @@ import { useState, ReactNode } from "react"
  * Uses FLIP technique: First, Last, Invert, Play
  */
 export function ExpandableCard() {
-  const [isExpanded, setIsExpanded] = useState(false)
+  const [isExpanded, setIsExpanded] = useState(false);
 
   return (
     <motion.div
       layout // Enable FLIP layout animations
       onClick={() => setIsExpanded(!isExpanded)}
-      className={`cursor-pointer bg-white border rounded-lg shadow-md p-6 ${
-        isExpanded ? "w-full" : "w-64"
-      }`}
+      className={`cursor-pointer bg-white border rounded-lg shadow-md p-6 ${isExpanded ? "w-full" : "w-64"}`}
       transition={{ layout: { duration: 0.3, type: "spring" } }}
     >
       <motion.h3 layout className="text-xl font-bold mb-2">
@@ -42,17 +40,13 @@ export function ExpandableCard() {
       </motion.h3>
 
       {isExpanded && (
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 0.2 }}
-        >
+        <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.2 }}>
           <p>This content appears when expanded.</p>
           <p className="mt-2">Layout automatically animates the size change.</p>
         </motion.div>
       )}
     </motion.div>
-  )
+  );
 }
 
 /**
@@ -70,20 +64,20 @@ export function ExpandableCard() {
  * Perfect for card → detail page transitions.
  */
 interface Card {
-  id: string
-  title: string
-  description: string
-  color: string
+  id: string;
+  title: string;
+  description: string;
+  color: string;
 }
 
 export function SharedElementExample() {
-  const [selectedCard, setSelectedCard] = useState<Card | null>(null)
+  const [selectedCard, setSelectedCard] = useState<Card | null>(null);
 
   const cards: Card[] = [
     { id: "1", title: "Card 1", description: "Full description for card 1", color: "bg-red-500" },
     { id: "2", title: "Card 2", description: "Full description for card 2", color: "bg-blue-500" },
     { id: "3", title: "Card 3", description: "Full description for card 3", color: "bg-green-500" },
-  ]
+  ];
 
   return (
     <div>
@@ -115,18 +109,13 @@ export function SharedElementExample() {
           <motion.h3 layoutId={`title-${selectedCard.id}`} className="text-4xl font-bold mb-4">
             {selectedCard.title}
           </motion.h3>
-          <motion.p
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 0.2 }}
-            className="text-xl"
-          >
+          <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.2 }} className="text-xl">
             {selectedCard.description}
           </motion.p>
         </motion.div>
       )}
     </div>
-  )
+  );
 }
 
 /**
@@ -143,8 +132,8 @@ export function SharedElementExample() {
  * Perfect for drag-to-reorder, filtering, sorting.
  */
 interface Item {
-  id: number
-  text: string
+  id: number;
+  text: string;
 }
 
 export function AnimatedList() {
@@ -153,15 +142,15 @@ export function AnimatedList() {
     { id: 2, text: "Item 2" },
     { id: 3, text: "Item 3" },
     { id: 4, text: "Item 4" },
-  ])
+  ]);
 
   const shuffle = () => {
-    setItems([...items].sort(() => Math.random() - 0.5))
-  }
+    setItems([...items].sort(() => Math.random() - 0.5));
+  };
 
   const reverse = () => {
-    setItems([...items].reverse())
-  }
+    setItems([...items].reverse());
+  };
 
   return (
     <div>
@@ -187,7 +176,7 @@ export function AnimatedList() {
         ))}
       </div>
     </div>
-  )
+  );
 }
 
 /**
@@ -204,23 +193,21 @@ export function AnimatedList() {
  * Prevents conflicts when using multiple instances.
  */
 interface TabPanelProps {
-  tabs: Array<{ id: string; label: string; content: ReactNode }>
+  tabs: Array<{ id: string; label: string; content: ReactNode }>;
 }
 
 export function TabPanel({ tabs }: TabPanelProps) {
-  const [activeTab, setActiveTab] = useState(tabs[0].id)
+  const [activeTab, setActiveTab] = useState(tabs[0].id);
 
   return (
-    <LayoutGroup> {/* Namespace layoutIds within this group */}
+    <LayoutGroup>
+      {" "}
+      {/* Namespace layoutIds within this group */}
       <div className="space-y-4">
         {/* Tab buttons */}
         <div className="flex gap-4 border-b border-gray-200">
           {tabs.map((tab) => (
-            <button
-              key={tab.id}
-              onClick={() => setActiveTab(tab.id)}
-              className="relative px-4 py-2"
-            >
+            <button key={tab.id} onClick={() => setActiveTab(tab.id)} className="relative px-4 py-2">
               {tab.label}
 
               {/* Shared underline */}
@@ -236,12 +223,10 @@ export function TabPanel({ tabs }: TabPanelProps) {
         </div>
 
         {/* Tab content */}
-        <div className="p-4">
-          {tabs.find((tab) => tab.id === activeTab)?.content}
-        </div>
+        <div className="p-4">{tabs.find((tab) => tab.id === activeTab)?.content}</div>
       </div>
     </LayoutGroup>
-  )
+  );
 }
 
 /**
@@ -249,7 +234,7 @@ export function TabPanel({ tabs }: TabPanelProps) {
  *
  * <div className="grid grid-cols-2 gap-4">
  *   <TabPanel tabs={[...]} />
- *   <TabPanel tabs={[...]} />  {/* No layoutId conflicts! */}
+ *   <TabPanel tabs={[...]} />  {/* No layoutId conflicts! */ }
  * </div>
  */
 
@@ -266,12 +251,12 @@ export function ScrollableList() {
     Array.from({ length: 20 }, (_, i) => ({
       id: i + 1,
       text: `Item ${i + 1}`,
-    }))
-  )
+    })),
+  );
 
   const removeItem = (id: number) => {
-    setItems(items.filter((item) => item.id !== id))
-  }
+    setItems(items.filter((item) => item.id !== id));
+  };
 
   return (
     <motion.div
@@ -288,16 +273,13 @@ export function ScrollableList() {
           className="p-4 bg-white border rounded-lg shadow-sm flex justify-between items-center"
         >
           <span>{item.text}</span>
-          <button
-            onClick={() => removeItem(item.id)}
-            className="px-3 py-1 bg-red-500 text-white rounded text-sm"
-          >
+          <button onClick={() => removeItem(item.id)} className="px-3 py-1 bg-red-500 text-white rounded text-sm">
             Remove
           </button>
         </motion.div>
       ))}
     </motion.div>
-  )
+  );
 }
 
 /**
@@ -315,14 +297,11 @@ export function ScrollableList() {
  * Without layoutRoot, fixed elements animate incorrectly.
  */
 export function FixedModal() {
-  const [isOpen, setIsOpen] = useState(false)
+  const [isOpen, setIsOpen] = useState(false);
 
   return (
     <>
-      <button
-        onClick={() => setIsOpen(!isOpen)}
-        className="px-4 py-2 bg-blue-600 text-white rounded"
-      >
+      <button onClick={() => setIsOpen(!isOpen)} className="px-4 py-2 bg-blue-600 text-white rounded">
         Toggle Fixed Modal
       </button>
 
@@ -333,13 +312,11 @@ export function FixedModal() {
           className="fixed bottom-4 right-4 w-64 bg-white border rounded-lg shadow-2xl p-4 z-50"
         >
           <h3 className="font-bold mb-2">Fixed Modal</h3>
-          <p className="text-sm text-gray-700">
-            This is a fixed-position element with layout animations.
-          </p>
+          <p className="text-sm text-gray-700">This is a fixed-position element with layout animations.</p>
         </motion.div>
       )}
     </>
-  )
+  );
 }
 
 /**
@@ -355,38 +332,31 @@ export function FixedModal() {
  * Smooth transition between grid and list layouts.
  */
 export function ViewSwitcher() {
-  const [view, setView] = useState<"grid" | "list">("grid")
+  const [view, setView] = useState<"grid" | "list">("grid");
 
   const items = Array.from({ length: 9 }, (_, i) => ({
     id: i + 1,
     title: `Item ${i + 1}`,
-  }))
+  }));
 
   return (
     <div>
       <div className="flex gap-2 mb-4">
         <button
           onClick={() => setView("grid")}
-          className={`px-4 py-2 rounded ${
-            view === "grid" ? "bg-blue-600 text-white" : "bg-gray-200"
-          }`}
+          className={`px-4 py-2 rounded ${view === "grid" ? "bg-blue-600 text-white" : "bg-gray-200"}`}
         >
           Grid
         </button>
         <button
           onClick={() => setView("list")}
-          className={`px-4 py-2 rounded ${
-            view === "list" ? "bg-blue-600 text-white" : "bg-gray-200"
-          }`}
+          className={`px-4 py-2 rounded ${view === "list" ? "bg-blue-600 text-white" : "bg-gray-200"}`}
         >
           List
         </button>
       </div>
 
-      <motion.div
-        layout
-        className={view === "grid" ? "grid grid-cols-3 gap-4" : "space-y-2"}
-      >
+      <motion.div layout className={view === "grid" ? "grid grid-cols-3 gap-4" : "space-y-2"}>
         {items.map((item) => (
           <motion.div
             key={item.id}
@@ -399,7 +369,7 @@ export function ViewSwitcher() {
         ))}
       </motion.div>
     </div>
-  )
+  );
 }
 
 // ============================================================================
@@ -417,7 +387,7 @@ export function DragToReorder() {
     { id: 2, text: "Reorder me" },
     { id: 3, text: "Move me around" },
     { id: 4, text: "Drop me anywhere" },
-  ])
+  ]);
 
   return (
     <div className="space-y-2">
@@ -439,7 +409,7 @@ export function DragToReorder() {
         </motion.div>
       ))}
     </div>
-  )
+  );
 }
 
 /**
@@ -462,12 +432,12 @@ export function MasonryLayout() {
     Array.from({ length: 12 }, (_, i) => ({
       id: i + 1,
       height: Math.floor(Math.random() * 200) + 100,
-    }))
-  )
+    })),
+  );
 
   const shuffle = () => {
-    setItems([...items].sort(() => Math.random() - 0.5))
-  }
+    setItems([...items].sort(() => Math.random() - 0.5));
+  };
 
   return (
     <div>
@@ -489,7 +459,7 @@ export function MasonryLayout() {
         ))}
       </div>
     </div>
-  )
+  );
 }
 
 // ============================================================================
@@ -552,7 +522,7 @@ export function LayoutAnimationsDemo() {
         <MasonryLayout />
       </section>
     </div>
-  )
+  );
 }
 
 /**

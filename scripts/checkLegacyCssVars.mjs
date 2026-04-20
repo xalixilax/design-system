@@ -1,16 +1,9 @@
-import { readdirSync, readFileSync, statSync } from "node:fs";
+import { readFileSync, readdirSync, statSync } from "node:fs";
 import { extname, join } from "node:path";
 
 const ROOT_DIR = process.cwd();
 const ALLOWED_EXTENSIONS = new Set([".css", ".ts", ".tsx", ".js", ".jsx", ".mjs", ".cjs"]);
-const IGNORED_DIRS = new Set([
-  ".git",
-  "node_modules",
-  "dist",
-  "coverage",
-  "storybook-static",
-  "build",
-]);
+const IGNORED_DIRS = new Set([".git", "node_modules", "dist", "coverage", "storybook-static", "build"]);
 
 const LEGACY_VARS = [
   "background",
@@ -48,11 +41,7 @@ const LEGACY_VARS = [
   "chart-5",
 ];
 
-const TARGET_ROOTS = [
-  "clients",
-  "packages",
-  "servers",
-];
+const TARGET_ROOTS = ["clients", "packages", "servers"];
 
 function collectFiles(dir) {
   const entries = readdirSync(dir);
@@ -122,9 +111,7 @@ for (const root of TARGET_ROOTS) {
 if (offenders.length > 0) {
   console.error("Legacy design tokens were found. Use DS-prefixed variables instead.");
   for (const offender of offenders) {
-    console.error(
-      `- ${offender.filePath}:${offender.line}:${offender.column} -> ${offender.match}`,
-    );
+    console.error(`- ${offender.filePath}:${offender.line}:${offender.column} -> ${offender.match}`);
   }
   process.exit(1);
 }

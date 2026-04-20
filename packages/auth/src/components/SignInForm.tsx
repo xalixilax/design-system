@@ -1,4 +1,3 @@
-import * as React from "react";
 import { Button } from "@design-system/components/ui/button";
 import {
   Card,
@@ -8,8 +7,9 @@ import {
   CardHeader,
   CardTitle,
 } from "@design-system/components/ui/card";
-import { Label } from "@design-system/components/ui/label";
 import { Input } from "@design-system/components/ui/input";
+import { Label } from "@design-system/components/ui/label";
+import * as React from "react";
 
 interface SignInFormProps {
   onSubmit: (email: string, password: string) => void | Promise<void>;
@@ -38,9 +38,7 @@ export function SignInForm({
     <Card className="w-full max-w-md">
       <CardHeader>
         <CardTitle>Sign In</CardTitle>
-        <CardDescription>
-          Enter your credentials to access your account
-        </CardDescription>
+        <CardDescription>Enter your credentials to access your account</CardDescription>
       </CardHeader>
       <form onSubmit={handleSubmit}>
         <CardContent className="space-y-4">

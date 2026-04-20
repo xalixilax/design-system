@@ -1,12 +1,6 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 
-import type {
-  DashboardBounds,
-  DashboardCard,
-  DashboardSection,
-  ResizeDirection,
-  SplitPlacement,
-} from "../types";
+import type { DashboardBounds, DashboardCard, DashboardSection, ResizeDirection, SplitPlacement } from "../types";
 import {
   applyResizeDelta,
   buildId,
@@ -168,7 +162,9 @@ function hasNoGaps(next: DashboardSection[], bounds: DashboardBounds) {
 }
 
 export function useDashboardLayout({ bounds, initialSections }: UseDashboardLayoutOptions) {
-  const [sections, setSections] = useState(() => initialSections.map((section) => clampSectionToBounds(section, bounds)));
+  const [sections, setSections] = useState(() =>
+    initialSections.map((section) => clampSectionToBounds(section, bounds)),
+  );
 
   useEffect(() => {
     setSections((previous) => {
@@ -218,10 +214,7 @@ export function useDashboardLayout({ bounds, initialSections }: UseDashboardLayo
         const moved = clampSectionToBounds({ ...current, x, y }, bounds);
 
         const isSamePlacement =
-          moved.x === current.x &&
-          moved.y === current.y &&
-          moved.w === current.w &&
-          moved.h === current.h;
+          moved.x === current.x && moved.y === current.y && moved.w === current.w && moved.h === current.h;
         if (isSamePlacement) {
           return previous;
         }
@@ -230,20 +223,14 @@ export function useDashboardLayout({ bounds, initialSections }: UseDashboardLayo
           return previous;
         }
 
-        return previous.map((section) =>
-          section.id === sectionId ? moved : section,
-        );
+        return previous.map((section) => (section.id === sectionId ? moved : section));
       });
     },
     [bounds.columns, bounds.rows],
   );
 
   const swapSections = useCallback(
-    (
-      draggedSectionId: string,
-      hoveredSectionId: string,
-      origin: { x: number; y: number; w: number; h: number },
-    ) => {
+    (draggedSectionId: string, hoveredSectionId: string, origin: { x: number; y: number; w: number; h: number }) => {
       if (draggedSectionId === hoveredSectionId) {
         return;
       }
@@ -281,29 +268,29 @@ export function useDashboardLayout({ bounds, initialSections }: UseDashboardLayo
 
         const hoveredNext = hoveredIsAtOrigin
           ? {
-            ...hoveredSection,
-            x: draggedSection.x,
-            y: draggedSection.y,
-            w: draggedSection.w,
-            h: draggedSection.h,
-          }
-          : {
-            ...hoveredSection,
-            x: origin.x,
-            y: origin.y,
-            w: origin.w,
-            h: origin.h,
-          };
-
-        const originOccupantNext =
-          originOccupant && originOccupant.id !== hoveredSection.id
-            ? {
-              ...originOccupant,
+              ...hoveredSection,
               x: draggedSection.x,
               y: draggedSection.y,
               w: draggedSection.w,
               h: draggedSection.h,
             }
+          : {
+              ...hoveredSection,
+              x: origin.x,
+              y: origin.y,
+              w: origin.w,
+              h: origin.h,
+            };
+
+        const originOccupantNext =
+          originOccupant && originOccupant.id !== hoveredSection.id
+            ? {
+                ...originOccupant,
+                x: draggedSection.x,
+                y: draggedSection.y,
+                w: draggedSection.w,
+                h: draggedSection.h,
+              }
             : null;
 
         return previous.map((section) => {
@@ -747,133 +734,128 @@ export function useDashboardLayout({ bounds, initialSections }: UseDashboardLayo
     [bounds.columns, bounds.rows],
   );
 
-  const splitSectionWithNew = useCallback(
-    (hoveredSectionId: string, placement: SplitPlacement) => {
-      setSections((previous) => {
-        const hoveredSection = previous.find((section) => section.id === hoveredSectionId);
-        if (!hoveredSection) {
-          return previous;
-        }
+  const splitSectionWithNew = useCallback((hoveredSectionId: string, placement: SplitPlacement) => {
+    setSections((previous) => {
+      const hoveredSection = previous.find((section) => section.id === hoveredSectionId);
+      if (!hoveredSection) {
+        return previous;
+      }
 
-        const hoveredMinW = minWidth(hoveredSection);
-        const hoveredMinH = minHeight(hoveredSection);
-        const canSplitVertically = hoveredSection.w >= hoveredMinW * 2;
-        const canSplitHorizontally = hoveredSection.h >= hoveredMinH * 2;
+      const hoveredMinW = minWidth(hoveredSection);
+      const hoveredMinH = minHeight(hoveredSection);
+      const canSplitVertically = hoveredSection.w >= hoveredMinW * 2;
+      const canSplitHorizontally = hoveredSection.h >= hoveredMinH * 2;
 
-        if (!canSplitVertically && !canSplitHorizontally) {
-          return previous;
-        }
+      if (!canSplitVertically && !canSplitHorizontally) {
+        return previous;
+      }
 
-        const useVertical = placement.orientation === "vertical";
-        if (useVertical && !canSplitVertically) {
-          return previous;
-        }
+      const useVertical = placement.orientation === "vertical";
+      if (useVertical && !canSplitVertically) {
+        return previous;
+      }
 
-        if (!useVertical && !canSplitHorizontally) {
-          return previous;
-        }
+      if (!useVertical && !canSplitHorizontally) {
+        return previous;
+      }
 
-        const nextIndex = previous.length + 1;
+      const nextIndex = previous.length + 1;
 
-        let updatedHovered: DashboardSection;
-        let newSection: DashboardSection;
+      let updatedHovered: DashboardSection;
+      let newSection: DashboardSection;
 
-        if (useVertical) {
-          const leftWidth = Math.floor(hoveredSection.w / 2);
-          const rightWidth = hoveredSection.w - leftWidth;
-          const dropOnLeft = placement.side === "left";
+      if (useVertical) {
+        const leftWidth = Math.floor(hoveredSection.w / 2);
+        const rightWidth = hoveredSection.w - leftWidth;
+        const dropOnLeft = placement.side === "left";
 
-          if (dropOnLeft) {
-            updatedHovered = {
-              ...hoveredSection,
-              x: hoveredSection.x + leftWidth,
-              w: rightWidth,
-            };
-            newSection = {
-              id: buildId("section"),
-              title: `Section ${nextIndex}`,
-              x: hoveredSection.x,
-              y: hoveredSection.y,
-              w: leftWidth,
-              h: hoveredSection.h,
-              cards: [createCard(1)],
-            };
-          } else {
-            updatedHovered = {
-              ...hoveredSection,
-              w: leftWidth,
-            };
-            newSection = {
-              id: buildId("section"),
-              title: `Section ${nextIndex}`,
-              x: hoveredSection.x + leftWidth,
-              y: hoveredSection.y,
-              w: rightWidth,
-              h: hoveredSection.h,
-              cards: [createCard(1)],
-            };
-          }
+        if (dropOnLeft) {
+          updatedHovered = {
+            ...hoveredSection,
+            x: hoveredSection.x + leftWidth,
+            w: rightWidth,
+          };
+          newSection = {
+            id: buildId("section"),
+            title: `Section ${nextIndex}`,
+            x: hoveredSection.x,
+            y: hoveredSection.y,
+            w: leftWidth,
+            h: hoveredSection.h,
+            cards: [createCard(1)],
+          };
         } else {
-          const topHeight = Math.floor(hoveredSection.h / 2);
-          const bottomHeight = hoveredSection.h - topHeight;
-          const dropOnTop = placement.side === "top";
-
-          if (dropOnTop) {
-            updatedHovered = {
-              ...hoveredSection,
-              y: hoveredSection.y + topHeight,
-              h: bottomHeight,
-            };
-            newSection = {
-              id: buildId("section"),
-              title: `Section ${nextIndex}`,
-              x: hoveredSection.x,
-              y: hoveredSection.y,
-              w: hoveredSection.w,
-              h: topHeight,
-              cards: [createCard(1)],
-            };
-          } else {
-            updatedHovered = {
-              ...hoveredSection,
-              h: topHeight,
-            };
-            newSection = {
-              id: buildId("section"),
-              title: `Section ${nextIndex}`,
-              x: hoveredSection.x,
-              y: hoveredSection.y + topHeight,
-              w: hoveredSection.w,
-              h: bottomHeight,
-              cards: [createCard(1)],
-            };
-          }
+          updatedHovered = {
+            ...hoveredSection,
+            w: leftWidth,
+          };
+          newSection = {
+            id: buildId("section"),
+            title: `Section ${nextIndex}`,
+            x: hoveredSection.x + leftWidth,
+            y: hoveredSection.y,
+            w: rightWidth,
+            h: hoveredSection.h,
+            cards: [createCard(1)],
+          };
         }
+      } else {
+        const topHeight = Math.floor(hoveredSection.h / 2);
+        const bottomHeight = hoveredSection.h - topHeight;
+        const dropOnTop = placement.side === "top";
 
-        if (
-          updatedHovered.w < minWidth(updatedHovered) ||
-          updatedHovered.h < minHeight(updatedHovered) ||
-          newSection.w < minWidth(newSection) ||
-          newSection.h < minHeight(newSection)
-        ) {
+        if (dropOnTop) {
+          updatedHovered = {
+            ...hoveredSection,
+            y: hoveredSection.y + topHeight,
+            h: bottomHeight,
+          };
+          newSection = {
+            id: buildId("section"),
+            title: `Section ${nextIndex}`,
+            x: hoveredSection.x,
+            y: hoveredSection.y,
+            w: hoveredSection.w,
+            h: topHeight,
+            cards: [createCard(1)],
+          };
+        } else {
+          updatedHovered = {
+            ...hoveredSection,
+            h: topHeight,
+          };
+          newSection = {
+            id: buildId("section"),
+            title: `Section ${nextIndex}`,
+            x: hoveredSection.x,
+            y: hoveredSection.y + topHeight,
+            w: hoveredSection.w,
+            h: bottomHeight,
+            cards: [createCard(1)],
+          };
+        }
+      }
+
+      if (
+        updatedHovered.w < minWidth(updatedHovered) ||
+        updatedHovered.h < minHeight(updatedHovered) ||
+        newSection.w < minWidth(newSection) ||
+        newSection.h < minHeight(newSection)
+      ) {
+        return previous;
+      }
+
+      const nextSections = previous.map((section) => (section.id === hoveredSection.id ? updatedHovered : section));
+
+      for (const section of nextSections) {
+        if (sectionsOverlap(section, newSection)) {
           return previous;
         }
+      }
 
-        const nextSections = previous.map((section) =>
-          section.id === hoveredSection.id ? updatedHovered : section,
-        );
-
-        for (const section of nextSections) {
-          if (sectionsOverlap(section, newSection)) {
-            return previous;
-          }
-        }
-
-        return [...nextSections, newSection];
-      });
-    },
-    [],
-  );
+      return [...nextSections, newSection];
+    });
+  }, []);
 
   const splitSection = useCallback((sectionId: string, orientation: SplitOrientation) => {
     setSections((previous) => {
@@ -944,9 +926,7 @@ export function useDashboardLayout({ bounds, initialSections }: UseDashboardLayo
         return previous;
       }
 
-      const nextSections = previous.map((candidate) =>
-        candidate.id === section.id ? updatedSection : candidate,
-      );
+      const nextSections = previous.map((candidate) => (candidate.id === section.id ? updatedSection : candidate));
 
       for (const candidate of nextSections) {
         if (sectionsOverlap(candidate, newSection)) {
@@ -958,24 +938,27 @@ export function useDashboardLayout({ bounds, initialSections }: UseDashboardLayo
     });
   }, []);
 
-  const removeSection = useCallback((sectionId: string) => {
-    setSections((previous) => {
-      const removed = previous.find((section) => section.id === sectionId);
-      if (!removed) {
-        return previous;
-      }
+  const removeSection = useCallback(
+    (sectionId: string) => {
+      setSections((previous) => {
+        const removed = previous.find((section) => section.id === sectionId);
+        if (!removed) {
+          return previous;
+        }
 
-      const remaining = previous.filter((section) => section.id !== sectionId);
-      const filler = findGapFiller(removed, remaining);
+        const remaining = previous.filter((section) => section.id !== sectionId);
+        const filler = findGapFiller(removed, remaining);
 
-      if (!filler) {
-        return remaining;
-      }
+        if (!filler) {
+          return remaining;
+        }
 
-      const next = remaining.map((section) => (section.id === filler.id ? filler.next : section));
-      return isValidLayout(next, bounds) ? next : remaining;
-    });
-  }, [bounds.columns, bounds.rows]);
+        const next = remaining.map((section) => (section.id === filler.id ? filler.next : section));
+        return isValidLayout(next, bounds) ? next : remaining;
+      });
+    },
+    [bounds.columns, bounds.rows],
+  );
 
   const addCardToSection = useCallback((sectionId: string) => {
     setSections((previous) =>

@@ -164,13 +164,9 @@
   --color-sidebar: var(--semantic-sidebar);
   --color-sidebar-foreground: var(--semantic-sidebar-foreground);
   --color-sidebar-primary: var(--semantic-sidebar-primary);
-  --color-sidebar-primary-foreground: var(
-    --semantic-sidebar-primary-foreground
-  );
+  --color-sidebar-primary-foreground: var(--semantic-sidebar-primary-foreground);
   --color-sidebar-accent: var(--semantic-sidebar-accent);
-  --color-sidebar-accent-foreground: var(
-    --semantic-sidebar-accent-foreground
-  );
+  --color-sidebar-accent-foreground: var(--semantic-sidebar-accent-foreground);
   --color-sidebar-border: var(--semantic-sidebar-border);
   --color-sidebar-ring: var(--semantic-sidebar-ring);
 }

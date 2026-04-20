@@ -1,14 +1,10 @@
+import { motion } from "motion/react";
 import type * as React from "react";
 import { useCallback } from "react";
-import { motion } from "motion/react";
 import { useDrag } from "react-dnd";
 
 import { Button } from "@design-system/components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardHeader,
-} from "@design-system/components/ui/card";
+import { Card, CardContent, CardHeader } from "@design-system/components/ui/card";
 import { cn } from "@design-system/lib/utils";
 
 import type { DashboardCard, DashboardSection } from "./types";
@@ -33,10 +29,7 @@ type DashboardSectionItemProps = {
   onRemove: (sectionId: string) => void;
   onAddCard: (sectionId: string) => void;
   onRemoveCard: (sectionId: string, cardId: string) => void;
-  renderCard?: (
-    card: DashboardCard,
-    section: DashboardSection,
-  ) => React.ReactNode;
+  renderCard?: (card: DashboardCard, section: DashboardSection) => React.ReactNode;
 };
 
 export function DashboardSectionItem({
@@ -47,11 +40,7 @@ export function DashboardSectionItem({
   onRemoveCard,
   renderCard,
 }: DashboardSectionItemProps) {
-  const [{ isDragging }, dragRef] = useDrag<
-    DashboardSectionDragItem,
-    void,
-    { isDragging: boolean }
-  >(
+  const [{ isDragging }, dragRef] = useDrag<DashboardSectionDragItem, void, { isDragging: boolean }>(
     () => ({
       type: DASHBOARD_SECTION_ITEM_TYPE,
       item: {
@@ -111,9 +100,7 @@ export function DashboardSectionItem({
               type="button"
               className={cn(
                 "rounded-sm px-1 text-left text-sm font-semibold tracking-tight",
-                isLayoutEditing
-                  ? "cursor-move text-foreground hover:bg-accent/70"
-                  : "cursor-default",
+                isLayoutEditing ? "cursor-move text-foreground hover:bg-accent/70" : "cursor-default",
               )}
             >
               {section.title}
@@ -134,27 +121,16 @@ export function DashboardSectionItem({
         <CardContent className="flex min-h-0 flex-1 flex-col gap-2 pb-3">
           <div className="bg-muted/10 flex min-h-0 flex-1 flex-col gap-2 overflow-auto rounded-md border border-dashed border-border/80 p-2">
             {section.cards.map((card) => (
-              <div
-                key={card.id}
-                className="rounded-md border bg-card p-2 shadow-xs"
-              >
+              <div key={card.id} className="rounded-md border bg-card p-2 shadow-xs">
                 {renderCard ? (
                   renderCard(card, section)
                 ) : (
                   <div className="flex items-start justify-between gap-2">
                     <div>
                       <p className="text-sm font-medium">{card.title}</p>
-                      {card.content ? (
-                        <p className="text-muted-foreground text-xs">
-                          {card.content}
-                        </p>
-                      ) : null}
+                      {card.content ? <p className="text-muted-foreground text-xs">{card.content}</p> : null}
                     </div>
-                    <Button
-                      size="sm"
-                      variant="ghost"
-                      onClick={() => onRemoveCard(section.id, card.id)}
-                    >
+                    <Button size="sm" variant="ghost" onClick={() => onRemoveCard(section.id, card.id)}>
                       ×
                     </Button>
                   </div>
@@ -163,11 +139,7 @@ export function DashboardSectionItem({
             ))}
           </div>
           <div className="flex justify-end">
-            <Button
-              size="sm"
-              variant="outline"
-              onClick={() => onAddCard(section.id)}
-            >
+            <Button size="sm" variant="outline" onClick={() => onAddCard(section.id)}>
               Add card
             </Button>
           </div>

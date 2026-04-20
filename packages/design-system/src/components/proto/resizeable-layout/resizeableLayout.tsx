@@ -1,57 +1,38 @@
 import { cn } from "@design-system/lib/utils";
 import { motion } from "motion/react";
 import { createContext, useContext } from "react";
-import { useResizableLayout, type UseResizableLayoutResult } from "./hooks/useResizableLayout";
+import { type UseResizableLayoutResult, useResizableLayout } from "./hooks/useResizableLayout";
 
-const ResizableLayoutContext = createContext<UseResizableLayoutResult | null>(
-  null,
-);
+const ResizableLayoutContext = createContext<UseResizableLayoutResult | null>(null);
 
 function useResizableLayoutContext() {
   const context = useContext(ResizableLayoutContext);
   if (!context) {
-    throw new Error(
-      "ResizableLayout components must be used inside ResizableLayoutRoot.",
-    );
+    throw new Error("ResizableLayout components must be used inside ResizableLayoutRoot.");
   }
 
   return context;
 }
 
-export function ResizableLayoutRoot({
-  children,
-  className,
-  ...props
-}: React.ComponentProps<typeof motion.div>) {
+export function ResizableLayoutRoot({ children, className, ...props }: React.ComponentProps<typeof motion.div>) {
   const layout = useResizableLayout();
 
   return (
     <ResizableLayoutContext.Provider value={layout}>
-      <motion.div
-        className={cn("min-h-screen min-w-screen", className)}
-        {...props}
-      >
+      <motion.div className={cn("min-h-screen min-w-screen", className)} {...props}>
         {children}
       </motion.div>
     </ResizableLayoutContext.Provider>
   );
 }
 
-export function ResizableLayoutFrame({
-  children,
-  className,
-  ...props
-}: React.ComponentProps<"div">) {
+export function ResizableLayoutFrame({ children, className, ...props }: React.ComponentProps<"div">) {
   const {
     refs: { layoutRef },
   } = useResizableLayoutContext();
 
   return (
-    <div
-      ref={layoutRef}
-      className={cn("flex h-svh overflow-hidden bg-background", className)}
-      {...props}
-    >
+    <div ref={layoutRef} className={cn("flex h-svh overflow-hidden bg-background", className)} {...props}>
       {children}
     </div>
   );
@@ -66,6 +47,7 @@ export function SidebarPanel({
 
   return (
     <motion.aside
+      initial={false}
       animate={{ width: state.sidebarWidth }}
       transition={transitions.sidebarTransition}
       className={cn("relative h-full shrink-0 bg-sidebar", className)}
@@ -76,12 +58,7 @@ export function SidebarPanel({
   );
 }
 
-export function SidebarResizeHandle({
-  onClick,
-  onMouseDown,
-  className,
-  ...props
-}: React.ComponentProps<"div">) {
+export function SidebarResizeHandle({ onClick, onMouseDown, className, ...props }: React.ComponentProps<"div">) {
   const { actions } = useResizableLayoutContext();
 
   return (
@@ -106,11 +83,7 @@ export function SidebarResizeHandle({
   );
 }
 
-export function SidebarTrigger({
-  onClick,
-  className,
-  ...props
-}: React.ComponentProps<"button">) {
+export function SidebarTrigger({ onClick, className, ...props }: React.ComponentProps<"button">) {
   const { actions } = useResizableLayoutContext();
 
   return (
@@ -127,11 +100,7 @@ export function SidebarTrigger({
   );
 }
 
-export function CenterPanel({
-  children,
-  className,
-  ...props
-}: React.ComponentProps<"div">) {
+export function CenterPanel({ children, className, ...props }: React.ComponentProps<"div">) {
   const {
     refs: { leftStackRef },
   } = useResizableLayoutContext();
@@ -139,10 +108,7 @@ export function CenterPanel({
   return (
     <div
       ref={leftStackRef}
-      className={cn(
-        "relative flex min-h-0 min-w-0 flex-1 flex-col overflow-hidden",
-        className,
-      )}
+      className={cn("relative flex min-h-0 min-w-0 flex-1 flex-col overflow-hidden", className)}
       {...props}
     >
       {children}
@@ -150,16 +116,9 @@ export function CenterPanel({
   );
 }
 
-export function TopPanel({
-  children,
-  className,
-  ...props
-}: React.ComponentProps<"section">) {
+export function TopPanel({ children, className, ...props }: React.ComponentProps<"section">) {
   return (
-    <section
-      className={cn("min-h-0 flex-1 rounded-none p-6", className)}
-      {...props}
-    >
+    <section className={cn("min-h-0 flex-1 rounded-none p-6", className)} {...props}>
       {children}
     </section>
   );
@@ -169,14 +128,12 @@ export function BottomPanel({
   children,
   className,
   ...props
-}: Omit<
-  React.ComponentProps<typeof motion.section>,
-  "animate" | "transition"
->) {
+}: Omit<React.ComponentProps<typeof motion.section>, "animate" | "transition">) {
   const { state, transitions } = useResizableLayoutContext();
 
   return (
     <motion.section
+      initial={false}
       animate={{ height: state.bottomHeight }}
       transition={transitions.bottomTransition}
       className={cn("relative shrink-0 overflow-visible", className)}
@@ -188,12 +145,7 @@ export function BottomPanel({
   );
 }
 
-export function BottomResizeHandle({
-  onClick,
-  onMouseDown,
-  className,
-  ...props
-}: React.ComponentProps<"div">) {
+export function BottomResizeHandle({ onClick, onMouseDown, className, ...props }: React.ComponentProps<"div">) {
   const { actions, state } = useResizableLayoutContext();
 
   return (
@@ -224,11 +176,7 @@ export function BottomResizeHandle({
   );
 }
 
-export function BottomPanelTrigger({
-  onClick,
-  className,
-  ...props
-}: React.ComponentProps<"button">) {
+export function BottomPanelTrigger({ onClick, className, ...props }: React.ComponentProps<"button">) {
   const { actions } = useResizableLayoutContext();
 
   return (
@@ -255,15 +203,13 @@ export function SidepanelResizeHandle({
 
   return (
     <motion.div
+      initial={false}
       animate={{
         width: state.isSidepanelCollapsed ? 0 : 1,
         opacity: state.isSidepanelCollapsed ? 0 : 1,
       }}
       transition={transitions.sidepanelTransition}
-      className={cn(
-        "absolute inset-y-0 left-0 z-20 overflow-visible",
-        className,
-      )}
+      className={cn("absolute inset-y-0 left-0 z-20 overflow-visible", className)}
       onClick={(event) => {
         if (actions.shouldToggleOnHandleClick()) {
           actions.toggleSidepanel();
@@ -290,10 +236,7 @@ export function Sidepanel({
   children,
   className,
   ...props
-}: Omit<
-  React.ComponentProps<typeof motion.section>,
-  "animate" | "transition"
->) {
+}: Omit<React.ComponentProps<typeof motion.section>, "animate" | "transition">) {
   const { state, transitions } = useResizableLayoutContext();
 
   return (
@@ -332,11 +275,7 @@ export function SidepanelContent({
   );
 }
 
-export function SidepanelTrigger({
-  onClick,
-  className,
-  ...props
-}: React.ComponentProps<"button">) {
+export function SidepanelTrigger({ onClick, className, ...props }: React.ComponentProps<"button">) {
   const { actions } = useResizableLayoutContext();
 
   return (
@@ -352,4 +291,3 @@ export function SidepanelTrigger({
     />
   );
 }
-

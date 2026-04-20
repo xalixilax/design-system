@@ -20,8 +20,8 @@
  * NO VITE CONFIGURATION NEEDED - works out of the box
  */
 
-import { motion } from "motion/react"
-import { useState } from "react"
+import { motion } from "motion/react";
+import { useState } from "react";
 
 /**
  * Example 1: Basic Animation
@@ -38,7 +38,7 @@ export function FadeInBox() {
       <h2 className="text-xl font-bold">I fade in and slide up!</h2>
       <p className="text-gray-700">Basic animation example</p>
     </motion.div>
-  )
+  );
 }
 
 /**
@@ -54,7 +54,7 @@ export function InteractiveButton() {
     >
       Hover and Click Me
     </motion.button>
-  )
+  );
 }
 
 /**
@@ -62,8 +62,8 @@ export function InteractiveButton() {
  * Propagates through component tree automatically
  */
 interface Item {
-  id: number
-  text: string
+  id: number;
+  text: string;
 }
 
 const containerVariants = {
@@ -72,14 +72,14 @@ const containerVariants = {
     opacity: 1,
     transition: {
       staggerChildren: 0.1, // Delay between each child (in seconds)
-    }
-  }
-}
+    },
+  },
+};
 
 const itemVariants = {
   hidden: { opacity: 0, x: -20 },
-  show: { opacity: 1, x: 0 }
-}
+  show: { opacity: 1, x: 0 },
+};
 
 export function StaggeredList() {
   const [items] = useState<Item[]>([
@@ -87,26 +87,17 @@ export function StaggeredList() {
     { id: 2, text: "Second item" },
     { id: 3, text: "Third item" },
     { id: 4, text: "Fourth item" },
-  ])
+  ]);
 
   return (
-    <motion.ul
-      variants={containerVariants}
-      initial="hidden"
-      animate="show"
-      className="space-y-2"
-    >
+    <motion.ul variants={containerVariants} initial="hidden" animate="show" className="space-y-2">
       {items.map((item) => (
-        <motion.li
-          key={item.id}
-          variants={itemVariants}
-          className="p-4 bg-white border rounded-lg shadow-sm"
-        >
+        <motion.li key={item.id} variants={itemVariants} className="p-4 bg-white border rounded-lg shadow-sm">
           {item.text}
         </motion.li>
       ))}
     </motion.ul>
-  )
+  );
 }
 
 /**
@@ -114,7 +105,7 @@ export function StaggeredList() {
  * Natural, physics-based motion
  */
 export function SpringButton() {
-  const [isActive, setIsActive] = useState(false)
+  const [isActive, setIsActive] = useState(false);
 
   return (
     <motion.button
@@ -124,16 +115,16 @@ export function SpringButton() {
       }}
       transition={{
         type: "spring",
-        stiffness: 300,  // Higher = more sudden movement
-        damping: 10,     // Higher = less oscillation
-        mass: 1,         // Higher = more lethargic
+        stiffness: 300, // Higher = more sudden movement
+        damping: 10, // Higher = less oscillation
+        mass: 1, // Higher = more lethargic
       }}
       onClick={() => setIsActive(!isActive)}
       className="w-16 h-16 bg-purple-600 text-white rounded-full"
     >
       🎨
     </motion.button>
-  )
+  );
 }
 
 /**
@@ -152,12 +143,12 @@ export function KeyframeAnimation() {
         duration: 2,
         ease: "easeInOut",
         times: [0, 0.2, 0.5, 0.8, 1], // When each keyframe happens (0-1)
-        repeat: Infinity,
+        repeat: Number.POSITIVE_INFINITY,
         repeatDelay: 1,
       }}
       className="w-20 h-20 bg-gradient-to-br from-pink-500 to-purple-600"
     />
-  )
+  );
 }
 
 /**
@@ -177,7 +168,7 @@ export function DraggableBox() {
         DRAG
       </motion.div>
     </div>
-  )
+  );
 }
 
 /**
@@ -197,7 +188,7 @@ export function ColorChangeCard() {
       <h3 className="text-lg font-bold">Hover me!</h3>
       <p>Background and text color change on hover</p>
     </motion.div>
-  )
+  );
 }
 
 /**
@@ -205,9 +196,9 @@ export function ColorChangeCard() {
  * Motion components are fully typed
  */
 interface AnimatedCardProps {
-  title: string
-  description: string
-  delay?: number
+  title: string;
+  description: string;
+  delay?: number;
 }
 
 export function AnimatedCard({ title, description, delay = 0 }: AnimatedCardProps) {
@@ -221,7 +212,7 @@ export function AnimatedCard({ title, description, delay = 0 }: AnimatedCardProp
       <h3 className="text-xl font-bold mb-2">{title}</h3>
       <p className="text-gray-700">{description}</p>
     </motion.div>
-  )
+  );
 }
 
 /**
@@ -242,7 +233,7 @@ export function TailwindIntegration() {
         Tailwind styles + Motion animations (no transition classes)
       </motion.div>
     </div>
-  )
+  );
 }
 
 /**
@@ -293,21 +284,9 @@ export function AnimatedExamples() {
       <section>
         <h2 className="text-2xl font-bold mb-4">8. TypeScript Example</h2>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-          <AnimatedCard
-            title="Card 1"
-            description="First card with no delay"
-            delay={0}
-          />
-          <AnimatedCard
-            title="Card 2"
-            description="Second card with 0.2s delay"
-            delay={0.2}
-          />
-          <AnimatedCard
-            title="Card 3"
-            description="Third card with 0.4s delay"
-            delay={0.4}
-          />
+          <AnimatedCard title="Card 1" description="First card with no delay" delay={0} />
+          <AnimatedCard title="Card 2" description="Second card with 0.2s delay" delay={0.2} />
+          <AnimatedCard title="Card 3" description="Third card with 0.4s delay" delay={0.4} />
         </div>
       </section>
 
@@ -316,7 +295,7 @@ export function AnimatedExamples() {
         <TailwindIntegration />
       </section>
     </div>
-  )
+  );
 }
 
 /**

@@ -10,12 +10,8 @@ export function AuthLayout({ children, title, description }: AuthLayoutProps) {
       <div className="w-full max-w-md space-y-6">
         {(title || description) && (
           <div className="text-center space-y-2">
-            {title && (
-              <h1 className="text-3xl font-bold tracking-tight">{title}</h1>
-            )}
-            {description && (
-              <p className="text-muted-foreground">{description}</p>
-            )}
+            {title && <h1 className="text-3xl font-bold tracking-tight">{title}</h1>}
+            {description && <p className="text-muted-foreground">{description}</p>}
           </div>
         )}
         {children}

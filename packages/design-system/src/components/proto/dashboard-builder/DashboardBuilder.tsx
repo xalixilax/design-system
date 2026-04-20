@@ -1,10 +1,10 @@
-import type * as React from "react";
-import { useCallback, useEffect, useRef, useState } from "react";
 import { GripVertical, Lock, LockOpen, Square } from "lucide-react";
 import { AnimatePresence, motion } from "motion/react";
+import type * as React from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { DndProvider, useDrop } from "react-dnd";
-import { HTML5Backend } from "react-dnd-html5-backend";
 import { useDrag } from "react-dnd";
+import { HTML5Backend } from "react-dnd-html5-backend";
 
 import { Button } from "@design-system/components/ui/button";
 import { useElementSize } from "@design-system/lib/hooks/use-element-size";
@@ -15,24 +15,15 @@ import {
   DASHBOARD_SECTION_ITEM_TYPE,
   DashboardSectionItem,
 } from "./DashboardSectionItem";
-import type {
-  DashboardBounds,
-  DashboardCard,
-  DashboardSection,
-  SplitPlacement,
-} from "./types";
+import type { DashboardBounds, DashboardCard, DashboardSection, SplitPlacement } from "./types";
 import {
+  type NewSectionPreview,
   applySplitPreviewToSection,
   buildSplitPreview,
   findNearestPlacementPreview,
   getSplitPlacementFromPreview,
-  type NewSectionPreview,
 } from "./utils/new-section-preview";
-import {
-  buildBoundaryGuides,
-  buildSeparators,
-  type SeparatorPreview,
-} from "./utils/separators";
+import { type SeparatorPreview, buildBoundaryGuides, buildSeparators } from "./utils/separators";
 
 type DashboardDragItem = {
   kind: "section";
@@ -93,13 +84,7 @@ function NewSectionDragButton({ disabled }: { disabled: boolean }) {
   );
 
   return (
-    <Button
-      ref={setRef}
-      size="icon"
-      variant="outline"
-      title="Drag to add an empty section"
-      disabled={disabled}
-    >
+    <Button ref={setRef} size="icon" variant="outline" title="Drag to add an empty section" disabled={disabled}>
       <Square />
       <span className="sr-only">Drag new empty section</span>
     </Button>
@@ -113,45 +98,25 @@ export type DashboardBuilderCanvasProps = {
   canvasHeight?: number;
   className?: string;
   onAddSection: () => void;
-  onAddSectionAt: (
-    x: number,
-    y: number,
-    options?: { width?: number; height?: number; title?: string },
-  ) => void;
-  onSplitSectionWithNew: (
-    hoveredSectionId: string,
-    placement: SplitPlacement,
-  ) => void;
+  onAddSectionAt: (x: number, y: number, options?: { width?: number; height?: number; title?: string }) => void;
+  onSplitSectionWithNew: (hoveredSectionId: string, placement: SplitPlacement) => void;
   onSwapSections: (
     draggedSectionId: string,
     hoveredSectionId: string,
     origin: { x: number; y: number; w: number; h: number },
   ) => void;
-  onResizeSection: (
-    sectionId: string,
-    direction: "e" | "s",
-    deltaColumns: number,
-    deltaRows: number,
-  ) => void;
+  onResizeSection: (sectionId: string, direction: "e" | "s", deltaColumns: number, deltaRows: number) => void;
   onResizeBoundary: (
     orientation: "vertical" | "horizontal",
     boundary: number,
     delta: number,
     participants?: { leadingIds: string[]; trailingIds: string[] },
   ) => void;
-  onResizeSegment: (
-    sectionId: string,
-    neighborSectionId: string,
-    direction: "e" | "s",
-    delta: number,
-  ) => void;
+  onResizeSegment: (sectionId: string, neighborSectionId: string, direction: "e" | "s", delta: number) => void;
   onRemoveSection: (sectionId: string) => void;
   onAddCardToSection: (sectionId: string) => void;
   onRemoveCardFromSection: (sectionId: string, cardId: string) => void;
-  renderCard?: (
-    card: DashboardCard,
-    section: DashboardSection,
-  ) => React.ReactNode;
+  renderCard?: (card: DashboardCard, section: DashboardSection) => React.ReactNode;
 };
 
 export function DashboardBuilderCanvas({
@@ -173,17 +138,11 @@ export function DashboardBuilderCanvas({
   renderCard,
 }: DashboardBuilderCanvasProps) {
   const containerRef = useRef<HTMLDivElement | null>(null);
-  const [newSectionPreview, setNewSectionPreview] =
-    useState<NewSectionPreview | null>(null);
-  const [pendingPreviewClearTargetCount, setPendingPreviewClearTargetCount] =
-    useState<number | null>(null);
+  const [newSectionPreview, setNewSectionPreview] = useState<NewSectionPreview | null>(null);
+  const [pendingPreviewClearTargetCount, setPendingPreviewClearTargetCount] = useState<number | null>(null);
   const [isLayoutEditing, setIsLayoutEditing] = useState(false);
-  const [hoveredBoundaryKey, setHoveredBoundaryKey] = useState<string | null>(
-    null,
-  );
-  const [activeSegmentSeparatorKey, setActiveSegmentSeparatorKey] = useState<
-    string | null
-  >(null);
+  const [hoveredBoundaryKey, setHoveredBoundaryKey] = useState<string | null>(null);
+  const [activeSegmentSeparatorKey, setActiveSegmentSeparatorKey] = useState<string | null>(null);
   const resizeSessionRef = useRef<ResizeDragSession | null>(null);
   const containerSize = useElementSize(containerRef.current);
 
@@ -244,10 +203,7 @@ export function DashboardBuilderCanvas({
             Math.max(1, Math.floor((cursor.x - rect.left) / columnStep) + 1),
             bounds.columns,
           );
-          const cursorRow = Math.min(
-            Math.max(1, Math.floor((cursor.y - rect.top) / rowStep) + 1),
-            bounds.rows,
-          );
+          const cursorRow = Math.min(Math.max(1, Math.floor((cursor.y - rect.top) / rowStep) + 1), bounds.rows);
 
           const hoveredSection = sections.find(
             (section) =>
@@ -258,9 +214,7 @@ export function DashboardBuilderCanvas({
           );
 
           if (hoveredSection) {
-            setNewSectionPreview(
-              buildSplitPreview(hoveredSection, cursorColumn, cursorRow),
-            );
+            setNewSectionPreview(buildSplitPreview(hoveredSection, cursorColumn, cursorRow));
             return;
           }
 
@@ -273,9 +227,7 @@ export function DashboardBuilderCanvas({
             bounds,
           );
 
-          setNewSectionPreview(
-            placement ? { mode: "place", ...placement } : null,
-          );
+          setNewSectionPreview(placement ? { mode: "place", ...placement } : null);
           return;
         }
 
@@ -295,14 +247,8 @@ export function DashboardBuilderCanvas({
         const usableHeight = rect.height - gap * (bounds.rows - 1);
         const columnStep = Math.max(1, usableWidth / bounds.columns + gap);
         const rowStep = Math.max(1, usableHeight / bounds.rows + gap);
-        const cursorColumn = Math.min(
-          Math.max(1, Math.floor((cursor.x - rect.left) / columnStep) + 1),
-          bounds.columns,
-        );
-        const cursorRow = Math.min(
-          Math.max(1, Math.floor((cursor.y - rect.top) / rowStep) + 1),
-          bounds.rows,
-        );
+        const cursorColumn = Math.min(Math.max(1, Math.floor((cursor.x - rect.left) / columnStep) + 1), bounds.columns);
+        const cursorRow = Math.min(Math.max(1, Math.floor((cursor.y - rect.top) / rowStep) + 1), bounds.rows);
 
         const hoveredSection = sections.find(
           (section) =>
@@ -342,10 +288,7 @@ export function DashboardBuilderCanvas({
 
         if (newSectionPreview?.mode === "split") {
           setPendingPreviewClearTargetCount(sections.length + 1);
-          onSplitSectionWithNew(
-            newSectionPreview.hoveredSectionId,
-            getSplitPlacementFromPreview(newSectionPreview),
-          );
+          onSplitSectionWithNew(newSectionPreview.hoveredSectionId, getSplitPlacementFromPreview(newSectionPreview));
           return;
         }
 
@@ -369,14 +312,8 @@ export function DashboardBuilderCanvas({
         const usableHeight = rect.height - gap * (bounds.rows - 1);
         const columnStep = Math.max(1, usableWidth / bounds.columns + gap);
         const rowStep = Math.max(1, usableHeight / bounds.rows + gap);
-        const cursorColumn = Math.min(
-          Math.max(1, Math.floor((cursor.x - rect.left) / columnStep) + 1),
-          bounds.columns,
-        );
-        const cursorRow = Math.min(
-          Math.max(1, Math.floor((cursor.y - rect.top) / rowStep) + 1),
-          bounds.rows,
-        );
+        const cursorColumn = Math.min(Math.max(1, Math.floor((cursor.x - rect.left) / columnStep) + 1), bounds.columns);
+        const cursorRow = Math.min(Math.max(1, Math.floor((cursor.y - rect.top) / rowStep) + 1), bounds.rows);
 
         const hoveredSection = sections.find(
           (section) =>
@@ -387,20 +324,13 @@ export function DashboardBuilderCanvas({
         );
 
         if (hoveredSection) {
-          const splitPreview = buildSplitPreview(
-            hoveredSection,
-            cursorColumn,
-            cursorRow,
-          );
+          const splitPreview = buildSplitPreview(hoveredSection, cursorColumn, cursorRow);
           if (splitPreview?.mode !== "split") {
             return;
           }
 
           setPendingPreviewClearTargetCount(sections.length + 1);
-          onSplitSectionWithNew(
-            hoveredSection.id,
-            getSplitPlacementFromPreview(splitPreview),
-          );
+          onSplitSectionWithNew(hoveredSection.id, getSplitPlacementFromPreview(splitPreview));
           return;
         }
 
@@ -432,43 +362,16 @@ export function DashboardBuilderCanvas({
     [dropRef],
   );
 
-  const columnStep = Math.max(
-    8,
-    (containerSize.width - gap * (bounds.columns - 1)) / bounds.columns + gap,
-  );
-  const rowStep = Math.max(
-    8,
-    (containerSize.height - gap * (bounds.rows - 1)) / bounds.rows + gap,
-  );
+  const columnStep = Math.max(8, (containerSize.width - gap * (bounds.columns - 1)) / bounds.columns + gap);
+  const rowStep = Math.max(8, (containerSize.height - gap * (bounds.rows - 1)) / bounds.rows + gap);
 
-  const columnSize = Math.max(
-    1,
-    (containerSize.width - gap * (bounds.columns - 1)) / bounds.columns,
-  );
-  const rowSize = Math.max(
-    1,
-    (containerSize.height - gap * (bounds.rows - 1)) / bounds.rows,
-  );
-  const separators = buildSeparators(
-    sections,
-    bounds,
-    columnSize,
-    rowSize,
-    gap,
-    GRID_PADDING_PX,
-  );
-  const boundaryGuides = buildBoundaryGuides(
-    separators,
-    columnSize,
-    rowSize,
-    gap,
-    GRID_PADDING_PX,
-  );
+  const columnSize = Math.max(1, (containerSize.width - gap * (bounds.columns - 1)) / bounds.columns);
+  const rowSize = Math.max(1, (containerSize.height - gap * (bounds.rows - 1)) / bounds.rows);
+  const separators = buildSeparators(sections, bounds, columnSize, rowSize, gap, GRID_PADDING_PX);
+  const boundaryGuides = buildBoundaryGuides(separators, columnSize, rowSize, gap, GRID_PADDING_PX);
   const previewedSections =
     newSectionPreview?.mode === "split"
-      ? sections.map((section) =>
-          applySplitPreviewToSection(section, newSectionPreview),
-        )
+      ? sections.map((section) => applySplitPreviewToSection(section, newSectionPreview))
       : sections;
 
   const onResizePointerMove = useCallback(
@@ -479,9 +382,7 @@ export function DashboardBuilderCanvas({
       }
 
       if (session.separator.orientation === "vertical") {
-        const rawColumns = Math.round(
-          (event.clientX - session.startX) / columnStep,
-        );
+        const rawColumns = Math.round((event.clientX - session.startX) / columnStep);
         const deltaColumns = rawColumns - session.consumedColumns;
         if (deltaColumns === 0) {
           return;
@@ -489,12 +390,7 @@ export function DashboardBuilderCanvas({
 
         session.consumedColumns = rawColumns;
         if (session.mode === "boundary") {
-          onResizeBoundary(
-            "vertical",
-            session.separator.boundary,
-            deltaColumns,
-            session.boundaryParticipants,
-          );
+          onResizeBoundary("vertical", session.separator.boundary, deltaColumns, session.boundaryParticipants);
           session.separator.boundary += deltaColumns;
         } else {
           onResizeSegment(
@@ -515,12 +411,7 @@ export function DashboardBuilderCanvas({
 
       session.consumedRows = rawRows;
       if (session.mode === "boundary") {
-        onResizeBoundary(
-          "horizontal",
-          session.separator.boundary,
-          deltaRows,
-          session.boundaryParticipants,
-        );
+        onResizeBoundary("horizontal", session.separator.boundary, deltaRows, session.boundaryParticipants);
         session.separator.boundary += deltaRows;
       } else {
         onResizeSegment(
@@ -543,54 +434,49 @@ export function DashboardBuilderCanvas({
   }, [onResizePointerMove]);
 
   const startResizeDrag = useCallback(
-    (separator: SeparatorPreview, mode: "boundary" | "segment") =>
-      (event: React.PointerEvent<HTMLDivElement>) => {
-        event.preventDefault();
-        event.stopPropagation();
-        event.currentTarget.setPointerCapture(event.pointerId);
-        if (mode === "segment") {
-          setActiveSegmentSeparatorKey(separator.key);
-        }
+    (separator: SeparatorPreview, mode: "boundary" | "segment") => (event: React.PointerEvent<HTMLDivElement>) => {
+      event.preventDefault();
+      event.stopPropagation();
+      event.currentTarget.setPointerCapture(event.pointerId);
+      if (mode === "segment") {
+        setActiveSegmentSeparatorKey(separator.key);
+      }
 
-        const boundaryParticipants =
-          mode === "boundary"
-            ? separator.orientation === "vertical"
-              ? {
-                  leadingIds: sections
-                    .filter(
-                      (section) => section.x + section.w === separator.boundary,
-                    )
-                    .map((section) => section.id),
-                  trailingIds: sections
-                    .filter((section) => section.x === separator.boundary)
-                    .map((section) => section.id),
-                }
-              : {
-                  leadingIds: sections
-                    .filter(
-                      (section) => section.y + section.h === separator.boundary,
-                    )
-                    .map((section) => section.id),
-                  trailingIds: sections
-                    .filter((section) => section.y === separator.boundary)
-                    .map((section) => section.id),
-                }
-            : undefined;
+      const boundaryParticipants =
+        mode === "boundary"
+          ? separator.orientation === "vertical"
+            ? {
+                leadingIds: sections
+                  .filter((section) => section.x + section.w === separator.boundary)
+                  .map((section) => section.id),
+                trailingIds: sections
+                  .filter((section) => section.x === separator.boundary)
+                  .map((section) => section.id),
+              }
+            : {
+                leadingIds: sections
+                  .filter((section) => section.y + section.h === separator.boundary)
+                  .map((section) => section.id),
+                trailingIds: sections
+                  .filter((section) => section.y === separator.boundary)
+                  .map((section) => section.id),
+              }
+          : undefined;
 
-        resizeSessionRef.current = {
-          mode,
-          separator,
-          boundaryParticipants,
-          startX: event.clientX,
-          startY: event.clientY,
-          consumedColumns: 0,
-          consumedRows: 0,
-        };
+      resizeSessionRef.current = {
+        mode,
+        separator,
+        boundaryParticipants,
+        startX: event.clientX,
+        startY: event.clientY,
+        consumedColumns: 0,
+        consumedRows: 0,
+      };
 
-        window.addEventListener("pointermove", onResizePointerMove);
-        window.addEventListener("pointerup", onResizePointerUp);
-        window.addEventListener("pointercancel", onResizePointerUp);
-      },
+      window.addEventListener("pointermove", onResizePointerMove);
+      window.addEventListener("pointerup", onResizePointerUp);
+      window.addEventListener("pointercancel", onResizePointerUp);
+    },
     [onResizePointerMove, onResizePointerUp, sections],
   );
 
@@ -651,9 +537,7 @@ export function DashboardBuilderCanvas({
                 role="presentation"
                 onPointerDown={(event) => {
                   const separator = separators.find(
-                    (candidate) =>
-                      candidate.orientation === guide.orientation &&
-                      candidate.boundary === guide.boundary,
+                    (candidate) => candidate.orientation === guide.orientation && candidate.boundary === guide.boundary,
                   );
 
                   if (!separator) {
@@ -662,27 +546,16 @@ export function DashboardBuilderCanvas({
 
                   startResizeDrag(separator, "boundary")(event);
                 }}
-                onPointerEnter={() =>
-                  setHoveredBoundaryKey(
-                    `${guide.orientation}-${guide.boundary}`,
-                  )
-                }
+                onPointerEnter={() => setHoveredBoundaryKey(`${guide.orientation}-${guide.boundary}`)}
                 onPointerLeave={() =>
                   setHoveredBoundaryKey((previous) =>
-                    previous === `${guide.orientation}-${guide.boundary}`
-                      ? null
-                      : previous,
+                    previous === `${guide.orientation}-${guide.boundary}` ? null : previous,
                   )
                 }
                 className={cn(
                   "absolute z-20 rounded-full transition-all",
-                  guide.orientation === "vertical"
-                    ? "w-4 cursor-ew-resize"
-                    : "h-4 cursor-ns-resize",
-                  hoveredBoundaryKey ===
-                    `${guide.orientation}-${guide.boundary}`
-                    ? "bg-border/90"
-                    : "",
+                  guide.orientation === "vertical" ? "w-4 cursor-ew-resize" : "h-4 cursor-ns-resize",
+                  hoveredBoundaryKey === `${guide.orientation}-${guide.boundary}` ? "bg-border/90" : "",
                 )}
                 style={
                   guide.orientation === "vertical"
@@ -707,41 +580,27 @@ export function DashboardBuilderCanvas({
               .filter(
                 (separator) =>
                   (separator.localResizable &&
-                    hoveredBoundaryKey ===
-                      `${separator.orientation}-${separator.boundary}`) ||
+                    hoveredBoundaryKey === `${separator.orientation}-${separator.boundary}`) ||
                   activeSegmentSeparatorKey === separator.key,
               )
               .map((separator) => (
                 <div
                   key={`${separator.key}-segment-handle`}
                   role="presentation"
-                  onPointerEnter={() =>
-                    setHoveredBoundaryKey(
-                      `${separator.orientation}-${separator.boundary}`,
-                    )
-                  }
+                  onPointerEnter={() => setHoveredBoundaryKey(`${separator.orientation}-${separator.boundary}`)}
                   onPointerLeave={() =>
                     setHoveredBoundaryKey((previous) =>
-                      previous ===
-                      `${separator.orientation}-${separator.boundary}`
-                        ? null
-                        : previous,
+                      previous === `${separator.orientation}-${separator.boundary}` ? null : previous,
                     )
                   }
                   onPointerDown={startResizeDrag(separator, "segment")}
                   className={cn(
                     "absolute z-30 flex items-center justify-center rounded-full border border-border/80 bg-muted/70 text-muted-foreground transition-colors hover:bg-muted hover:text-foreground",
-                    separator.orientation === "vertical"
-                      ? "h-8 w-4 cursor-ew-resize"
-                      : "h-4 w-8 cursor-ns-resize",
+                    separator.orientation === "vertical" ? "h-8 w-4 cursor-ew-resize" : "h-4 w-8 cursor-ns-resize",
                   )}
                   style={(() => {
-                    const primarySection = sections.find(
-                      (section) => section.id === separator.sectionId,
-                    );
-                    const neighborSection = sections.find(
-                      (section) => section.id === separator.neighborSectionId,
-                    );
+                    const primarySection = sections.find((section) => section.id === separator.sectionId);
+                    const neighborSection = sections.find((section) => section.id === separator.neighborSectionId);
 
                     const anchorSection =
                       separator.orientation === "vertical"
@@ -755,9 +614,7 @@ export function DashboardBuilderCanvas({
                     if (separator.orientation === "vertical") {
                       const anchorCenterY = anchorSection
                         ? (anchorSection.y - 1) * (rowSize + gap) +
-                          (anchorSection.h * rowSize +
-                            (anchorSection.h - 1) * gap) /
-                            2 +
+                          (anchorSection.h * rowSize + (anchorSection.h - 1) * gap) / 2 +
                           GRID_PADDING_PX
                         : separator.offsetY + separator.length / 2;
 
@@ -770,9 +627,7 @@ export function DashboardBuilderCanvas({
 
                     const anchorCenterX = anchorSection
                       ? (anchorSection.x - 1) * (columnSize + gap) +
-                        (anchorSection.w * columnSize +
-                          (anchorSection.w - 1) * gap) /
-                          2 +
+                        (anchorSection.w * columnSize + (anchorSection.w - 1) * gap) / 2 +
                         GRID_PADDING_PX
                       : separator.offsetX + separator.length / 2;
 
@@ -784,10 +639,7 @@ export function DashboardBuilderCanvas({
                   })()}
                 >
                   <GripVertical
-                    className={cn(
-                      "size-3 opacity-80",
-                      separator.orientation === "horizontal" && "rotate-90",
-                    )}
+                    className={cn("size-3 opacity-80", separator.orientation === "horizontal" && "rotate-90")}
                   />
                 </div>
               ))

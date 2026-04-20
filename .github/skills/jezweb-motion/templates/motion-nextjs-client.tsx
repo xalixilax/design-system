@@ -28,13 +28,10 @@
  * This allows you to import { motion } in any file without repeating "use client".
  */
 
-"use client"
-
-// Optimized import for Next.js (reduces client JS bundle)
-import * as motion from "motion/react-client"
+"use client";
 
 // Re-export everything from motion
-export { motion }
+export { motion };
 
 // Also export commonly used components
 export {
@@ -49,7 +46,7 @@ export {
   useAnimate,
   useInView,
   useDragControls,
-} from "motion/react-client"
+} from "motion/react-client";
 
 /**
  * USAGE IN SERVER COMPONENTS
@@ -79,26 +76,24 @@ export {
  * For complex components, create dedicated Client Components.
  */
 
-"use client"
+("use client");
 
-import { motion, AnimatePresence } from "motion/react-client"
-import { useState, ReactNode } from "react"
+import { AnimatePresence, motion } from "motion/react-client";
+import { type ReactNode, useState } from "react";
 
 interface AnimatedModalProps {
-  trigger: ReactNode
-  title: string
-  children: ReactNode
+  trigger: ReactNode;
+  title: string;
+  children: ReactNode;
 }
 
 export function AnimatedModal({ trigger, title, children }: AnimatedModalProps) {
-  const [isOpen, setIsOpen] = useState(false)
+  const [isOpen, setIsOpen] = useState(false);
 
   return (
     <>
       {/* Trigger button */}
-      <div onClick={() => setIsOpen(true)}>
-        {trigger}
-      </div>
+      <div onClick={() => setIsOpen(true)}>{trigger}</div>
 
       {/* Modal with AnimatePresence */}
       <AnimatePresence>
@@ -125,10 +120,7 @@ export function AnimatedModal({ trigger, title, children }: AnimatedModalProps) 
             >
               <div className="flex justify-between items-center mb-4">
                 <h2 className="text-2xl font-bold">{title}</h2>
-                <button
-                  onClick={() => setIsOpen(false)}
-                  className="text-gray-500 hover:text-gray-700"
-                >
+                <button onClick={() => setIsOpen(false)} className="text-gray-500 hover:text-gray-700">
                   ✕
                 </button>
               </div>
@@ -138,7 +130,7 @@ export function AnimatedModal({ trigger, title, children }: AnimatedModalProps) 
         )}
       </AnimatePresence>
     </>
-  )
+  );
 }
 
 /**
@@ -169,21 +161,17 @@ export function AnimatedModal({ trigger, title, children }: AnimatedModalProps) 
  * Wrap your app to respect user's prefers-reduced-motion setting.
  */
 
-"use client"
+("use client");
 
-import { MotionConfig } from "motion/react-client"
-import { ReactNode } from "react"
+import { MotionConfig } from "motion/react-client";
+import type { ReactNode } from "react";
 
 interface MotionProviderProps {
-  children: ReactNode
+  children: ReactNode;
 }
 
 export function MotionProvider({ children }: MotionProviderProps) {
-  return (
-    <MotionConfig reducedMotion="user">
-      {children}
-    </MotionConfig>
-  )
+  return <MotionConfig reducedMotion="user">{children}</MotionConfig>;
 }
 
 /**
@@ -221,13 +209,13 @@ export function MotionProvider({ children }: MotionProviderProps) {
  * Animate route changes in App Router.
  */
 
-"use client"
+("use client");
 
-import { motion } from "motion/react-client"
-import { ReactNode } from "react"
+import { motion } from "motion/react-client";
+import type { ReactNode } from "react";
 
 interface PageTransitionProps {
-  children: ReactNode
+  children: ReactNode;
 }
 
 export function PageTransition({ children }: PageTransitionProps) {
@@ -240,7 +228,7 @@ export function PageTransition({ children }: PageTransitionProps) {
     >
       {children}
     </motion.div>
-  )
+  );
 }
 
 /**
@@ -273,20 +261,20 @@ export function PageTransition({ children }: PageTransitionProps) {
  * Fetch data in Server Component, animate in Client Component.
  */
 
-"use client"
+("use client");
 
-import { motion } from "motion/react-client"
+import { motion } from "motion/react-client";
 
 interface Product {
-  id: number
-  name: string
-  price: number
-  image: string
+  id: number;
+  name: string;
+  price: number;
+  image: string;
 }
 
 interface AnimatedProductCardProps {
-  product: Product
-  index: number
+  product: Product;
+  index: number;
 }
 
 export function AnimatedProductCard({ product, index }: AnimatedProductCardProps) {
@@ -298,15 +286,11 @@ export function AnimatedProductCard({ product, index }: AnimatedProductCardProps
       whileHover={{ scale: 1.05 }}
       className="p-4 bg-white border rounded-lg shadow-sm cursor-pointer"
     >
-      <img
-        src={product.image}
-        alt={product.name}
-        className="w-full h-48 object-cover rounded mb-4"
-      />
+      <img src={product.image} alt={product.name} className="w-full h-48 object-cover rounded mb-4" />
       <h3 className="text-lg font-bold">{product.name}</h3>
       <p className="text-gray-600">${product.price}</p>
     </motion.div>
-  )
+  );
 }
 
 /**
@@ -445,20 +429,11 @@ export function AnimatedProductCard({ product, index }: AnimatedProductCardProps
  * Common types:
  */
 
-import type {
-  HTMLMotionProps,
-  SVGMotionProps,
-  Variants,
-  Target,
-  Transition,
-  MotionValue,
-  AnimationControls,
-  DragControls,
-} from "motion/react-client"
+import type { HTMLMotionProps, Variants } from "motion/react-client";
 
 // Example: Typed motion component props
 interface AnimatedBoxProps extends HTMLMotionProps<"div"> {
-  title: string
+  title: string;
 }
 
 export function AnimatedBox({ title, ...motionProps }: AnimatedBoxProps) {
@@ -466,14 +441,14 @@ export function AnimatedBox({ title, ...motionProps }: AnimatedBoxProps) {
     <motion.div {...motionProps}>
       <h3>{title}</h3>
     </motion.div>
-  )
+  );
 }
 
 // Example: Typed variants
 const typedVariants: Variants = {
   hidden: { opacity: 0, y: 20 },
   visible: { opacity: 1, y: 0 },
-}
+};
 
 /**
  * QUICK REFERENCE

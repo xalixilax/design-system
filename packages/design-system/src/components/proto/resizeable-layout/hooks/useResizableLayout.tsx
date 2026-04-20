@@ -1,7 +1,16 @@
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
+import {
+  BOTTOM_PANEL_COLLAPSE_HEIGHT,
+  BOTTOM_PANEL_COLLAPSE_THRESHOLD,
+  PANEL_TRANSITION,
+  SIDEBAR_COLLAPSED_WIDTH,
+  SIDEBAR_OPEN_WIDTH,
+  SIDE_PANEL_DEFAULT_WIDTH,
+  SIDE_PANEL_MIN_VISIBLE_WIDTH,
+} from "../utils/const";
+import { getInitialResizableLayoutState, writePersistedResizableLayoutState } from "./useResizableLayoutStorage";
 import { useResizeDrag } from "./useResizeDrag";
 import { useSidepanelKeyboardToggle } from "./useSidepanelKeyboardToggle";
-import { BOTTOM_PANEL_COLLAPSE_HEIGHT, BOTTOM_PANEL_COLLAPSE_THRESHOLD, BOTTOM_PANEL_DEFAULT_HEIGHT, PANEL_TRANSITION, SIDE_PANEL_DEFAULT_WIDTH, SIDE_PANEL_MIN_VISIBLE_WIDTH, SIDEBAR_COLLAPSED_WIDTH, SIDEBAR_OPEN_WIDTH } from "../utils/const";
 
 type ResizableLayoutState = {
   sidebarWidth: number;
@@ -11,7 +20,6 @@ type ResizableLayoutState = {
   isBottomCollapsed: boolean;
   isSidepanelCollapsed: boolean;
 };
-
 
 export type ResizableLayoutActions = {
   toggleSidebar: () => void;
@@ -28,7 +36,7 @@ export type ResizableLayoutTransitions = {
   bottomTransition: { duration: 0 } | typeof PANEL_TRANSITION;
   sidepanelTransition: { duration: 0 } | typeof PANEL_TRANSITION;
 };
-  
+
 type ResizableLayoutRefs = {
   layoutRef: React.RefObject<HTMLDivElement | null>;
   leftStackRef: React.RefObject<HTMLDivElement | null>;
@@ -64,28 +72,34 @@ export function toggleSidepanelCollapseState(
 }
 
 export function useResizableLayout(): UseResizableLayoutResult {
+  const [initialState] = useState(getInitialResizableLayoutState);
+  const [shouldAnimate, setShouldAnimate] = useState(false);
+
   const layoutRef = useRef<HTMLDivElement>(null);
   const leftStackRef = useRef<HTMLDivElement>(null);
 
-  const [sidebarWidth, setSidebarWidth] = useState(SIDEBAR_OPEN_WIDTH);
-  const [sidepanelWidth, setSidepanelWidth] = useState(
-    SIDE_PANEL_DEFAULT_WIDTH,
-  );
-  const [bottomHeight, setBottomHeight] = useState(BOTTOM_PANEL_DEFAULT_HEIGHT);
-  const [isSidepanelCollapsed, setIsSidepanelCollapsed] = useState(false);
+  const [sidebarWidth, setSidebarWidth] = useState(initialState.sidebarWidth);
+  const [sidepanelWidth, setSidepanelWidth] = useState(initialState.sidepanelWidth);
+  const [bottomHeight, setBottomHeight] = useState(initialState.bottomHeight);
+  const [lastExpandedBottomHeight, setLastExpandedBottomHeight] = useState(initialState.lastExpandedBottomHeight);
+  const [isSidepanelCollapsed, setIsSidepanelCollapsed] = useState(initialState.isSidepanelCollapsed);
   const isSidepanelCollapsedRef = useRef(isSidepanelCollapsed);
 
   isSidepanelCollapsedRef.current = isSidepanelCollapsed;
 
+  useEffect(() => {
+    if (bottomHeight > BOTTOM_PANEL_COLLAPSE_THRESHOLD) {
+      setLastExpandedBottomHeight(bottomHeight);
+    }
+  }, [bottomHeight]);
+
+  useEffect(() => {
+    setShouldAnimate(true);
+  }, []);
+
   const isSidebarCollapsed = sidebarWidth <= SIDEBAR_COLLAPSED_WIDTH;
   const isBottomCollapsed = bottomHeight <= BOTTOM_PANEL_COLLAPSE_HEIGHT;
-  const {
-    dragMode,
-    shouldToggleOnHandleClick,
-    startSidebarDrag,
-    startBottomDrag,
-    startSidepanelDrag,
-  } = useResizeDrag({
+  const { dragMode, shouldToggleOnHandleClick, startSidebarDrag, startBottomDrag, startSidepanelDrag } = useResizeDrag({
     layoutRef,
     leftStackRef,
     sidepanelWidth,
@@ -102,16 +116,14 @@ export function useResizableLayout(): UseResizableLayoutResult {
     toggleBottomPanel: () => {
       setBottomHeight((current) => {
         if (current <= BOTTOM_PANEL_COLLAPSE_THRESHOLD) {
-          return BOTTOM_PANEL_DEFAULT_HEIGHT;
+          return lastExpandedBottomHeight;
         }
 
         return BOTTOM_PANEL_COLLAPSE_HEIGHT;
       });
     },
     toggleSidebar: () => {
-      setSidebarWidth(
-        isSidebarCollapsed ? SIDEBAR_OPEN_WIDTH : SIDEBAR_COLLAPSED_WIDTH,
-      );
+      setSidebarWidth(isSidebarCollapsed ? SIDEBAR_OPEN_WIDTH : SIDEBAR_COLLAPSED_WIDTH);
     },
     toggleSidepanel: () => {
       toggleSidepanelCollapseState(setIsSidepanelCollapsed, setSidepanelWidth);
@@ -122,13 +134,20 @@ export function useResizableLayout(): UseResizableLayoutResult {
     startSidepanelDrag,
   };
 
+  useEffect(() => {
+    writePersistedResizableLayoutState({
+      sidebarWidth,
+      sidepanelWidth,
+      bottomHeight,
+      lastExpandedBottomHeight,
+      isSidepanelCollapsed,
+    });
+  }, [sidebarWidth, sidepanelWidth, bottomHeight, lastExpandedBottomHeight, isSidepanelCollapsed]);
+
   const transitions: ResizableLayoutTransitions = {
-    sidebarTransition:
-      dragMode === "sidebar" ? { duration: 0 } : PANEL_TRANSITION,
-    bottomTransition:
-      dragMode === "bottom" ? { duration: 0 } : PANEL_TRANSITION,
-    sidepanelTransition:
-      dragMode === "sidepanel" ? { duration: 0 } : PANEL_TRANSITION,
+    sidebarTransition: !shouldAnimate || dragMode === "sidebar" ? { duration: 0 } : PANEL_TRANSITION,
+    bottomTransition: !shouldAnimate || dragMode === "bottom" ? { duration: 0 } : PANEL_TRANSITION,
+    sidepanelTransition: !shouldAnimate || dragMode === "sidepanel" ? { duration: 0 } : PANEL_TRANSITION,
   };
 
   return {

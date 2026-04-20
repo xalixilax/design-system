@@ -1,7 +1,19 @@
-import { useState, useRef, useEffect } from "react";
-import { useHandleClickSuppression } from "./useHandleClickSuppression";
-import { BOTTOM_PANEL_COLLAPSE_HEIGHT, BOTTOM_PANEL_COLLAPSE_THRESHOLD, BOTTOM_PANEL_MAX_HEIGHT, BOTTOM_PANEL_MIN_VISIBLE_HEIGHT, BOTTOM_PANEL_RESERVED_TOP_HEIGHT, SIDE_PANEL_COLLAPSE_THRESHOLD, SIDE_PANEL_DEFAULT_WIDTH, SIDE_PANEL_MAX_WIDTH, SIDE_PANEL_MIN_VISIBLE_WIDTH, SIDEBAR_COLLAPSED_WIDTH, SIDEBAR_OPEN_WIDTH } from "../utils/const";
+import { useEffect, useRef, useState } from "react";
 import { clamp } from "../utils/clamp";
+import {
+  BOTTOM_PANEL_COLLAPSE_HEIGHT,
+  BOTTOM_PANEL_COLLAPSE_THRESHOLD,
+  BOTTOM_PANEL_MAX_HEIGHT,
+  BOTTOM_PANEL_MIN_VISIBLE_HEIGHT,
+  BOTTOM_PANEL_RESERVED_TOP_HEIGHT,
+  SIDEBAR_COLLAPSED_WIDTH,
+  SIDEBAR_OPEN_WIDTH,
+  SIDE_PANEL_COLLAPSE_THRESHOLD,
+  SIDE_PANEL_DEFAULT_WIDTH,
+  SIDE_PANEL_MAX_WIDTH,
+  SIDE_PANEL_MIN_VISIBLE_WIDTH,
+} from "../utils/const";
+import { useHandleClickSuppression } from "./useHandleClickSuppression";
 
 export type DragMode = "sidebar" | "sidepanel" | "bottom";
 
@@ -36,12 +48,7 @@ export function useResizeDrag({
 }: UseResizeDragParams): UseResizeDragResult {
   const [dragMode, setDragMode] = useState<DragMode | null>(null);
   const sidepanelWidthBeforeDragRef = useRef(SIDE_PANEL_DEFAULT_WIDTH);
-  const {
-    startTracking,
-    trackMovement,
-    clearTracking,
-    shouldToggleOnHandleClick,
-  } = useHandleClickSuppression();
+  const { startTracking, trackMovement, clearTracking, shouldToggleOnHandleClick } = useHandleClickSuppression();
 
   function beginDrag(mode: DragMode, event?: React.MouseEvent): void {
     event?.preventDefault();
@@ -66,9 +73,7 @@ export function useResizeDrag({
     const previousRootCursor = root.style.cursor;
     const previousBodyCursor = body.style.cursor;
     const previousBodyUserSelect = body.style.userSelect;
-    const previousWebkitUserSelect = body.style.getPropertyValue(
-      "-webkit-user-select",
-    );
+    const previousWebkitUserSelect = body.style.getPropertyValue("-webkit-user-select");
 
     const preventDefault = (event: Event) => {
       event.preventDefault();
@@ -87,11 +92,7 @@ export function useResizeDrag({
           return;
         }
 
-        const next = clamp(
-          event.clientX - layoutRect.left,
-          SIDEBAR_COLLAPSED_WIDTH,
-          SIDEBAR_OPEN_WIDTH,
-        );
+        const next = clamp(event.clientX - layoutRect.left, SIDEBAR_COLLAPSED_WIDTH, SIDEBAR_OPEN_WIDTH);
         setSidebarWidth(next);
         return;
       }
@@ -105,20 +106,14 @@ export function useResizeDrag({
         const raw = layoutRect.right - event.clientX;
         if (raw <= SIDE_PANEL_COLLAPSE_THRESHOLD) {
           setSidepanelWidth(
-            clamp(
-              sidepanelWidthBeforeDragRef.current,
-              SIDE_PANEL_MIN_VISIBLE_WIDTH,
-              SIDE_PANEL_MAX_WIDTH,
-            ),
+            clamp(sidepanelWidthBeforeDragRef.current, SIDE_PANEL_MIN_VISIBLE_WIDTH, SIDE_PANEL_MAX_WIDTH),
           );
           setIsSidepanelCollapsed(true);
           return;
         }
 
         setIsSidepanelCollapsed(false);
-        setSidepanelWidth(
-          clamp(raw, SIDE_PANEL_MIN_VISIBLE_WIDTH, SIDE_PANEL_MAX_WIDTH),
-        );
+        setSidepanelWidth(clamp(raw, SIDE_PANEL_MIN_VISIBLE_WIDTH, SIDE_PANEL_MAX_WIDTH));
         return;
       }
 
@@ -134,10 +129,7 @@ export function useResizeDrag({
           : clamp(
               raw,
               BOTTOM_PANEL_MIN_VISIBLE_HEIGHT,
-              Math.min(
-                BOTTOM_PANEL_MAX_HEIGHT,
-                leftStackRect.height - BOTTOM_PANEL_RESERVED_TOP_HEIGHT,
-              ),
+              Math.min(BOTTOM_PANEL_MAX_HEIGHT, leftStackRect.height - BOTTOM_PANEL_RESERVED_TOP_HEIGHT),
             );
 
       setBottomHeight(next);
@@ -150,26 +142,18 @@ export function useResizeDrag({
 
       if (dragMode === "sidebar") {
         const midpoint = (SIDEBAR_COLLAPSED_WIDTH + SIDEBAR_OPEN_WIDTH) / 2;
-        setSidebarWidth((current) =>
-          current <= midpoint ? SIDEBAR_COLLAPSED_WIDTH : SIDEBAR_OPEN_WIDTH,
-        );
+        setSidebarWidth((current) => (current <= midpoint ? SIDEBAR_COLLAPSED_WIDTH : SIDEBAR_OPEN_WIDTH));
       }
 
       if (dragMode === "sidepanel" && !isSidepanelCollapsedRef.current) {
-        setSidepanelWidth((current) =>
-          clamp(current, SIDE_PANEL_MIN_VISIBLE_WIDTH, SIDE_PANEL_MAX_WIDTH),
-        );
+        setSidepanelWidth((current) => clamp(current, SIDE_PANEL_MIN_VISIBLE_WIDTH, SIDE_PANEL_MAX_WIDTH));
       }
 
       if (dragMode === "bottom") {
         setBottomHeight((current) =>
           current <= BOTTOM_PANEL_COLLAPSE_THRESHOLD
             ? BOTTOM_PANEL_COLLAPSE_HEIGHT
-            : clamp(
-                current,
-                BOTTOM_PANEL_MIN_VISIBLE_HEIGHT,
-                BOTTOM_PANEL_MAX_HEIGHT,
-              ),
+            : clamp(current, BOTTOM_PANEL_MIN_VISIBLE_HEIGHT, BOTTOM_PANEL_MAX_HEIGHT),
         );
       }
 

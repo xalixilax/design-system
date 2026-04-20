@@ -136,7 +136,12 @@ export function findOpenSlot(
       };
 
       const bounded = clampSectionToBounds(candidate, bounds);
-      if (bounded.x !== candidate.x || bounded.y !== candidate.y || bounded.w !== candidate.w || bounded.h !== candidate.h) {
+      if (
+        bounded.x !== candidate.x ||
+        bounded.y !== candidate.y ||
+        bounded.w !== candidate.w ||
+        bounded.h !== candidate.h
+      ) {
         continue;
       }
 

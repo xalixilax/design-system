@@ -1,13 +1,7 @@
 import { Button } from "@design-system/components/ui/button";
 
 interface AuthProviderButtonProps {
-  provider:
-    | "google"
-    | "github"
-    | "microsoft"
-    | "apple"
-    | "discord"
-    | "facebook";
+  provider: "google" | "github" | "microsoft" | "apple" | "discord" | "facebook";
   onSignIn: () => void | Promise<void>;
   isLoading?: boolean;
   mode?: "signin" | "signup";
@@ -89,13 +83,7 @@ export function AuthProviderButton({
   const actionText = mode === "signin" ? "Sign in" : "Sign up";
 
   return (
-    <Button
-      variant="outline"
-      type="button"
-      onClick={onSignIn}
-      disabled={isLoading}
-      className="w-full"
-    >
+    <Button variant="outline" type="button" onClick={onSignIn} disabled={isLoading} className="w-full">
       {config.icon}
       {actionText} with {config.name}
     </Button>

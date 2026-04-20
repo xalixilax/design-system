@@ -1,4 +1,3 @@
-import * as React from "react";
 import { Button } from "@design-system/components/ui/button";
 import {
   Card,
@@ -10,24 +9,16 @@ import {
 } from "@design-system/components/ui/card";
 import { Input } from "@design-system/components/ui/input";
 import { Label } from "@design-system/components/ui/label";
+import * as React from "react";
 
 interface SignUpFormProps {
-  onSubmit: (
-    email: string,
-    password: string,
-    name: string
-  ) => void | Promise<void>;
+  onSubmit: (email: string, password: string, name: string) => void | Promise<void>;
   isLoading?: boolean;
   error?: string;
   onSignInClick?: () => void;
 }
 
-export function SignUpForm({
-  onSubmit,
-  isLoading = false,
-  error,
-  onSignInClick,
-}: SignUpFormProps) {
+export function SignUpForm({ onSubmit, isLoading = false, error, onSignInClick }: SignUpFormProps) {
   const [email, setEmail] = React.useState("");
   const [password, setPassword] = React.useState("");
   const [confirmPassword, setConfirmPassword] = React.useState("");
@@ -55,9 +46,7 @@ export function SignUpForm({
     <Card className="w-full max-w-md">
       <CardHeader>
         <CardTitle>Create Account</CardTitle>
-        <CardDescription>
-          Enter your information to create a new account
-        </CardDescription>
+        <CardDescription>Enter your information to create a new account</CardDescription>
       </CardHeader>
       <form onSubmit={handleSubmit}>
         <CardContent className="space-y-4">
@@ -116,9 +105,7 @@ export function SignUpForm({
               disabled={isLoading}
               aria-invalid={!!passwordError}
             />
-            {passwordError && (
-              <p className="text-sm text-destructive">{passwordError}</p>
-            )}
+            {passwordError && <p className="text-sm text-destructive">{passwordError}</p>}
           </div>
         </CardContent>
         <CardFooter className="flex flex-col gap-4">

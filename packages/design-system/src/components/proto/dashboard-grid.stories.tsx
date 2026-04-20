@@ -2,11 +2,7 @@ import { useMemo, useState } from "react";
 
 import { Button } from "@design-system/components/ui/button";
 
-import {
-  DashboardBuilder,
-  type DashboardSection,
-  useDashboardLayout,
-} from "./resizeable-layout/resizeableLayout";
+import { DashboardBuilder, type DashboardSection, useDashboardLayout } from "./resizeable-layout/resizeableLayout";
 
 type StoryArgs = {
   columns: number;
@@ -38,9 +34,7 @@ const INITIAL_LAYOUT: DashboardSection[] = [
     y: 1,
     w: 9,
     h: 4,
-    cards: [
-      { id: "card-top-1", title: "KPI summary", content: "Overview widgets" },
-    ],
+    cards: [{ id: "card-top-1", title: "KPI summary", content: "Overview widgets" }],
   },
   {
     id: "section-bottom-left",
@@ -64,9 +58,7 @@ const INITIAL_LAYOUT: DashboardSection[] = [
     y: 5,
     w: 4,
     h: 2,
-    cards: [
-      { id: "card-right-top-1", title: "Stats", content: "Compact metrics" },
-    ],
+    cards: [{ id: "card-right-top-1", title: "Stats", content: "Compact metrics" }],
   },
   {
     id: "section-right-bottom",
@@ -85,12 +77,7 @@ const INITIAL_LAYOUT: DashboardSection[] = [
   },
 ];
 
-function InteractiveDashboardStory({
-  columns,
-  rows,
-  gap,
-  canvasHeight,
-}: StoryArgs) {
+function InteractiveDashboardStory({ columns, rows, gap, canvasHeight }: StoryArgs) {
   const [localColumns, setLocalColumns] = useState(columns);
   const [localRows, setLocalRows] = useState(rows);
   const [localGap, setLocalGap] = useState(gap);
@@ -147,10 +134,7 @@ function InteractiveDashboardStory({
         </label>
 
         <div className="md:col-span-4 flex items-center justify-end">
-          <Button
-            variant="outline"
-            onClick={() => actions.resetSections(initialLayout)}
-          >
+          <Button variant="outline" onClick={() => actions.resetSections(initialLayout)}>
             Reset to sketch layout
           </Button>
         </div>

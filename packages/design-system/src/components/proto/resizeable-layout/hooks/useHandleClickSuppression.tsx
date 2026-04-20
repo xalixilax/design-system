@@ -6,9 +6,7 @@ export function useHandleClickSuppression() {
   const suppressHandleClickRef = useRef(false);
 
   function startTracking(event?: React.MouseEvent): void {
-    dragStartPointRef.current = event
-      ? { x: event.clientX, y: event.clientY }
-      : null;
+    dragStartPointRef.current = event ? { x: event.clientX, y: event.clientY } : null;
     suppressHandleClickRef.current = false;
   }
 

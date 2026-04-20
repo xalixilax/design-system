@@ -7,10 +7,7 @@ export function useSidepanelKeyboardToggle(
 ): void {
   useEffect(() => {
     const onKeyDown = (event: KeyboardEvent) => {
-      if (
-        !(event.ctrlKey || event.metaKey) ||
-        event.key.toLowerCase() !== "b"
-      ) {
+      if (!(event.ctrlKey || event.metaKey) || event.key.toLowerCase() !== "b") {
         return;
       }
 
