@@ -1,8 +1,8 @@
 import { useMemo, useState } from "react";
 
 import { Button } from "@design-system/components/ui/button";
+import { type DashboardSection, useDashboardLayout, DashboardBuilder } from "./dashboard-builder";
 
-import { DashboardBuilder, type DashboardSection, useDashboardLayout } from "./resizeable-layout/resizeableLayout";
 
 type StoryArgs = {
   columns: number;
