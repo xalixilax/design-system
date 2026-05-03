@@ -1,0 +1,17 @@
+{
+  "$schema": "https://raw.githubusercontent.com/fallow-rs/fallow/main/schema.json",
+  "publicPackages": ["design-system"],
+  "overrides": [
+    {
+      "files": ["packages/design-system/src/**/*.{ts,tsx}"],
+      "rules": {
+        "unused-files": "off"
+      }
+    }
+  ],
+  "ignoreDependencies": [
+    "@storybook/addon-docs",
+    "@total-typescript/tsconfig",
+    "storybook-addon-pseudo-states"
+  ]
+}

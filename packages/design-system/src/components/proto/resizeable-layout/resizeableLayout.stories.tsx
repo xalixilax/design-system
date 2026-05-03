@@ -26,18 +26,28 @@ function ResizablePortalLayoutStory() {
         </SidebarPanel>
 
         <CenterPanel>
-          <TopPanel>
-            <SidepanelTrigger className="absolute right-3 top-3 p-1 bg-background rounded-sm border shadow-sm hover:bg-muted text-muted-foreground">
+          <TopPanel className="relative">
+            <SidepanelTrigger className="absolute right-3 top-3 hidden rounded-sm border bg-background p-1 text-muted-foreground shadow-sm hover:bg-muted md:inline-flex">
               <PanelRight />
             </SidepanelTrigger>
-            <SidebarTrigger className="absolute top-3 left-3 z-20 p-1 rounded-sm border bg-background text-muted-foreground shadow-sm hover:bg-muted">
+            <SidebarTrigger className="absolute top-3 left-3 z-30 p-1 rounded-sm border bg-background text-muted-foreground shadow-sm hover:bg-muted">
               <PanelLeft />
             </SidebarTrigger>
-            <div>Top content</div>
+            <div>Nav</div>
+
+            <div className="absolute bottom-4 right-4 flex flex-col gap-3 md:hidden">
+              <SidepanelTrigger className="rounded-sm border bg-background p-1 text-muted-foreground shadow-sm hover:bg-muted">
+                <PanelRight />
+              </SidepanelTrigger>
+
+              <BottomPanelTrigger className="rounded-sm border bg-background p-1 text-muted-foreground shadow-sm hover:bg-muted">
+                <X />
+              </BottomPanelTrigger>
+            </div>
           </TopPanel>
 
           <BottomPanel>
-            <BottomPanelTrigger className="absolute right-3 top-3 p-1 bg-background rounded-sm border shadow-sm hover:bg-muted text-muted-foreground">
+            <BottomPanelTrigger className="absolute right-3 top-3 hidden rounded-sm border bg-background p-1 text-muted-foreground shadow-sm hover:bg-muted md:inline-flex">
               <X />
             </BottomPanelTrigger>
             <BottomResizeHandle />

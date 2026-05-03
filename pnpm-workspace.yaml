@@ -5,3 +5,6 @@ packages:
 
 hoistPattern:
   - "*"
+
+catalog:
+  "@typescript/native-preview": ^7.0.0-dev.20260418.1

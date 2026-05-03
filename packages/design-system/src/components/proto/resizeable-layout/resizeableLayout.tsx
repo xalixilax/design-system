@@ -1,9 +1,20 @@
+import { Drawer, DrawerContent, DrawerOverlay, DrawerPopup, DrawerPortal, DrawerViewport } from "@design-system/components/ui/drawer";
 import { cn } from "@design-system/lib/utils";
 import { motion } from "motion/react";
 import { createContext, useContext } from "react";
 import { type UseResizableLayoutResult, useResizableLayout } from "./hooks/useResizableLayout";
 
 const ResizableLayoutContext = createContext<UseResizableLayoutResult | null>(null);
+
+type LayoutSectionProps = Omit<
+  React.ComponentPropsWithoutRef<"section">,
+  "onAnimationStart" | "onAnimationEnd" | "onDrag" | "onDragStart" | "onDragEnd" | "popover"
+>;
+
+type LayoutAsideProps = Omit<
+  React.ComponentPropsWithoutRef<"aside">,
+  "onAnimationStart" | "onAnimationEnd" | "onDrag" | "onDragStart" | "onDragEnd" | "popover"
+>;
 
 function useResizableLayoutContext() {
   const context = useContext(ResizableLayoutContext);
@@ -42,8 +53,35 @@ export function SidebarPanel({
   children,
   className,
   ...props
-}: Omit<React.ComponentProps<typeof motion.aside>, "animate" | "transition">) {
-  const { state, transitions } = useResizableLayoutContext();
+}: LayoutAsideProps) {
+  const { actions, state, transitions } = useResizableLayoutContext();
+
+  if (state.isMobile) {
+    return (
+      <Drawer
+        open={!state.isSidebarCollapsed}
+        onOpenChange={(open) => {
+          if (open === state.isSidebarCollapsed) {
+            actions.toggleSidebar();
+          }
+        }}
+        direction="left"
+      >
+        <DrawerPortal>
+          <DrawerOverlay />
+          <DrawerViewport>
+            <DrawerPopup
+              className={cn("h-full w-[min(18rem,calc(100vw-3rem))] shrink-0 rounded-none bg-sidebar", className)}
+            >
+              <DrawerContent className="h-full overflow-y-auto bg-sidebar" {...props}>
+                {children}
+              </DrawerContent>
+            </DrawerPopup>
+          </DrawerViewport>
+        </DrawerPortal>
+      </Drawer>
+    );
+  }
 
   return (
     <motion.aside
@@ -59,7 +97,11 @@ export function SidebarPanel({
 }
 
 export function SidebarResizeHandle({ onClick, onMouseDown, className, ...props }: React.ComponentProps<"div">) {
-  const { actions } = useResizableLayoutContext();
+  const { actions, state } = useResizableLayoutContext();
+
+  if (state.isMobile) {
+    return null;
+  }
 
   return (
     <div
@@ -124,12 +166,37 @@ export function TopPanel({ children, className, ...props }: React.ComponentProps
   );
 }
 
-export function BottomPanel({
-  children,
-  className,
-  ...props
-}: Omit<React.ComponentProps<typeof motion.section>, "animate" | "transition">) {
-  const { state, transitions } = useResizableLayoutContext();
+export function BottomPanel({ children, className, ...props }: LayoutSectionProps) {
+  const { actions, state, transitions } = useResizableLayoutContext();
+
+  if (state.isMobile) {
+    return (
+      <Drawer
+        open={!state.isBottomCollapsed}
+        onOpenChange={(open) => {
+          if (open === state.isBottomCollapsed) {
+            actions.toggleBottomPanel();
+          }
+        }}
+        direction="bottom"
+      >
+        <DrawerPortal>
+          <DrawerOverlay />
+          <DrawerViewport>
+            <DrawerPopup
+              className={cn("rounded-none outline-0", className)}
+              data-state={state.isBottomCollapsed ? "collapsed" : "open"}
+              style={{ height: Math.min(state.bottomHeight || 0, 512) }}
+            >
+              <DrawerContent className="h-full overflow-hidden" {...props}>
+                {children}
+              </DrawerContent>
+            </DrawerPopup>
+          </DrawerViewport>
+        </DrawerPortal>
+      </Drawer>
+    );
+  }
 
   return (
     <motion.section
@@ -147,6 +214,10 @@ export function BottomPanel({
 
 export function BottomResizeHandle({ onClick, onMouseDown, className, ...props }: React.ComponentProps<"div">) {
   const { actions, state } = useResizableLayoutContext();
+
+  if (state.isMobile) {
+    return null;
+  }
 
   return (
     <div
@@ -201,6 +272,10 @@ export function SidepanelResizeHandle({
 }: Omit<React.ComponentProps<typeof motion.div>, "animate" | "transition">) {
   const { actions, state, transitions } = useResizableLayoutContext();
 
+  if (state.isMobile) {
+    return null;
+  }
+
   return (
     <motion.div
       initial={false}
@@ -232,12 +307,37 @@ export function SidepanelResizeHandle({
   );
 }
 
-export function Sidepanel({
-  children,
-  className,
-  ...props
-}: Omit<React.ComponentProps<typeof motion.section>, "animate" | "transition">) {
-  const { state, transitions } = useResizableLayoutContext();
+export function Sidepanel({ children, className, ...props }: LayoutSectionProps) {
+  const { actions, state, transitions } = useResizableLayoutContext();
+
+  if (state.isMobile) {
+    return (
+      <Drawer
+        open={!state.isSidepanelCollapsed}
+        onOpenChange={(open) => {
+          if (open === state.isSidepanelCollapsed) {
+            actions.toggleSidepanel();
+          }
+        }}
+        direction="bottom"
+      >
+        <DrawerPortal>
+          <DrawerOverlay />
+          <DrawerViewport>
+            <DrawerPopup
+              className={cn("rounded-none outline-0", className)}
+              data-state={state.isSidepanelCollapsed ? "collapsed" : "open"}
+              style={{ height: Math.min(state.sidepanelWidth || 0, 512) }}
+            >
+              <DrawerContent className="h-full overflow-y-auto" {...props}>
+                {children}
+              </DrawerContent>
+            </DrawerPopup>
+          </DrawerViewport>
+        </DrawerPortal>
+      </Drawer>
+    );
+  }
 
   return (
     <motion.section

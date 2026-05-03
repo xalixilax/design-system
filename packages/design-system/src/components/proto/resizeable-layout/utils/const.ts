@@ -1,6 +1,8 @@
 export const SIDEBAR_COLLAPSED_WIDTH = 45;
 export const SIDEBAR_OPEN_WIDTH = 245;
 
+export const MOBILE_LAYOUT_BREAKPOINT = 768;
+
 export const SIDE_PANEL_DEFAULT_WIDTH = 300;
 export const SIDE_PANEL_MIN_VISIBLE_WIDTH = 84;
 export const SIDE_PANEL_MAX_WIDTH = 5000;
