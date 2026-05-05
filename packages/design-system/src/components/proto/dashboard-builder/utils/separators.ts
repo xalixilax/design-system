@@ -21,7 +21,7 @@ export type SeparatorPreview = {
 export type BoundaryGuide = {
   key: string;
   orientation: "vertical" | "horizontal";
-  boundary: number;
+  boundary: number;w
   offsetX: number;
   offsetY: number;
   length: number;

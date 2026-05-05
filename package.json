@@ -10,7 +10,7 @@
   "scripts": {
     "prepare": "husky",
     "web": "pnpm --filter web",
-    "ui": "pnpm --filter @design-system/components",
+    "ui": "pnpm --filter design-system",
     "api": "pnpm --filter api",
     "db": "pnpm --filter db",
     "check": "pnpm biome check . --write",

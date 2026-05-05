@@ -11,6 +11,8 @@ import { motion } from "motion/react";
 import { createContext, useContext } from "react";
 
 import { type UseResizableLayoutResult, useResizableLayout } from "./hooks/useResizableLayout";
+import { BOTTOM_PANEL_COLLAPSE_HEIGHT } from "./utils/const";
+import { getExpandedSidepanelWidth } from "./utils/sidepanel";
 
 const ResizableLayoutContext = createContext<UseResizableLayoutResult | null>(null);
 
@@ -31,6 +33,10 @@ function useResizableLayoutContext() {
   }
 
   return context;
+}
+
+export function useResizableLayoutValue() {
+  return useResizableLayoutContext();
 }
 
 export function ResizableLayoutRoot({ children, className, ...props }: React.ComponentProps<typeof motion.div>) {
@@ -100,6 +106,18 @@ export function SidebarPanel({ children, className, ...props }: LayoutAsideProps
   );
 }
 
+export function SidebarPanelContent({ children, className, ...props }: React.ComponentProps<typeof motion.div>) {
+  return (
+    <motion.div
+      initial={false}
+      className={cn("h-full min-w-0", className)}
+      {...props}
+    >
+      {children}
+    </motion.div>
+  );
+}
+
 export function SidebarResizeHandle({ onClick, onMouseDown, className, ...props }: React.ComponentProps<"div">) {
   const { actions, state } = useResizableLayoutContext();
 
@@ -164,7 +182,7 @@ export function CenterPanel({ children, className, ...props }: React.ComponentPr
 
 export function TopPanel({ children, className, ...props }: React.ComponentProps<"section">) {
   return (
-    <section className={cn("min-h-0 flex-1 rounded-none p-6", className)} {...props}>
+    <section className={cn("relative flex min-h-0 flex-1 flex-col overflow-hidden rounded-none", className)} {...props}>
       {children}
     </section>
   );
@@ -205,7 +223,7 @@ export function BottomPanel({ children, className, ...props }: LayoutSectionProp
   return (
     <motion.section
       initial={false}
-      animate={{ height: state.bottomHeight }}
+      animate={{ height: state.isBottomCollapsed ? BOTTOM_PANEL_COLLAPSE_HEIGHT : state.bottomHeight }}
       transition={transitions.bottomTransition}
       className={cn("relative shrink-0 overflow-visible", className)}
       data-state={state.isBottomCollapsed ? "collapsed" : "open"}
@@ -227,12 +245,13 @@ export function BottomResizeHandle({ onClick, onMouseDown, className, ...props }
     <div
       className={cn(
         "absolute right-0 left-0 z-20 cursor-row-resize",
-        "data-[state=collapsed]:-top-3 data-[state=collapsed]:h-3",
+        "data-[state=collapsed]:-top-3 data-[state=collapsed]:h-3 data-[state=collapsed]:bg-muted",
+        "data-[state=collapsed]:hover:bg-muted-foreground/20 data-[state=collapsed]:active:bg-muted-foreground/20",
         "data-[state=open]:top-0 data-[state=open]:h-px",
-        "bg-border/90 hover:bg-primary/40 active:bg-primary/40",
+        "data-[state=open]:bg-border data-[state=open]:hover:bg-border/90 data-[state=open]:active:bg-border/90",
         "after:absolute after:right-0 after:left-0 after:content-['']",
         "data-[state=open]:after:-top-2 data-[state=open]:after:h-5",
-        "data-[state=collapsed]:after:hidden",
+        "data-[state=open]:after:bg-transparent",
         className,
       )}
       data-state={state.isBottomCollapsed ? "collapsed" : "open"}
@@ -346,9 +365,9 @@ export function Sidepanel({ children, className, ...props }: LayoutSectionProps)
   return (
     <motion.section
       initial={false}
-      animate={{ width: state.sidepanelWidth }}
+      animate={{ width: state.isSidepanelCollapsed ? 0 : state.sidepanelWidth }}
       transition={transitions.sidepanelTransition}
-      className={cn("relative min-h-0 shrink-0", className)}
+      className={cn("relative min-h-0 shrink-0 overflow-hidden", className)}
       data-state={state.isSidepanelCollapsed ? "collapsed" : "open"}
       {...props}
     >
@@ -363,15 +382,17 @@ export function SidepanelContent({
   ...props
 }: Omit<React.ComponentProps<typeof motion.div>, "animate">) {
   const { state } = useResizableLayoutContext();
+  const preservedWidth = state.isMobile ? undefined : getExpandedSidepanelWidth(state.sidepanelWidth);
 
   return (
     <motion.div
       animate={{
         opacity: state.isSidepanelCollapsed ? 0 : 1,
-        x: state.isSidepanelCollapsed ? 16 : 0,
+        x: state.isSidepanelCollapsed ? 24 : 0,
       }}
       transition={{ duration: 0.2 }}
       className={cn("h-full p-6", className)}
+      style={{ width: preservedWidth, minWidth: preservedWidth }}
       {...props}
     >
       {children}

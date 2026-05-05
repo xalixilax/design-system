@@ -14,7 +14,7 @@
     "type-check": "tsc --noEmit"
   },
   "dependencies": {
-    "@design-system/components": "workspace:*",
+    "design-system": "workspace:*",
     "better-auth": "^1.0.9",
     "drizzle-orm": "^0.35.3"
   },
