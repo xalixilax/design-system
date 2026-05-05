@@ -1,4 +1,6 @@
 import type { DashboardBounds, DashboardSection } from "../types";
+
+import { applySegmentResizeDelta, fillsBoundsExactly, isValidSectionLayout } from "./layout";
 import { buildSegmentParticipants } from "./participants";
 
 export type SeparatorPreview = {
@@ -29,41 +31,6 @@ function rangesOverlap(startA: number, endA: number, startB: number, endB: numbe
   return startA < endB && endA > startB;
 }
 
-function isValidLocalLayout(sections: DashboardSection[], bounds: DashboardBounds) {
-  const occupancy = new Uint8Array(bounds.columns * bounds.rows);
-
-  for (const section of sections) {
-    const minW = section.minW ?? 2;
-    const minH = section.minH ?? 2;
-
-    if (
-      section.w < minW ||
-      section.h < minH ||
-      section.x < 1 ||
-      section.y < 1 ||
-      section.x + section.w - 1 > bounds.columns ||
-      section.y + section.h - 1 > bounds.rows
-    ) {
-      return false;
-    }
-
-    for (let row = section.y; row < section.y + section.h; row += 1) {
-      for (let column = section.x; column < section.x + section.w; column += 1) {
-        const index = (row - 1) * bounds.columns + (column - 1);
-        occupancy[index] = (occupancy[index] ?? 0) + 1;
-      }
-    }
-  }
-
-  for (const cell of occupancy) {
-    if (cell !== 1) {
-      return false;
-    }
-  }
-
-  return true;
-}
-
 function canResizeSegmentPair(
   sections: DashboardSection[],
   bounds: DashboardBounds,
@@ -83,40 +50,9 @@ function canResizeSegmentPair(
   const deltas = [-1, 1];
 
   for (const delta of deltas) {
-    const next =
-      participants.direction === "e"
-        ? sections.map((candidate) => {
-            if (participants.leftIds.has(candidate.id)) {
-              return { ...candidate, w: candidate.w + delta };
-            }
+    const next = applySegmentResizeDelta(sections, participants, delta);
 
-            if (participants.rightIds.has(candidate.id)) {
-              return {
-                ...candidate,
-                x: candidate.x + delta,
-                w: candidate.w - delta,
-              };
-            }
-
-            return candidate;
-          })
-        : sections.map((candidate) => {
-            if (participants.topIds.has(candidate.id)) {
-              return { ...candidate, h: candidate.h + delta };
-            }
-
-            if (participants.bottomIds.has(candidate.id)) {
-              return {
-                ...candidate,
-                y: candidate.y + delta,
-                h: candidate.h - delta,
-              };
-            }
-
-            return candidate;
-          });
-
-    if (isValidLocalLayout(next, bounds)) {
+    if (isValidSectionLayout(next, bounds) && fillsBoundsExactly(next, bounds)) {
       return true;
     }
   }

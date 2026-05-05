@@ -1,6 +1,9 @@
-import { withThemeByClassName } from "@storybook/addon-themes";
 import type { Preview } from "@storybook/react-vite";
-import "@design-system/styles/global.css";
+
+import { withThemeByClassName } from "@storybook/addon-themes";
+
+// @ts-ignore CSS side-effect imports are handled by Vite/Storybook, not TypeScript module resolution.
+import "../../design-system/src/styles/global.css";
 
 const preview: Preview = {
   parameters: {

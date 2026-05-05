@@ -1,11 +1,11 @@
-import { motion } from "motion/react";
 import type * as React from "react";
-import { useCallback } from "react";
-import { useDrag } from "react-dnd";
 
 import { Button } from "@design-system/components/ui/button";
 import { Card, CardContent, CardHeader } from "@design-system/components/ui/card";
 import { cn } from "@design-system/lib/utils";
+import { motion } from "motion/react";
+import { useCallback } from "react";
+import { useDrag } from "react-dnd";
 
 import type { DashboardCard, DashboardSection } from "./types";
 
@@ -119,7 +119,7 @@ export function DashboardSectionItem({
         </CardHeader>
 
         <CardContent className="flex min-h-0 flex-1 flex-col gap-2 pb-3">
-          <div className="bg-muted/10 flex min-h-0 flex-1 flex-col gap-2 overflow-auto rounded-md border border-dashed border-border/80 p-2">
+          <div className="flex min-h-0 flex-1 flex-col gap-2 overflow-auto rounded-md border border-dashed border-border/80 bg-muted/10 p-2">
             {section.cards.map((card) => (
               <div key={card.id} className="rounded-md border bg-card p-2 shadow-xs">
                 {renderCard ? (
@@ -128,7 +128,7 @@ export function DashboardSectionItem({
                   <div className="flex items-start justify-between gap-2">
                     <div>
                       <p className="text-sm font-medium">{card.title}</p>
-                      {card.content ? <p className="text-muted-foreground text-xs">{card.content}</p> : null}
+                      {card.content ? <p className="text-xs text-muted-foreground">{card.content}</p> : null}
                     </div>
                     <Button size="sm" variant="ghost" onClick={() => onRemoveCard(section.id, card.id)}>
                       ×

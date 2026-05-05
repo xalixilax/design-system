@@ -103,10 +103,7 @@ export default class Button extends React.Component {
     const btnText = enabled ? "enabled" : "disabled";
 
     return (
-      <div
-        className={`btn enabled-${enabled}`}
-        onClick={() => this.setState({ enabled: !enabled })}
-      >
+      <div className={`btn enabled-${enabled}`} onClick={() => this.setState({ enabled: !enabled })}>
         {btnText}
       </div>
     );
@@ -151,7 +148,6 @@ Lifecycle methods also require quite a lot of duplication in the code.
 Although a component may be small, the logic within the component can already be quite tangled. Whereas certain parts are specific for the `counter` logic, other parts are specific for the `width` logic. As your component grows, it can get increasingly difficult to structure logic within your component, find related logic within the component.
 
 Besides tangled logic, we're also **duplicating** some logic within the lifecycle methods. In both `componentDidMount` and `componentWillUnmount`, we're customizing the behavior of the app based on the window's `resize` event.
-
 
 ### Hooks
 
@@ -345,8 +341,7 @@ class TweetSearchResults extends React.Component {
     };
 
     this.handleFilterTextChange = this.handleFilterTextChange.bind(this);
-    this.handleInThisLocationChange =
-      this.handleInThisLocationChange.bind(this);
+    this.handleInThisLocationChange = this.handleInThisLocationChange.bind(this);
   }
 
   handleFilterTextChange(filterText) {
@@ -395,11 +390,7 @@ const TweetSearchResults = ({ tweets }) => {
         setFilterText={setFilterText}
         setInThisLocation={setInThisLocation}
       />
-      <TweetList
-        tweets={tweets}
-        filterText={filterText}
-        inThisLocation={inThisLocation}
-      />
+      <TweetList tweets={tweets} filterText={filterText} inThisLocation={inThisLocation} />
     </div>
   );
 };

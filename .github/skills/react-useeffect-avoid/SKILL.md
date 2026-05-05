@@ -1,7 +1,6 @@
 ---
 name: react-useeffect-avoid
-description:
-  Guides when NOT to use useEffect and suggests better alternatives. Use when reviewing React code, troubleshooting performance, or considering useEffect for derived state or form resets.
+description: Guides when NOT to use useEffect and suggests better alternatives. Use when reviewing React code, troubleshooting performance, or considering useEffect for derived state or form resets.
 ---
 
 # React: When Not to Use useEffect
@@ -40,15 +39,15 @@ Need to sync with external system?
 
 ### ❌ Don't use useEffect for:
 
-| Scenario | Problem | Alternative |
-|----------|---------|-------------|
-| **Derived state** | Double render | Calculate during render |
-| **State resets** | Stale data | Use `key` prop |
-| **User actions** | Lost intent | Event handlers |
-| **List filtering** | Extra renders | Filter in render |
-| **Browser APIs** | Tearing bugs (concurrent) | `useSyncExternalStore` |
-| **Form submission** | Fragile flag pattern | Direct async handler |
-| **Data fetching** | Manual cache management | React Query, SWR, Suspense |
+| Scenario            | Problem                   | Alternative                |
+| ------------------- | ------------------------- | -------------------------- |
+| **Derived state**   | Double render             | Calculate during render    |
+| **State resets**    | Stale data                | Use `key` prop             |
+| **User actions**    | Lost intent               | Event handlers             |
+| **List filtering**  | Extra renders             | Filter in render           |
+| **Browser APIs**    | Tearing bugs (concurrent) | `useSyncExternalStore`     |
+| **Form submission** | Fragile flag pattern      | Direct async handler       |
+| **Data fetching**   | Manual cache management   | React Query, SWR, Suspense |
 
 ### ✅ DO use useEffect for:
 
@@ -72,11 +71,11 @@ function UserProfile({ userId }) {
 
 ## Progressive Disclosure
 
-| Topic | File | When to Use |
-|-------|------|-------------|
-| Anti-patterns with examples | [context/anti-patterns.md](context/anti-patterns.md) | Detailed code examples of useEffect mistakes |
-| Patterns to always avoid | [context/patterns-to-avoid.md](context/patterns-to-avoid.md) | Common anti-patterns like logging, DOM manipulation |
-| Decision tree & references | [context/decision-tree.md](context/decision-tree.md) | Quick lookup and further reading |
+| Topic                       | File                                                         | When to Use                                         |
+| --------------------------- | ------------------------------------------------------------ | --------------------------------------------------- |
+| Anti-patterns with examples | [context/anti-patterns.md](context/anti-patterns.md)         | Detailed code examples of useEffect mistakes        |
+| Patterns to always avoid    | [context/patterns-to-avoid.md](context/patterns-to-avoid.md) | Common anti-patterns like logging, DOM manipulation |
+| Decision tree & references  | [context/decision-tree.md](context/decision-tree.md)         | Quick lookup and further reading                    |
 
 ## References
 

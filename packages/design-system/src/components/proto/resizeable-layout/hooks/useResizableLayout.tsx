@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from "react";
+
 import { useIsMobile } from "../../dashboard-builder/hooks/use-mobile";
 import {
   BOTTOM_PANEL_COLLAPSE_HEIGHT,
@@ -7,9 +8,8 @@ import {
   PANEL_TRANSITION,
   SIDEBAR_COLLAPSED_WIDTH,
   SIDEBAR_OPEN_WIDTH,
-  SIDE_PANEL_DEFAULT_WIDTH,
-  SIDE_PANEL_MIN_VISIBLE_WIDTH,
 } from "../utils/const";
+import { getExpandedSidepanelWidth, toggleSidepanelCollapseState } from "../utils/sidepanel";
 import { getInitialResizableLayoutState, writePersistedResizableLayoutState } from "./useResizableLayoutStorage";
 import { useResizeDrag } from "./useResizeDrag";
 import { useSidepanelKeyboardToggle } from "./useSidepanelKeyboardToggle";
@@ -51,28 +51,6 @@ export type UseResizableLayoutResult = {
   refs: ResizableLayoutRefs;
   transitions: ResizableLayoutTransitions;
 };
-
-function getExpandedSidepanelWidth(width: number): number {
-  if (width < SIDE_PANEL_MIN_VISIBLE_WIDTH) {
-    return SIDE_PANEL_DEFAULT_WIDTH;
-  }
-
-  return width;
-}
-
-export function toggleSidepanelCollapseState(
-  setIsSidepanelCollapsed: React.Dispatch<React.SetStateAction<boolean>>,
-  setSidepanelWidth: React.Dispatch<React.SetStateAction<number>>,
-): void {
-  setIsSidepanelCollapsed((current) => {
-    if (current) {
-      setSidepanelWidth((width) => getExpandedSidepanelWidth(width));
-      return false;
-    }
-
-    return true;
-  });
-}
 
 export function useResizableLayout(): UseResizableLayoutResult {
   const [initialState] = useState(getInitialResizableLayoutState);

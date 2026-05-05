@@ -71,18 +71,18 @@ export function ParallaxHero() {
     <div className="relative h-screen overflow-hidden">
       {/* Background layer (fastest) */}
       <motion.div style={{ y: y1 }} className="absolute inset-0 -z-10">
-        <img src="/images/background.jpg" alt="Background" className="w-full h-full object-cover" />
+        <img src="/images/background.jpg" alt="Background" className="h-full w-full object-cover" />
       </motion.div>
 
       {/* Middle layer (medium speed) */}
       <motion.div style={{ y: y2 }} className="absolute inset-0 -z-5">
-        <img src="/images/mountains.png" alt="Mountains" className="w-full h-full object-cover" />
+        <img src="/images/mountains.png" alt="Mountains" className="h-full w-full object-cover" />
       </motion.div>
 
       {/* Foreground content (slowest) + fade out */}
-      <motion.div style={{ y: y3, opacity }} className="relative z-10 flex items-center justify-center h-full">
+      <motion.div style={{ y: y3, opacity }} className="relative z-10 flex h-full items-center justify-center">
         <div className="text-center text-white">
-          <h1 className="text-6xl font-bold mb-4">Welcome</h1>
+          <h1 className="mb-4 text-6xl font-bold">Welcome</h1>
           <p className="text-2xl">Scroll down to see parallax effect</p>
         </div>
       </motion.div>
@@ -104,7 +104,7 @@ export function ScrollProgressBar() {
   return (
     <motion.div
       style={{ scaleX: scrollYProgress }}
-      className="fixed top-0 left-0 right-0 h-1 bg-blue-600 origin-left z-50"
+      className="fixed top-0 right-0 left-0 z-50 h-1 origin-left bg-blue-600"
     />
   );
 }
@@ -139,7 +139,7 @@ export function SectionScrollIndicator() {
 
   return (
     <section ref={ref} className="min-h-screen bg-gray-100 p-8">
-      <motion.div style={{ scaleX: scrollYProgress }} className="h-2 bg-purple-600 mb-4 origin-left" />
+      <motion.div style={{ scaleX: scrollYProgress }} className="mb-4 h-2 origin-left bg-purple-600" />
       <motion.p className="text-2xl font-bold">Section Progress: {percentage.get().toFixed(0)}%</motion.p>
       <p className="mt-4 text-gray-700">Scroll through this section to see the progress bar fill.</p>
     </section>
@@ -167,10 +167,10 @@ export function SmoothParallax() {
   return (
     <div className="relative h-screen overflow-hidden">
       <motion.div style={{ y }} className="absolute inset-0">
-        <img src="/images/hero.jpg" alt="Hero" className="w-full h-full object-cover" />
+        <img src="/images/hero.jpg" alt="Hero" className="h-full w-full object-cover" />
       </motion.div>
 
-      <div className="relative z-10 flex items-center justify-center h-full">
+      <div className="relative z-10 flex h-full items-center justify-center">
         <h1 className="text-6xl font-bold text-white">Smooth Parallax</h1>
       </div>
     </div>
@@ -218,16 +218,16 @@ export function HorizontalScrollGallery() {
     <section ref={targetRef} className="relative h-[400vh]">
       <div className="sticky top-0 h-screen overflow-hidden">
         <motion.div style={{ x }} className="flex h-full">
-          <div className="min-w-full h-full bg-red-500 flex items-center justify-center text-white text-4xl">
+          <div className="flex h-full min-w-full items-center justify-center bg-red-500 text-4xl text-white">
             Panel 1
           </div>
-          <div className="min-w-full h-full bg-blue-500 flex items-center justify-center text-white text-4xl">
+          <div className="flex h-full min-w-full items-center justify-center bg-blue-500 text-4xl text-white">
             Panel 2
           </div>
-          <div className="min-w-full h-full bg-green-500 flex items-center justify-center text-white text-4xl">
+          <div className="flex h-full min-w-full items-center justify-center bg-green-500 text-4xl text-white">
             Panel 3
           </div>
-          <div className="min-w-full h-full bg-purple-500 flex items-center justify-center text-white text-4xl">
+          <div className="flex h-full min-w-full items-center justify-center bg-purple-500 text-4xl text-white">
             Panel 4
           </div>
         </motion.div>
@@ -251,7 +251,7 @@ export function RotateOnScroll() {
   const rotate = useTransform(scrollY, [0, 1000], [0, 360]);
 
   return (
-    <motion.div style={{ rotate }} className="w-32 h-32 bg-gradient-to-br from-pink-500 to-purple-600 rounded-full" />
+    <motion.div style={{ rotate }} className="h-32 w-32 rounded-full bg-gradient-to-br from-pink-500 to-purple-600" />
   );
 }
 
@@ -271,10 +271,10 @@ export function StickyScrollIndicator() {
   const scale = useTransform(scrollY, [0, 200], [1, 0.5]);
 
   return (
-    <motion.div style={{ opacity, scale }} className="fixed bottom-8 left-1/2 -translate-x-1/2 z-50">
+    <motion.div style={{ opacity, scale }} className="fixed bottom-8 left-1/2 z-50 -translate-x-1/2">
       <div className="flex flex-col items-center text-gray-600">
         <p className="mb-2">Scroll Down</p>
-        <svg className="w-6 h-6 animate-bounce" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <svg className="h-6 w-6 animate-bounce" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 14l-7 7m0 0l-7-7m7 7V3" />
         </svg>
       </div>
@@ -301,12 +301,12 @@ export function CustomInViewAnimation() {
   });
 
   return (
-    <div ref={ref} className="min-h-screen flex items-center justify-center">
+    <div ref={ref} className="flex min-h-screen items-center justify-center">
       <motion.div
         initial={{ opacity: 0, scale: 0.5 }}
         animate={isInView ? { opacity: 1, scale: 1 } : { opacity: 0, scale: 0.5 }}
         transition={{ duration: 0.5 }}
-        className="p-8 bg-blue-100 rounded-lg"
+        className="rounded-lg bg-blue-100 p-8"
       >
         <h2 className="text-2xl font-bold">{isInView ? "I'm in view!" : "Scroll to me"}</h2>
       </motion.div>
@@ -333,8 +333,8 @@ export function ScrollColorChange() {
   );
 
   return (
-    <motion.div style={{ backgroundColor }} className="min-h-[200vh] flex items-center justify-center">
-      <div className="text-white text-4xl font-bold">Background changes as you scroll</div>
+    <motion.div style={{ backgroundColor }} className="flex min-h-[200vh] items-center justify-center">
+      <div className="text-4xl font-bold text-white">Background changes as you scroll</div>
     </motion.div>
   );
 }
@@ -353,7 +353,7 @@ export function ScrollAnimationExamples() {
       <ParallaxHero />
       <FadeInSection>
         <div className="container mx-auto p-8">
-          <h2 className="text-4xl font-bold mb-4">Fade In Section</h2>
+          <h2 className="mb-4 text-4xl font-bold">Fade In Section</h2>
           <p className="text-gray-700">This section fades in when you scroll to it.</p>
         </div>
       </FadeInSection>
@@ -361,12 +361,12 @@ export function ScrollAnimationExamples() {
       <SmoothParallax />
       <div className="container mx-auto p-8">
         <ScaleOnScroll>
-          <h2 className="text-4xl font-bold mb-4">Scale on Scroll</h2>
+          <h2 className="mb-4 text-4xl font-bold">Scale on Scroll</h2>
           <p className="text-gray-700">This scales down as you scroll.</p>
         </ScaleOnScroll>
       </div>
       <HorizontalScrollGallery />
-      <div className="container mx-auto p-8 flex justify-center">
+      <div className="container mx-auto flex justify-center p-8">
         <RotateOnScroll />
       </div>
       <StickyScrollIndicator />

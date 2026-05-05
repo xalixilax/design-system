@@ -1,7 +1,15 @@
-import { Drawer, DrawerContent, DrawerOverlay, DrawerPopup, DrawerPortal, DrawerViewport } from "@design-system/components/ui/drawer";
+import {
+  Drawer,
+  DrawerContent,
+  DrawerOverlay,
+  DrawerPopup,
+  DrawerPortal,
+  DrawerViewport,
+} from "@design-system/components/ui/drawer";
 import { cn } from "@design-system/lib/utils";
 import { motion } from "motion/react";
 import { createContext, useContext } from "react";
+
 import { type UseResizableLayoutResult, useResizableLayout } from "./hooks/useResizableLayout";
 
 const ResizableLayoutContext = createContext<UseResizableLayoutResult | null>(null);
@@ -49,11 +57,7 @@ export function ResizableLayoutFrame({ children, className, ...props }: React.Co
   );
 }
 
-export function SidebarPanel({
-  children,
-  className,
-  ...props
-}: LayoutAsideProps) {
+export function SidebarPanel({ children, className, ...props }: LayoutAsideProps) {
   const { actions, state, transitions } = useResizableLayoutContext();
 
   if (state.isMobile) {
@@ -107,7 +111,7 @@ export function SidebarResizeHandle({ onClick, onMouseDown, className, ...props 
     <div
       className={cn(
         "absolute inset-y-0 right-0 z-20 w-px cursor-col-resize bg-border/90 hover:bg-primary/40 active:bg-primary/40",
-        "after:absolute after:inset-y-0 after:-left-2 after:-right-2 after:content-['']",
+        "after:absolute after:inset-y-0 after:-right-2 after:-left-2 after:content-['']",
         className,
       )}
       onClick={(event) => {
@@ -222,11 +226,11 @@ export function BottomResizeHandle({ onClick, onMouseDown, className, ...props }
   return (
     <div
       className={cn(
-        "absolute left-0 right-0 z-20 cursor-row-resize",
+        "absolute right-0 left-0 z-20 cursor-row-resize",
         "data-[state=collapsed]:-top-3 data-[state=collapsed]:h-3",
         "data-[state=open]:top-0 data-[state=open]:h-px",
         "bg-border/90 hover:bg-primary/40 active:bg-primary/40",
-        "after:absolute after:left-0 after:right-0 after:content-['']",
+        "after:absolute after:right-0 after:left-0 after:content-['']",
         "data-[state=open]:after:-top-2 data-[state=open]:after:h-5",
         "data-[state=collapsed]:after:hidden",
         className,
@@ -300,7 +304,7 @@ export function SidepanelResizeHandle({
       <div
         className={cn(
           "absolute inset-y-0 left-0 w-px cursor-col-resize bg-border/90 hover:bg-primary/40 active:bg-primary/40",
-          "after:absolute after:inset-y-0 after:-left-2 after:-right-2 after:content-['']",
+          "after:absolute after:inset-y-0 after:-right-2 after:-left-2 after:content-['']",
         )}
       />
     </motion.div>

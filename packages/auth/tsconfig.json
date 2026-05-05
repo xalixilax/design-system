@@ -2,8 +2,9 @@
   "extends": "@total-typescript/tsconfig/bundler/dom/library-monorepo",
   "compilerOptions": {
     "jsx": "react-jsx",
+    "types": ["node"],
     "paths": {
-      "@design-system/*": ["../ui/src/*"]
+      "@design-system/*": ["../design-system/src/*"]
     }
   },
   "include": ["src/**/*"],

@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 
 import type { DashboardBounds, DashboardSection } from "../types";
+
 import { buildSeparators } from "./separators";
 
 const bounds: DashboardBounds = { columns: 6, rows: 4 };

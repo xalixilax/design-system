@@ -40,7 +40,7 @@ export function Modal({ isOpen, onClose, title, children }: ModalProps) {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             onClick={onClose}
-            className="fixed inset-0 bg-black/50 z-40 cursor-pointer"
+            className="fixed inset-0 z-40 cursor-pointer bg-black/50"
           />
 
           {/* Dialog */}
@@ -50,17 +50,17 @@ export function Modal({ isOpen, onClose, title, children }: ModalProps) {
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.9, y: 20 }}
             transition={{ type: "spring", damping: 20, stiffness: 300 }}
-            className="fixed inset-0 m-auto w-full max-w-md h-fit bg-white dark:bg-gray-800 rounded-lg shadow-2xl z-50 p-6"
+            className="fixed inset-0 z-50 m-auto h-fit w-full max-w-md rounded-lg bg-white p-6 shadow-2xl dark:bg-gray-800"
             style={{ willChange: "transform, opacity" }}
           >
             {/* Header */}
-            <div className="flex justify-between items-center mb-4">
+            <div className="mb-4 flex items-center justify-between">
               <h2 className="text-2xl font-bold">{title}</h2>
               <motion.button
                 whileHover={{ scale: 1.1, rotate: 90 }}
                 whileTap={{ scale: 0.9 }}
                 onClick={onClose}
-                className="text-gray-500 hover:text-gray-700 dark:hover:text-gray-300 text-2xl"
+                className="text-2xl text-gray-500 hover:text-gray-700 dark:hover:text-gray-300"
               >
                 ✕
               </motion.button>
@@ -75,7 +75,7 @@ export function Modal({ isOpen, onClose, title, children }: ModalProps) {
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
                 onClick={onClose}
-                className="px-4 py-2 bg-gray-200 dark:bg-gray-700 rounded hover:bg-gray-300 dark:hover:bg-gray-600"
+                className="rounded bg-gray-200 px-4 py-2 hover:bg-gray-300 dark:bg-gray-700 dark:hover:bg-gray-600"
               >
                 Close
               </motion.button>
@@ -125,7 +125,7 @@ export function AccordionItem({ title, children, isOpen, onToggle }: AccordionIt
       {/* Trigger */}
       <motion.button
         onClick={onToggle}
-        className="w-full flex justify-between items-center py-4 px-4 text-left hover:bg-gray-50 dark:hover:bg-gray-800"
+        className="flex w-full items-center justify-between px-4 py-4 text-left hover:bg-gray-50 dark:hover:bg-gray-800"
         whileHover={{ backgroundColor: "rgba(0, 0, 0, 0.02)" }}
       >
         <span className="font-semibold">{title}</span>
@@ -178,7 +178,7 @@ export function Accordion({ items, allowMultiple = false }: AccordionProps) {
   };
 
   return (
-    <div className="border border-gray-200 dark:border-gray-700 rounded-lg overflow-hidden">
+    <div className="overflow-hidden rounded-lg border border-gray-200 dark:border-gray-700">
       {items.map((item) => (
         <AccordionItem
           key={item.id}
@@ -247,7 +247,7 @@ export function Carousel({ images }: CarouselProps) {
   };
 
   return (
-    <div className="relative w-full h-96 overflow-hidden bg-gray-100 dark:bg-gray-800 rounded-lg">
+    <div className="relative h-96 w-full overflow-hidden rounded-lg bg-gray-100 dark:bg-gray-800">
       {/* Image */}
       <AnimatePresence initial={false} custom={direction}>
         <motion.img
@@ -260,26 +260,26 @@ export function Carousel({ images }: CarouselProps) {
           animate="center"
           exit="exit"
           transition={{ type: "spring", stiffness: 300, damping: 30 }}
-          className="absolute inset-0 w-full h-full object-cover"
+          className="absolute inset-0 h-full w-full object-cover"
         />
       </AnimatePresence>
 
       {/* Navigation buttons */}
       <button
         onClick={handlePrev}
-        className="absolute left-4 top-1/2 -translate-y-1/2 bg-white/80 dark:bg-gray-800/80 p-3 rounded-full shadow-lg z-10"
+        className="absolute top-1/2 left-4 z-10 -translate-y-1/2 rounded-full bg-white/80 p-3 shadow-lg dark:bg-gray-800/80"
       >
         ←
       </button>
       <button
         onClick={handleNext}
-        className="absolute right-4 top-1/2 -translate-y-1/2 bg-white/80 dark:bg-gray-800/80 p-3 rounded-full shadow-lg z-10"
+        className="absolute top-1/2 right-4 z-10 -translate-y-1/2 rounded-full bg-white/80 p-3 shadow-lg dark:bg-gray-800/80"
       >
         →
       </button>
 
       {/* Indicators */}
-      <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-2 z-10">
+      <div className="absolute bottom-4 left-1/2 z-10 flex -translate-x-1/2 gap-2">
         {images.map((_, index) => (
           <motion.button
             key={index}
@@ -291,7 +291,7 @@ export function Carousel({ images }: CarouselProps) {
               scale: index === currentIndex ? 1.2 : 1,
               opacity: index === currentIndex ? 1 : 0.5,
             }}
-            className="w-3 h-3 bg-white rounded-full"
+            className="h-3 w-3 rounded-full bg-white"
           />
         ))}
       </div>
@@ -322,19 +322,19 @@ export function DragCarousel({ items }: DragCarouselProps) {
   const constraintsRef = useRef<HTMLDivElement>(null);
 
   return (
-    <div ref={constraintsRef} className="overflow-hidden bg-gray-100 dark:bg-gray-800 rounded-lg p-4">
+    <div ref={constraintsRef} className="overflow-hidden rounded-lg bg-gray-100 p-4 dark:bg-gray-800">
       <motion.div
         drag="x"
         dragConstraints={constraintsRef}
         dragElastic={0.1}
         dragMomentum={false}
-        className="flex gap-4 cursor-grab active:cursor-grabbing"
+        className="flex cursor-grab gap-4 active:cursor-grabbing"
       >
         {items.map((item, index) => (
           <motion.div
             key={index}
             whileHover={{ scale: 1.05 }}
-            className="min-w-[300px] h-64 bg-white dark:bg-gray-700 rounded-lg shadow-md flex items-center justify-center"
+            className="flex h-64 min-w-[300px] items-center justify-center rounded-lg bg-white shadow-md dark:bg-gray-700"
           >
             {item}
           </motion.div>
@@ -381,7 +381,7 @@ export function Tabs({ tabs }: TabsProps) {
           <button
             key={tab.id}
             onClick={() => setActiveTab(tab.id)}
-            className="relative px-4 py-2 text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white"
+            className="relative px-4 py-2 text-gray-700 hover:text-gray-900 dark:text-gray-300 dark:hover:text-white"
           >
             {tab.label}
 
@@ -389,7 +389,7 @@ export function Tabs({ tabs }: TabsProps) {
             {activeTab === tab.id && (
               <motion.div
                 layoutId="activeTab"
-                className="absolute bottom-0 left-0 right-0 h-0.5 bg-blue-600"
+                className="absolute right-0 bottom-0 left-0 h-0.5 bg-blue-600"
                 transition={{ type: "spring", stiffness: 300, damping: 30 }}
               />
             )}
@@ -459,7 +459,7 @@ export function Dropdown({ trigger, items }: DropdownProps) {
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -10 }}
               transition={{ duration: 0.2 }}
-              className="absolute right-0 mt-2 w-48 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg shadow-lg z-20"
+              className="absolute right-0 z-20 mt-2 w-48 rounded-lg border border-gray-200 bg-white shadow-lg dark:border-gray-700 dark:bg-gray-800"
             >
               {items.map((item, index) => (
                 <motion.button
@@ -469,7 +469,7 @@ export function Dropdown({ trigger, items }: DropdownProps) {
                     item.onClick();
                     setIsOpen(false);
                   }}
-                  className="w-full text-left px-4 py-2 first:rounded-t-lg last:rounded-b-lg"
+                  className="w-full px-4 py-2 text-left first:rounded-t-lg last:rounded-b-lg"
                 >
                   {item.label}
                 </motion.button>
@@ -521,7 +521,7 @@ export function Toast({ message, type = "info", isVisible, onClose }: ToastProps
           animate={{ opacity: 1, x: 0 }}
           exit={{ opacity: 0, x: 300 }}
           transition={{ type: "spring", stiffness: 300, damping: 30 }}
-          className={`fixed top-4 right-4 ${colors[type]} text-white px-6 py-4 rounded-lg shadow-lg z-50 flex items-center gap-4`}
+          className={`fixed top-4 right-4 ${colors[type]} z-50 flex items-center gap-4 rounded-lg px-6 py-4 text-white shadow-lg`}
         >
           <span>{message}</span>
           <motion.button
@@ -567,13 +567,13 @@ export function UIComponentsDemo() {
   const [showToast, setShowToast] = useState(false);
 
   return (
-    <div className="max-w-4xl mx-auto p-8 space-y-12">
-      <h1 className="text-4xl font-bold mb-8">Motion UI Components</h1>
+    <div className="mx-auto max-w-4xl space-y-12 p-8">
+      <h1 className="mb-8 text-4xl font-bold">Motion UI Components</h1>
 
       {/* Modal */}
       <section>
-        <h2 className="text-2xl font-bold mb-4">1. Modal Dialog</h2>
-        <button onClick={() => setIsModalOpen(true)} className="px-4 py-2 bg-blue-600 text-white rounded">
+        <h2 className="mb-4 text-2xl font-bold">1. Modal Dialog</h2>
+        <button onClick={() => setIsModalOpen(true)} className="rounded bg-blue-600 px-4 py-2 text-white">
           Open Modal
         </button>
         <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} title="Example Modal">
@@ -583,7 +583,7 @@ export function UIComponentsDemo() {
 
       {/* Accordion */}
       <section>
-        <h2 className="text-2xl font-bold mb-4">2. Accordion</h2>
+        <h2 className="mb-4 text-2xl font-bold">2. Accordion</h2>
         <Accordion
           items={[
             { id: "1", title: "Section 1", content: <p>Content for section 1</p> },
@@ -595,7 +595,7 @@ export function UIComponentsDemo() {
 
       {/* Carousel */}
       <section>
-        <h2 className="text-2xl font-bold mb-4">3. Carousel</h2>
+        <h2 className="mb-4 text-2xl font-bold">3. Carousel</h2>
         <Carousel
           images={[
             { id: "1", url: "https://via.placeholder.com/800x400/ff6b6b", alt: "Red" },
@@ -607,7 +607,7 @@ export function UIComponentsDemo() {
 
       {/* Drag Carousel */}
       <section>
-        <h2 className="text-2xl font-bold mb-4">4. Drag Carousel</h2>
+        <h2 className="mb-4 text-2xl font-bold">4. Drag Carousel</h2>
         <DragCarousel
           items={[
             <div className="text-2xl font-bold">Card 1</div>,
@@ -620,7 +620,7 @@ export function UIComponentsDemo() {
 
       {/* Tabs */}
       <section>
-        <h2 className="text-2xl font-bold mb-4">5. Tabs</h2>
+        <h2 className="mb-4 text-2xl font-bold">5. Tabs</h2>
         <Tabs
           tabs={[
             { id: "home", label: "Home", content: <p>Home tab content</p> },
@@ -632,9 +632,9 @@ export function UIComponentsDemo() {
 
       {/* Dropdown */}
       <section>
-        <h2 className="text-2xl font-bold mb-4">6. Dropdown Menu</h2>
+        <h2 className="mb-4 text-2xl font-bold">6. Dropdown Menu</h2>
         <Dropdown
-          trigger={<button className="px-4 py-2 bg-gray-600 text-white rounded">Open Menu</button>}
+          trigger={<button className="rounded bg-gray-600 px-4 py-2 text-white">Open Menu</button>}
           items={[
             { label: "Profile", onClick: () => alert("Profile clicked") },
             { label: "Settings", onClick: () => alert("Settings clicked") },
@@ -645,8 +645,8 @@ export function UIComponentsDemo() {
 
       {/* Toast */}
       <section>
-        <h2 className="text-2xl font-bold mb-4">7. Toast Notification</h2>
-        <button onClick={() => setShowToast(true)} className="px-4 py-2 bg-green-600 text-white rounded">
+        <h2 className="mb-4 text-2xl font-bold">7. Toast Notification</h2>
+        <button onClick={() => setShowToast(true)} className="rounded bg-green-600 px-4 py-2 text-white">
           Show Toast
         </button>
         <Toast

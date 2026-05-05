@@ -9,14 +9,20 @@ Detailed examples of when NOT to use useEffect and better alternatives.
 ```jsx
 // ❌ BAD: Double render cycle
 function FilteredList({ items }) {
-  const [query, setQuery] = useState('');
+  const [query, setQuery] = useState("");
   const [filtered, setFiltered] = useState([]);
 
   useEffect(() => {
-    setFiltered(items.filter(item => item.name.includes(query)));
+    setFiltered(items.filter((item) => item.name.includes(query)));
   }, [items, query]); // Renders twice on every input
 
-  return <ul>{filtered.map(item => <li key={item.id}>{item.name}</li>)}</ul>;
+  return (
+    <ul>
+      {filtered.map((item) => (
+        <li key={item.id}>{item.name}</li>
+      ))}
+    </ul>
+  );
 }
 ```
 
@@ -25,16 +31,23 @@ function FilteredList({ items }) {
 ```jsx
 // ✅ GOOD: Single render, no effect needed
 function FilteredList({ items }) {
-  const [query, setQuery] = useState('');
+  const [query, setQuery] = useState("");
 
   // Calculated every render - no state, no effect
-  const filtered = items.filter(item => item.name.includes(query));
+  const filtered = items.filter((item) => item.name.includes(query));
 
-  return <ul>{filtered.map(item => <li key={item.id}>{item.name}</li>)}</ul>;
+  return (
+    <ul>
+      {filtered.map((item) => (
+        <li key={item.id}>{item.name}</li>
+      ))}
+    </ul>
+  );
 }
 ```
 
 **Why it's better:**
+
 - Immediate feedback UI updates (no double render pause)
 - Simpler mental model: what you see is what you get
 - No dependency array to manage
@@ -47,18 +60,18 @@ function FilteredList({ items }) {
 ```jsx
 // ❌ BAD: Shows old state briefly, then new
 function UserForm({ userId }) {
-  const [userName, setUserName] = useState('');
-  const [email, setEmail] = useState('');
+  const [userName, setUserName] = useState("");
+  const [email, setEmail] = useState("");
 
   useEffect(() => {
-    setUserName('');  // First render shows old userName
-    setEmail('');    // Then this effect runs to reset
-  }, [userId]);      // Double render every userId change
+    setUserName(""); // First render shows old userName
+    setEmail(""); // Then this effect runs to reset
+  }, [userId]); // Double render every userId change
 
   return (
     <form>
-      <input value={userName} onChange={e => setUserName(e.target.value)} />
-      <input value={email} onChange={e => setEmail(e.target.value)} />
+      <input value={userName} onChange={(e) => setUserName(e.target.value)} />
+      <input value={email} onChange={(e) => setEmail(e.target.value)} />
     </form>
   );
 }
@@ -73,7 +86,7 @@ function App() {
 
   return (
     <div>
-      <button onClick={() => setUserId(prev => prev + 1)}>Next User</button>
+      <button onClick={() => setUserId((prev) => prev + 1)}>Next User</button>
       {/* Different key = different component instance */}
       <UserForm key={userId} userId={userId} />
     </div>
@@ -88,9 +101,9 @@ function App() {
 function UserForm({ userId }) {
   const [userName, setUserName] = useSyncExternalStore(
     () => ({ onSet: setUserName }), // Reset when userId changes
-    { value: '' }
+    { value: "" },
   );
-  const [email, setEmail] = useState('');
+  const [email, setEmail] = useState("");
 
   // Email persists, userName resets
   return <form>...</form>;
@@ -117,7 +130,7 @@ function OrderForm() {
 
   // Effect 2: Set error when validation changes
   useEffect(() => {
-    setError(validated ? null : 'Invalid');
+    setError(validated ? null : "Invalid");
   }, [validated]);
 
   // Effect 3: Submit when no error
@@ -137,9 +150,9 @@ function OrderForm() {
   const handleSubmit = () => {
     // All logic happens atomically
     if (validateData(formData)) {
-      submitOrder(formData);  // No intermediate states
+      submitOrder(formData); // No intermediate states
     } else {
-      setError('Invalid form');  // Set directly, no cascade
+      setError("Invalid form"); // Set directly, no cascade
     }
   };
 
@@ -154,16 +167,16 @@ function OrderForm() {
 ```jsx
 // ❌ BAD: Intent is lost, hard to follow
 function LoginForm() {
-  const [username, setUsername] = useState('');
+  const [username, setUsername] = useState("");
   const [submitted, setSubmitted] = useState(false);
 
   const handleSubmit = () => {
-    setSubmitted(true);  // Just a flag, no actual logic
+    setSubmitted(true); // Just a flag, no actual logic
   };
 
   useEffect(() => {
     if (submitted) {
-      login(username);  // What triggered this? Which submit was it?
+      login(username); // What triggered this? Which submit was it?
     }
   }, [submitted, username]);
 }
@@ -174,16 +187,16 @@ function LoginForm() {
 ```jsx
 // ✅ GOOD: Clear intent, direct action
 function LoginForm() {
-  const [username, setUsername] = useState('');
+  const [username, setUsername] = useState("");
 
   const handleSubmit = async (e) => {
-    e.preventDefault();  // User action context preserved
+    e.preventDefault(); // User action context preserved
 
     // Actual logic here, not delayed
     try {
       await login(username);
     } catch (error) {
-      console.error('Login failed:', error);
+      console.error("Login failed:", error);
     }
   };
 
@@ -201,7 +214,7 @@ function ProductList({ products }) {
   const [visibleProducts, setVisibleProducts] = useState([]);
 
   useEffect(() => {
-    setVisibleProducts(products.filter(p => p.inStock));
+    setVisibleProducts(products.filter((p) => p.inStock));
   }, [products]); // Runs twice whenever products change
 }
 ```
@@ -211,7 +224,7 @@ function ProductList({ products }) {
 ```jsx
 // ✅ GOOD: Immediate, single render
 function ProductList({ products }) {
-  const visibleProducts = products.filter(p => p.inStock);
+  const visibleProducts = products.filter((p) => p.inStock);
 }
 ```
 
@@ -226,8 +239,8 @@ function WindowSize() {
 
   useEffect(() => {
     const handleResize = () => setWidth(window.innerWidth);
-    window.addEventListener('resize', handleResize);
-    return () => window.removeEventListener('resize', handleResize);
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
   }, []);
 }
 ```
@@ -240,18 +253,19 @@ function WindowSize() {
   const width = useSyncExternalStore(
     // Subscribe - return cleanup function
     (callback) => {
-      window.addEventListener('resize', callback);
-      return () => window.removeEventListener('resize', callback);
+      window.addEventListener("resize", callback);
+      return () => window.removeEventListener("resize", callback);
     },
     // Get snapshot
     () => window.innerWidth,
     // Server fallback
-    () => 1200
+    () => 1200,
   );
 }
 ```
 
 **Why it's better:**
+
 - React can guarantee UI consistency even during concurrent rendering
 - Single source of truth
 - Built-in optimization - subscription fires only when needed
@@ -266,8 +280,10 @@ function UserProfile({ userId }) {
   const [user, setUser] = useState(null);
 
   useEffect(() => {
-    fetch(`/user/1`).then(res => res.json()).then(setUser);
-  }, [ ]); // Missing userId dependency!
+    fetch(`/user/1`)
+      .then((res) => res.json())
+      .then(setUser);
+  }, []); // Missing userId dependency!
 }
 ```
 
@@ -279,7 +295,9 @@ function UserProfile({ userId }) {
   const [user, setUser] = useState(null);
 
   useEffect(() => {
-    fetch(`/user/${userId}`).then(res => res.json()).then(setUser);
+    fetch(`/user/${userId}`)
+      .then((res) => res.json())
+      .then(setUser);
   }, [userId]); // Properly tracks changes
 }
 ```

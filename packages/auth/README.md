@@ -47,7 +47,7 @@ The auth package provides the necessary database schema. You need to include it 
 ```typescript
 // packages/db/src/schema/index.ts
 export * from "./users";
-export * from "auth/schema";  // Add this line
+export * from "auth/schema"; // Add this line
 ```
 
 Then run migrations:
@@ -107,23 +107,23 @@ function SignUpForm() {
 
   return (
     <form onSubmit={(e) => { e.preventDefault(); handleSignUp(); }}>
-      <input 
-        type="text" 
-        value={name} 
-        onChange={(e) => setName(e.target.value)} 
-        placeholder="Name" 
+      <input
+        type="text"
+        value={name}
+        onChange={(e) => setName(e.target.value)}
+        placeholder="Name"
       />
-      <input 
-        type="email" 
-        value={email} 
-        onChange={(e) => setEmail(e.target.value)} 
-        placeholder="Email" 
+      <input
+        type="email"
+        value={email}
+        onChange={(e) => setEmail(e.target.value)}
+        placeholder="Email"
       />
-      <input 
-        type="password" 
-        value={password} 
-        onChange={(e) => setPassword(e.target.value)} 
-        placeholder="Password" 
+      <input
+        type="password"
+        value={password}
+        onChange={(e) => setPassword(e.target.value)}
+        placeholder="Password"
       />
       <button type="submit">Sign Up</button>
     </form>
@@ -149,17 +149,17 @@ function SignInForm() {
 
   return (
     <form onSubmit={(e) => { e.preventDefault(); handleSignIn(); }}>
-      <input 
-        type="email" 
-        value={email} 
-        onChange={(e) => setEmail(e.target.value)} 
-        placeholder="Email" 
+      <input
+        type="email"
+        value={email}
+        onChange={(e) => setEmail(e.target.value)}
+        placeholder="Email"
       />
-      <input 
-        type="password" 
-        value={password} 
-        onChange={(e) => setPassword(e.target.value)} 
-        placeholder="Password" 
+      <input
+        type="password"
+        value={password}
+        onChange={(e) => setPassword(e.target.value)}
+        placeholder="Password"
       />
       <button type="submit">Sign In</button>
     </form>
@@ -172,6 +172,7 @@ function SignInForm() {
 Add these environment variables to your `.env` file:
 
 ### Server (servers/api/.env)
+
 ```env
 BETTER_AUTH_SECRET=your-super-secret-key-change-in-production
 BETTER_AUTH_URL=http://localhost:3000
@@ -179,6 +180,7 @@ DATABASE_URL=postgres://postgres:postgres@localhost:5432/app_db
 ```
 
 ### Client (clients/web/.env)
+
 ```env
 VITE_BETTER_AUTH_URL=http://localhost:3000
 ```
@@ -244,9 +246,7 @@ import { organization } from "better-auth/plugins";
 export function createAuth(db: any) {
   return betterAuth({
     // ... existing config
-    plugins: [
-      organization(),
-    ],
+    plugins: [organization()],
   });
 }
 ```

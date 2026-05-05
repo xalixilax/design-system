@@ -1,27 +1,6 @@
 import { useEffect } from "react";
-import { SIDE_PANEL_DEFAULT_WIDTH, SIDE_PANEL_MIN_VISIBLE_WIDTH } from "../utils/const";
 
-function getExpandedSidepanelWidth(width: number): number {
-  if (width < SIDE_PANEL_MIN_VISIBLE_WIDTH) {
-    return SIDE_PANEL_DEFAULT_WIDTH;
-  }
-
-  return width;
-}
-
-function toggleSidepanelCollapseState(
-  setIsSidepanelCollapsed: React.Dispatch<React.SetStateAction<boolean>>,
-  setSidepanelWidth: React.Dispatch<React.SetStateAction<number>>,
-): void {
-  setIsSidepanelCollapsed((current) => {
-    if (current) {
-      setSidepanelWidth((width) => getExpandedSidepanelWidth(width));
-      return false;
-    }
-
-    return true;
-  });
-}
+import { toggleSidepanelCollapseState } from "../utils/sidepanel";
 
 export function useSidepanelKeyboardToggle(
   setIsSidepanelCollapsed: React.Dispatch<React.SetStateAction<boolean>>,

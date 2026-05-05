@@ -3,8 +3,8 @@
   "compilerOptions": {
     "jsx": "react-jsx",
     "paths": {
-      "@design-system/*": ["../design-system/src/*"],
+      "@design-system/*": ["../design-system/src/*"]
     }
   },
-  "includes": [".storybook"]
+  "include": [".storybook/**/*", "vitest.shims.d.ts"]
 }

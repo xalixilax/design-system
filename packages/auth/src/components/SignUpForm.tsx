@@ -51,7 +51,7 @@ export function SignUpForm({ onSubmit, isLoading = false, error, onSignInClick }
       <form onSubmit={handleSubmit}>
         <CardContent className="space-y-4">
           {error && (
-            <div className="rounded-md bg-destructive/10 p-3 text-sm text-destructive border border-destructive/20">
+            <div className="rounded-md border border-destructive/20 bg-destructive/10 p-3 text-sm text-destructive">
               {error}
             </div>
           )}
@@ -113,12 +113,12 @@ export function SignUpForm({ onSubmit, isLoading = false, error, onSignInClick }
             {isLoading ? "Creating account..." : "Create Account"}
           </Button>
           {onSignInClick && (
-            <p className="text-sm text-center text-muted-foreground">
+            <p className="text-center text-sm text-muted-foreground">
               Already have an account?{" "}
               <button
                 type="button"
                 onClick={onSignInClick}
-                className="text-primary hover:underline font-medium"
+                className="font-medium text-primary hover:underline"
                 disabled={isLoading}
               >
                 Sign in

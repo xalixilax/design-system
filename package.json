@@ -2,45 +2,47 @@
   "name": "root",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "keywords": [],
+  "license": "ISC",
+  "author": "",
   "type": "module",
-  "pnpm": {
-    "node-linker": "hoisted"
-  },
+  "main": "index.js",
   "scripts": {
     "prepare": "husky",
     "web": "pnpm --filter web",
-    "ui": "pnpm --filter ui",
+    "ui": "pnpm --filter @design-system/components",
     "api": "pnpm --filter api",
     "db": "pnpm --filter db",
     "check": "pnpm biome check . --write",
     "check:tokens": "node ./scripts/checkLegacyCssVars.mjs",
     "storybook": "pnpm --filter storybook-doc storybook",
     "lint:types": "pnpm -r exec tsgo --noEmit",
-    "ai": "pnpm  lint && pnpm lint:types && pnpm fallow dead-code --quiet && pnpm fallow dupes --quiet && pnpm fmt",
-    "lint": "pnpm oxlint",
-    "lint:fix": "pnpm oxlint --fix",
-    "fmt": "oxfmt",
-    "fmt:check": "oxfmt --check"
+    "fallow:dead-code": "pnpm exec fallow dead-code --quiet --summary --production",
+    "fallow:dupes": "pnpm exec fallow dupes --quiet --summary",
+    "ai": "pnpm lint && pnpm lint:types && pnpm fallow:dead-code && pnpm fallow:dupes && pnpm fmt",
+    "lint": "pnpm oxlint packages scripts --ignore-pattern packages/storybook-doc/.storybook/preview.tsx",
+    "lint:fix": "pnpm oxlint packages scripts --ignore-pattern packages/storybook-doc/.storybook/preview.tsx --fix",
+    "fmt": "oxfmt packages scripts --no-error-on-unmatched-pattern",
+    "fmt:check": "oxfmt packages scripts --check --no-error-on-unmatched-pattern"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
   "devDependencies": {
     "@total-typescript/tsconfig": "^1.0.4",
     "@types/bun": "^1.3.2",
     "@types/react": "19.0.7",
+    "@typescript/native-preview": "catalog:",
+    "fallow": "^2.40.3",
     "husky": "^9.1.7",
     "lint-staged": "^15.5.1",
-    "typescript": "^5.9.3",
-    "wrangler": "^4.83.0",
     "oxfmt": "^0.45.0",
     "oxlint": "^1.60.0",
     "oxlint-tsgolint": "^0.21.1",
-    "fallow": "^2.40.3",
-    "@typescript/native-preview": "catalog:"
+    "typescript": "^5.9.3",
+    "wrangler": "^4.83.0"
   },
   "lint-staged": {
     "*.{js,jsx,ts,tsx,mjs,cjs}": "pnpm lint"
+  },
+  "pnpm": {
+    "node-linker": "hoisted"
   }
 }

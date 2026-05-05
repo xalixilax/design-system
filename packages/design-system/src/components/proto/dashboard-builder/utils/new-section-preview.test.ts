@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 
 import type { DashboardSection } from "../types";
+
 import { applySplitPreviewToSection, buildSplitPreview, getSplitPlacementFromPreview } from "./new-section-preview";
 
 const baseSection: DashboardSection = {

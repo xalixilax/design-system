@@ -1,8 +1,7 @@
+import { Button } from "@design-system/components/ui/button";
 import { useMemo, useState } from "react";
 
-import { Button } from "@design-system/components/ui/button";
 import { type DashboardSection, useDashboardLayout, DashboardBuilder } from "./dashboard-builder";
-
 
 type StoryArgs = {
   columns: number;
@@ -133,7 +132,7 @@ function InteractiveDashboardStory({ columns, rows, gap, canvasHeight }: StoryAr
           />
         </label>
 
-        <div className="md:col-span-4 flex items-center justify-end">
+        <div className="flex items-center justify-end md:col-span-4">
           <Button variant="outline" onClick={() => actions.resetSections(initialLayout)}>
             Reset to sketch layout
           </Button>

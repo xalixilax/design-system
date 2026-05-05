@@ -1,4 +1,5 @@
 import type { DashboardBounds, DashboardCard, DashboardSection, ResizeDirection } from "../types";
+import type { SegmentParticipants } from "./participants";
 
 export const DEFAULT_MIN_SECTION_WIDTH = 2;
 export const DEFAULT_MIN_SECTION_HEIGHT = 2;
@@ -46,7 +47,7 @@ export function clampSectionToBounds(section: DashboardSection, bounds: Dashboar
   };
 }
 
-function doesOverlap(left: DashboardSection, right: DashboardSection) {
+export function sectionsOverlap(left: DashboardSection, right: DashboardSection) {
   const leftRight = left.x + left.w;
   const rightRight = right.x + right.w;
   const leftBottom = left.y + left.h;
@@ -56,11 +57,113 @@ function doesOverlap(left: DashboardSection, right: DashboardSection) {
 }
 
 export function collidesWithAny(section: DashboardSection, sections: DashboardSection[], exceptId?: string) {
-  return sections.some((candidate) => candidate.id !== exceptId && doesOverlap(section, candidate));
+  return sections.some((candidate) => candidate.id !== exceptId && sectionsOverlap(section, candidate));
 }
 
 export function findCollidingSections(section: DashboardSection, sections: DashboardSection[], exceptId?: string) {
-  return sections.filter((candidate) => candidate.id !== exceptId && doesOverlap(section, candidate));
+  return sections.filter((candidate) => candidate.id !== exceptId && sectionsOverlap(section, candidate));
+}
+
+function minWidth(section: DashboardSection) {
+  return section.minW ?? DEFAULT_MIN_SECTION_WIDTH;
+}
+
+function minHeight(section: DashboardSection) {
+  return section.minH ?? DEFAULT_MIN_SECTION_HEIGHT;
+}
+
+export function isSectionWithinBounds(section: DashboardSection, bounds: DashboardBounds) {
+  return (
+    section.w >= minWidth(section) &&
+    section.h >= minHeight(section) &&
+    section.x >= 1 &&
+    section.y >= 1 &&
+    section.x + section.w - 1 <= bounds.columns &&
+    section.y + section.h - 1 <= bounds.rows
+  );
+}
+
+export function isValidSectionLayout(sections: DashboardSection[], bounds: DashboardBounds) {
+  for (const section of sections) {
+    if (!isSectionWithinBounds(section, bounds)) {
+      return false;
+    }
+  }
+
+  for (const section of sections) {
+    if (collidesWithAny(section, sections, section.id)) {
+      return false;
+    }
+  }
+
+  return true;
+}
+
+export function fillsBoundsExactly(sections: DashboardSection[], bounds: DashboardBounds) {
+  const occupancy = new Uint8Array(bounds.columns * bounds.rows);
+
+  for (const section of sections) {
+    for (let row = section.y; row < section.y + section.h; row += 1) {
+      for (let column = section.x; column < section.x + section.w; column += 1) {
+        const index = (row - 1) * bounds.columns + (column - 1);
+        occupancy[index] = (occupancy[index] ?? 0) + 1;
+      }
+    }
+  }
+
+  for (const cell of occupancy) {
+    if (cell !== 1) {
+      return false;
+    }
+  }
+
+  return true;
+}
+
+export function applySegmentResizeDelta(
+  sections: DashboardSection[],
+  participants: SegmentParticipants,
+  delta: number,
+) {
+  if (participants.direction === "e") {
+    return sections.map((section) => {
+      if (participants.leftIds.has(section.id)) {
+        return {
+          ...section,
+          w: section.w + delta,
+        };
+      }
+
+      if (participants.rightIds.has(section.id)) {
+        return {
+          ...section,
+          x: section.x + delta,
+          w: section.w - delta,
+        };
+      }
+
+      return section;
+    });
+  }
+
+  return sections.map((section) => {
+    if (participants.topIds.has(section.id)) {
+      return {
+        ...section,
+        h: section.h + delta,
+      };
+    }
+
+    if (participants.bottomIds.has(section.id)) {
+      return {
+        ...section,
+        y: section.y + delta,
+        h: section.h - delta,
+      };
+    }
+
+    return section;
+  });
 }
 
 export function applyResizeDelta(

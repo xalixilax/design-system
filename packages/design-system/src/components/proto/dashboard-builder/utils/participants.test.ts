@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 
 import type { DashboardSection } from "../types";
+
 import { buildSegmentParticipants } from "./participants";
 
 const sections: DashboardSection[] = [

@@ -29,13 +29,13 @@ A modern full-stack monorepo starter template built with TypeScript, React, Hono
 
 - **Tooling**:
   - pnpm
-  - Biome 
+  - Biome
   - Vitest
 
 ---
 
 ## 📁 Project Structure
- 
+
 ```bash
 react-hono-mono-starter/
 ├── clients/
@@ -44,7 +44,7 @@ react-hono-mono-starter/
 │   └── ui/            # Shared UI components (shadcn/ui)
 ├── servers/
 │   └── api/           # Hono api
-├── .biome.js          
+├── .biome.js
 ├── pnpm-workspace.yaml
 └── README.md
 ```
@@ -54,12 +54,12 @@ react-hono-mono-starter/
 ## 🚀 Getting Started
 
 ### Prerequisites
--  Node.js (v18 or higher)
--  pnpm (v8 or higher)
+
+- Node.js (v18 or higher)
+- pnpm (v8 or higher)
 
 ### Installation
 
- 
 ```bash
 # Install dependencies
 pnpm install
@@ -67,7 +67,6 @@ pnpm install
 
 ### Development
 
- 
 ```bash
 # Start the backend server
 pnpm --filter api dev
@@ -80,7 +79,6 @@ pnpm --filter app dev
 
 ## 🧪 Testing
 
- 
 ```bash
 # Run tests (if configured)
 pnpm test
@@ -90,7 +88,6 @@ pnpm test
 
 ## 📦 Building for Producton
 
- 
 ```bash
 # Build the backend
 pnpm --filter api build

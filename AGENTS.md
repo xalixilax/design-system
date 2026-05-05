@@ -17,5 +17,5 @@
 
 ## Task Management
 
-- You **MUST** use `dex` skill for task coordination. See `.github/skills/dex/SKILL.md`
-- You **MUST** use `dex-plan` skill for creating tasks from planning docs. See `.github/skills/dex-plan/SKILL.md`
+- You **SHOULD** use `dex` skill for task coordination. See `.github/skills/dex/SKILL.md`
+- You **SHOULD** use `dex-plan` skill for creating tasks from planning docs. See `.github/skills/dex-plan/SKILL.md`

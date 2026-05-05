@@ -1,13 +1,18 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 
 import type { DashboardBounds, DashboardCard, DashboardSection, ResizeDirection, SplitPlacement } from "../types";
+
 import {
   applyResizeDelta,
+  applySegmentResizeDelta,
   buildId,
   clampSectionToBounds,
   collidesWithAny,
   createCard,
+  fillsBoundsExactly,
   findOpenSlot,
+  isValidSectionLayout,
+  sectionsOverlap,
 } from "../utils/layout";
 import { buildSegmentParticipants } from "../utils/participants";
 
@@ -42,15 +47,6 @@ function minWidth(section: DashboardSection) {
 
 function minHeight(section: DashboardSection) {
   return section.minH ?? 2;
-}
-
-function sectionsOverlap(left: DashboardSection, right: DashboardSection) {
-  const leftRight = left.x + left.w;
-  const rightRight = right.x + right.w;
-  const leftBottom = left.y + left.h;
-  const rightBottom = right.y + right.h;
-
-  return left.x < rightRight && leftRight > right.x && left.y < rightBottom && leftBottom > right.y;
 }
 
 function findGapFiller(removed: DashboardSection, sections: DashboardSection[]) {
@@ -111,54 +107,80 @@ function findGapFiller(removed: DashboardSection, sections: DashboardSection[]) 
   return null;
 }
 
-function isValidLayout(next: DashboardSection[], bounds: DashboardBounds) {
-  for (const section of next) {
-    if (
-      section.w < minWidth(section) ||
-      section.h < minHeight(section) ||
-      section.x < 1 ||
-      section.y < 1 ||
-      section.x + section.w - 1 > bounds.columns ||
-      section.y + section.h - 1 > bounds.rows
-    ) {
-      return false;
+function buildLineResizeUpdates(
+  sections: DashboardSection[],
+  current: DashboardSection,
+  direction: ResizeDirection,
+  deltaColumns: number,
+  deltaRows: number,
+) {
+  if ((direction === "e" || direction === "w") && deltaColumns !== 0) {
+    const boundary = direction === "e" ? current.x + current.w : current.x;
+    const neighbors = sections.filter(
+      (section) =>
+        section.id !== current.id &&
+        (direction === "e" ? section.x === boundary : section.x + section.w === boundary) &&
+        intervalsOverlap(section.y, section.y + section.h, current.y, current.y + current.h),
+    );
+
+    if (neighbors.length === 0) {
+      return null;
     }
+
+    const updates = new Map<string, DashboardSection>();
+    updates.set(
+      current.id,
+      direction === "e"
+        ? { ...current, w: current.w + deltaColumns }
+        : { ...current, x: current.x + deltaColumns, w: current.w - deltaColumns },
+    );
+
+    for (const neighbor of neighbors) {
+      updates.set(
+        neighbor.id,
+        direction === "e"
+          ? { ...neighbor, x: neighbor.x + deltaColumns, w: neighbor.w - deltaColumns }
+          : { ...neighbor, w: neighbor.w + deltaColumns },
+      );
+    }
+
+    return updates;
   }
 
-  for (const section of next) {
-    if (collidesWithAny(section, next, section.id)) {
-      return false;
+  if ((direction === "s" || direction === "n") && deltaRows !== 0) {
+    const boundary = direction === "s" ? current.y + current.h : current.y;
+    const neighbors = sections.filter(
+      (section) =>
+        section.id !== current.id &&
+        (direction === "s" ? section.y === boundary : section.y + section.h === boundary) &&
+        intervalsOverlap(section.x, section.x + section.w, current.x, current.x + current.w),
+    );
+
+    if (neighbors.length === 0) {
+      return null;
     }
+
+    const updates = new Map<string, DashboardSection>();
+    updates.set(
+      current.id,
+      direction === "s"
+        ? { ...current, h: current.h + deltaRows }
+        : { ...current, y: current.y + deltaRows, h: current.h - deltaRows },
+    );
+
+    for (const neighbor of neighbors) {
+      updates.set(
+        neighbor.id,
+        direction === "s"
+          ? { ...neighbor, y: neighbor.y + deltaRows, h: neighbor.h - deltaRows }
+          : { ...neighbor, h: neighbor.h + deltaRows },
+      );
+    }
+
+    return updates;
   }
 
-  return true;
-}
-
-function hasNoGaps(next: DashboardSection[], bounds: DashboardBounds) {
-  const totalCells = bounds.columns * bounds.rows;
-  const occupancy = new Uint8Array(totalCells);
-
-  for (const section of next) {
-    const startColumn = section.x;
-    const endColumn = section.x + section.w - 1;
-    const startRow = section.y;
-    const endRow = section.y + section.h - 1;
-
-    for (let row = startRow; row <= endRow; row += 1) {
-      for (let column = startColumn; column <= endColumn; column += 1) {
-        const index = (row - 1) * bounds.columns + (column - 1);
-        occupancy[index] = (occupancy[index] ?? 0) + 1;
-      }
-    }
-  }
-
-  for (const cell of occupancy) {
-    if (cell !== 1) {
-      return false;
-    }
-  }
-
-  return true;
+  return null;
 }
 
 export function useDashboardLayout({ bounds, initialSections }: UseDashboardLayoutOptions) {
@@ -325,128 +347,7 @@ export function useDashboardLayout({ bounds, initialSections }: UseDashboardLayo
           return previous;
         }
 
-        const attemptLineResize = () => {
-          if (direction === "e" && deltaColumns !== 0) {
-            const boundary = current.x + current.w;
-            const neighbors = previous.filter(
-              (section) =>
-                section.id !== current.id &&
-                section.x === boundary &&
-                intervalsOverlap(section.y, section.y + section.h, current.y, current.y + current.h),
-            );
-
-            if (neighbors.length === 0) {
-              return null;
-            }
-
-            const updates = new Map<string, DashboardSection>();
-            updates.set(current.id, { ...current, w: current.w + deltaColumns });
-
-            for (const neighbor of neighbors) {
-              updates.set(neighbor.id, {
-                ...neighbor,
-                x: neighbor.x + deltaColumns,
-                w: neighbor.w - deltaColumns,
-              });
-            }
-
-            return updates;
-          }
-
-          if (direction === "w" && deltaColumns !== 0) {
-            const boundary = current.x;
-            const neighbors = previous.filter(
-              (section) =>
-                section.id !== current.id &&
-                section.x + section.w === boundary &&
-                intervalsOverlap(section.y, section.y + section.h, current.y, current.y + current.h),
-            );
-
-            if (neighbors.length === 0) {
-              return null;
-            }
-
-            const updates = new Map<string, DashboardSection>();
-            updates.set(current.id, {
-              ...current,
-              x: current.x + deltaColumns,
-              w: current.w - deltaColumns,
-            });
-
-            for (const neighbor of neighbors) {
-              updates.set(neighbor.id, {
-                ...neighbor,
-                w: neighbor.w + deltaColumns,
-              });
-            }
-
-            return updates;
-          }
-
-          if (direction === "s" && deltaRows !== 0) {
-            const boundary = current.y + current.h;
-            const neighbors = previous.filter(
-              (section) =>
-                section.id !== current.id &&
-                section.y === boundary &&
-                intervalsOverlap(section.x, section.x + section.w, current.x, current.x + current.w),
-            );
-
-            if (neighbors.length === 0) {
-              return null;
-            }
-
-            const updates = new Map<string, DashboardSection>();
-            updates.set(current.id, {
-              ...current,
-              h: current.h + deltaRows,
-            });
-
-            for (const neighbor of neighbors) {
-              updates.set(neighbor.id, {
-                ...neighbor,
-                y: neighbor.y + deltaRows,
-                h: neighbor.h - deltaRows,
-              });
-            }
-
-            return updates;
-          }
-
-          if (direction === "n" && deltaRows !== 0) {
-            const boundary = current.y;
-            const neighbors = previous.filter(
-              (section) =>
-                section.id !== current.id &&
-                section.y + section.h === boundary &&
-                intervalsOverlap(section.x, section.x + section.w, current.x, current.x + current.w),
-            );
-
-            if (neighbors.length === 0) {
-              return null;
-            }
-
-            const updates = new Map<string, DashboardSection>();
-            updates.set(current.id, {
-              ...current,
-              y: current.y + deltaRows,
-              h: current.h - deltaRows,
-            });
-
-            for (const neighbor of neighbors) {
-              updates.set(neighbor.id, {
-                ...neighbor,
-                h: neighbor.h + deltaRows,
-              });
-            }
-
-            return updates;
-          }
-
-          return null;
-        };
-
-        const lineResizeUpdates = attemptLineResize();
+        const lineResizeUpdates = buildLineResizeUpdates(previous, current, direction, deltaColumns, deltaRows);
         if (lineResizeUpdates) {
           const next = previous.map((section) => lineResizeUpdates.get(section.id) ?? section);
 
@@ -559,7 +460,7 @@ export function useDashboardLayout({ bounds, initialSections }: UseDashboardLayo
           });
         }
 
-        if (!isValidLayout(next, bounds) || !hasNoGaps(next, bounds)) {
+        if (!isValidSectionLayout(next, bounds) || !fillsBoundsExactly(next, bounds)) {
           return previous;
         }
 
@@ -585,51 +486,9 @@ export function useDashboardLayout({ bounds, initialSections }: UseDashboardLayo
 
         const participants = buildSegmentParticipants(previous, section, neighbor, direction);
 
-        let next: DashboardSection[];
+        const next = applySegmentResizeDelta(previous, participants, delta);
 
-        if (participants.direction === "e") {
-          next = previous.map((candidate) => {
-            if (participants.leftIds.has(candidate.id)) {
-              return {
-                ...candidate,
-                w: candidate.w + delta,
-              };
-            }
-
-            if (participants.rightIds.has(candidate.id)) {
-              return {
-                ...candidate,
-                x: candidate.x + delta,
-                w: candidate.w - delta,
-              };
-            }
-
-            return candidate;
-          });
-        } else if (participants.direction === "s") {
-          next = previous.map((candidate) => {
-            if (participants.topIds.has(candidate.id)) {
-              return {
-                ...candidate,
-                h: candidate.h + delta,
-              };
-            }
-
-            if (participants.bottomIds.has(candidate.id)) {
-              return {
-                ...candidate,
-                y: candidate.y + delta,
-                h: candidate.h - delta,
-              };
-            }
-
-            return candidate;
-          });
-        } else {
-          return previous;
-        }
-
-        if (!isValidLayout(next, bounds) || !hasNoGaps(next, bounds)) {
+        if (!isValidSectionLayout(next, bounds) || !fillsBoundsExactly(next, bounds)) {
           return previous;
         }
 
@@ -954,7 +813,7 @@ export function useDashboardLayout({ bounds, initialSections }: UseDashboardLayo
         }
 
         const next = remaining.map((section) => (section.id === filler.id ? filler.next : section));
-        return isValidLayout(next, bounds) ? next : remaining;
+        return isValidSectionLayout(next, bounds) && fillsBoundsExactly(next, bounds) ? next : remaining;
       });
     },
     [bounds.columns, bounds.rows],

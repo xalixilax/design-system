@@ -17,7 +17,7 @@ This package provides a [Storybook](https://storybook.js.org/) instance for the 
 
 ## 📦 What does this package do?
 
-- **Displays the design system**: Renders all components from `@astus/design-system` in an interactive UI explorer.
+- **Displays the design system**: Renders all components from `@design-system` in an interactive UI explorer.
 - **Aggregates stories**: Can scrape and display stories from other projects in the monorepo, making it easy to view all UI components in one place.
 - **Supports documentation and testing**: Integrates with Storybook addons for docs, accessibility, and visual testing.
 

@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from "react";
+
 import { clamp } from "../utils/clamp";
 import {
   BOTTOM_PANEL_COLLAPSE_HEIGHT,

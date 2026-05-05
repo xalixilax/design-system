@@ -26,15 +26,15 @@ Need to sync with external system?
 
 ## ❌ Don't use useEffect for:
 
-| Scenario | Problem | Alternative |
-|----------|---------|-------------|
-| **Derived state** | Double render | Calculate during render |
-| **State resets** | Stale data | Use `key` prop |
-| **User actions** | Lost intent | Event handlers |
-| **List filtering** | Extra renders | Filter in render |
-| **Browser APIs** | Tearing bugs (concurrent) | `useSyncExternalStore` |
-| **Form submission** | Fragile flag pattern | Direct async handler |
-| **Data fetching** | Manual cache management | React Query, SWR, Suspense |
+| Scenario            | Problem                   | Alternative                |
+| ------------------- | ------------------------- | -------------------------- |
+| **Derived state**   | Double render             | Calculate during render    |
+| **State resets**    | Stale data                | Use `key` prop             |
+| **User actions**    | Lost intent               | Event handlers             |
+| **List filtering**  | Extra renders             | Filter in render           |
+| **Browser APIs**    | Tearing bugs (concurrent) | `useSyncExternalStore`     |
+| **Form submission** | Fragile flag pattern      | Direct async handler       |
+| **Data fetching**   | Manual cache management   | React Query, SWR, Suspense |
 
 ## ✅ DO use useEffect for:
 
@@ -62,16 +62,19 @@ This eliminates many data-fetching useEffect patterns entirely.
 ## References and Further Reading
 
 ### Official Documentation
+
 - [React Docs: You Might Not Need an Effect](https://react.dev/learn/you-might-not-need-an-effect)
 - [React Docs: Synchronizing with Effects](https://react.dev/learn/synchronizing-with-effects)
 - [React Docs: useSyncExternalStore](https://react.dev/reference/react/useSyncExternalStore)
 
 ### Articles from Senior Engineers
+
 - [LogRocket: 15 Common useEffect Mistakes](https://blog.logrocket.com/15-common-useeffect-mistakes-react/) - Comprehensive anti-pattern catalog
 - [Epic React: Myths About useEffect](https://www.epicreact.dev/myths-about-useeffect) - Kent Dodds on mental models
 - [Kent Dodds: useSyncExternalStore Demystified](https://www.epicreact.dev/use-sync-external-store-demystified-for-practical-react-development-w5ac0)
 
 ### Key Principles
+
 1. **Effects are escape hatches** - use only when stepping outside React
 2. **Event-driven > Effect-driven** - prefer handlers for user actions
 3. **Render-time > Effect-time** - calculate values during render

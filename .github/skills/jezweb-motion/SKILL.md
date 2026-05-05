@@ -143,12 +143,7 @@ import { AnimatePresence } from "motion/react";
 
 <AnimatePresence>
   {isVisible && (
-    <motion.div
-      key="modal"
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      exit={{ opacity: 0 }}
-    >
+    <motion.div key="modal" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
       Modal content
     </motion.div>
   )}
@@ -174,9 +169,7 @@ import { AnimatePresence } from "motion/react";
 }
 
 // ✅ Correct - AnimatePresence stays mounted
-<AnimatePresence>
-  {isVisible && <motion.div key="unique">Content</motion.div>}
-</AnimatePresence>;
+<AnimatePresence>{isVisible && <motion.div key="unique">Content</motion.div>}</AnimatePresence>;
 ```
 
 ### 2. Layout Animations
@@ -390,10 +383,7 @@ function Component() {
 **Add `willChange` for transforms:**
 
 ```tsx
-<motion.div
-  style={{ willChange: "transform" }}
-  animate={{ x: 100, rotate: 45 }}
-/>
+<motion.div style={{ willChange: "transform" }} animate={{ x: 100, rotate: 45 }} />
 ```
 
 **Also add for**: `opacity`, `backgroundColor`, `clipPath`, `filter`
@@ -436,9 +426,7 @@ import { motion } from "motion/react";
 Automatically animates layout changes without JavaScript calculation:
 
 ```tsx
-<motion.div layout>
-  {isExpanded ? <LargeContent /> : <SmallContent />}
-</motion.div>
+<motion.div layout>{isExpanded ? <LargeContent /> : <SmallContent />}</motion.div>
 ```
 
 **Performance**: Hardware-accelerated via transforms, no reflow/repaint.
@@ -502,9 +490,7 @@ See `references/common-patterns.md` for full code (15+ patterns).
 }
 
 // ✅ Correct
-<AnimatePresence>
-  {isVisible && <motion.div key="unique">Content</motion.div>}
-</AnimatePresence>;
+<AnimatePresence>{isVisible && <motion.div key="unique">Content</motion.div>}</AnimatePresence>;
 ```
 
 ### Issue 2: Large List Performance

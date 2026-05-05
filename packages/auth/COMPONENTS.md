@@ -18,7 +18,7 @@ function SignInPage() {
       email,
       password,
     });
-    
+
     if (error) {
       console.error("Sign in failed:", error);
     } else {
@@ -51,7 +51,7 @@ function SignUpPage() {
       password,
       name,
     });
-    
+
     if (error) {
       console.error("Sign up failed:", error);
     } else {
@@ -59,12 +59,7 @@ function SignUpPage() {
     }
   };
 
-  return (
-    <SignUpForm
-      onSubmit={handleSignUp}
-      onSignInClick={() => navigate("/signin")}
-    />
-  );
+  return <SignUpForm onSubmit={handleSignUp} onSignInClick={() => navigate("/signin")} />;
 }
 ```
 
@@ -93,20 +88,15 @@ function SocialAuth() {
 
   return (
     <div className="space-y-3">
-      <AuthProviderButton 
-        provider="google" 
-        onSignIn={handleGoogleSignIn}
-      />
-      <AuthProviderButton 
-        provider="github" 
-        onSignIn={handleGitHubSignIn}
-      />
+      <AuthProviderButton provider="google" onSignIn={handleGoogleSignIn} />
+      <AuthProviderButton provider="github" onSignIn={handleGitHubSignIn} />
     </div>
   );
 }
 ```
 
 Supported providers:
+
 - `google`
 - `github`
 - `microsoft`
@@ -123,10 +113,7 @@ import { AuthLayout, SignInForm } from "auth/components";
 
 function SignInPage() {
   return (
-    <AuthLayout
-      title="Welcome Back"
-      description="Sign in to your account to continue"
-    >
+    <AuthLayout title="Welcome Back" description="Sign in to your account to continue">
       <SignInForm onSubmit={handleSignIn} />
     </AuthLayout>
   );
@@ -148,39 +135,39 @@ function AuthPage() {
   const handleSignIn = async (email: string, password: string) => {
     setIsLoading(true);
     setError(undefined);
-    
+
     const { data, error } = await authClient.signIn.email({
       email,
       password,
     });
-    
+
     if (error) {
       setError(error.message);
     } else {
       // Redirect or update UI
       window.location.href = "/dashboard";
     }
-    
+
     setIsLoading(false);
   };
 
   const handleSignUp = async (email: string, password: string, name: string) => {
     setIsLoading(true);
     setError(undefined);
-    
+
     const { data, error } = await authClient.signUp.email({
       email,
       password,
       name,
     });
-    
+
     if (error) {
       setError(error.message);
     } else {
       // Redirect or update UI
       window.location.href = "/dashboard";
     }
-    
+
     setIsLoading(false);
   };
 
@@ -196,11 +183,7 @@ function AuthPage() {
   return (
     <AuthLayout
       title={mode === "signin" ? "Welcome Back" : "Create Account"}
-      description={
-        mode === "signin"
-          ? "Sign in to your account to continue"
-          : "Get started with a new account"
-      }
+      description={mode === "signin" ? "Sign in to your account to continue" : "Get started with a new account"}
     >
       <div className="space-y-4">
         {mode === "signin" ? (
@@ -224,9 +207,7 @@ function AuthPage() {
             <span className="w-full border-t" />
           </div>
           <div className="relative flex justify-center text-xs uppercase">
-            <span className="bg-background px-2 text-muted-foreground">
-              Or continue with
-            </span>
+            <span className="bg-background px-2 text-muted-foreground">Or continue with</span>
           </div>
         </div>
 
@@ -299,6 +280,7 @@ interface AuthLayoutProps {
 ## Styling
 
 All components use Tailwind CSS classes and are compatible with your design system. They use:
+
 - Card components from `@design-system/components/ui/card`
 - Button components from `@design-system/components/ui/button`
 - Input components from `@design-system/components/ui/input`

@@ -1,21 +1,23 @@
+import type * as React from "react";
+
+import { Button } from "@design-system/components/ui/button";
+import { useElementSize } from "@design-system/lib/hooks/use-element-size";
+import { cn } from "@design-system/lib/utils";
 import { GripVertical, Lock, LockOpen, Square } from "lucide-react";
 import { AnimatePresence, motion } from "motion/react";
-import type * as React from "react";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { DndProvider, useDrop } from "react-dnd";
 import { useDrag } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
 
-import { Button } from "@design-system/components/ui/button";
-import { useElementSize } from "@design-system/lib/hooks/use-element-size";
-import { cn } from "@design-system/lib/utils";
+import type { DashboardBounds, DashboardCard, DashboardSection, SplitPlacement } from "./types";
 
 import {
   DASHBOARD_NEW_SECTION_ITEM_TYPE,
   DASHBOARD_SECTION_ITEM_TYPE,
   DashboardSectionItem,
 } from "./DashboardSectionItem";
-import type { DashboardBounds, DashboardCard, DashboardSection, SplitPlacement } from "./types";
+import { findSectionAtGridPosition, getGridPositionFromCursor } from "./utils/grid-position";
 import {
   type NewSectionPreview,
   applySplitPreviewToSection,
@@ -129,7 +131,7 @@ export function DashboardBuilderCanvas({
   onAddSectionAt,
   onSplitSectionWithNew,
   onSwapSections,
-  onResizeSection,
+  onResizeSection: _onResizeSection,
   onResizeBoundary,
   onResizeSegment,
   onRemoveSection,
@@ -186,46 +188,22 @@ export function DashboardBuilderCanvas({
         }
 
         if (item.kind === "new-section") {
-          const cursor = monitor.getClientOffset();
-          const container = containerRef.current;
-          if (!cursor || !container) {
+          const gridPosition = getGridPositionFromCursor(monitor.getClientOffset(), containerRef.current, bounds, gap);
+          if (!gridPosition) {
             setNewSectionPreview(null);
             setPendingPreviewClearTargetCount(null);
             return;
           }
 
-          const rect = container.getBoundingClientRect();
-          const usableWidth = rect.width - gap * (bounds.columns - 1);
-          const usableHeight = rect.height - gap * (bounds.rows - 1);
-          const columnStep = Math.max(1, usableWidth / bounds.columns + gap);
-          const rowStep = Math.max(1, usableHeight / bounds.rows + gap);
-          const cursorColumn = Math.min(
-            Math.max(1, Math.floor((cursor.x - rect.left) / columnStep) + 1),
-            bounds.columns,
-          );
-          const cursorRow = Math.min(Math.max(1, Math.floor((cursor.y - rect.top) / rowStep) + 1), bounds.rows);
-
-          const hoveredSection = sections.find(
-            (section) =>
-              cursorColumn >= section.x &&
-              cursorColumn < section.x + section.w &&
-              cursorRow >= section.y &&
-              cursorRow < section.y + section.h,
-          );
+          const { column, row } = gridPosition;
+          const hoveredSection = findSectionAtGridPosition(sections, column, row);
 
           if (hoveredSection) {
-            setNewSectionPreview(buildSplitPreview(hoveredSection, cursorColumn, cursorRow));
+            setNewSectionPreview(buildSplitPreview(hoveredSection, column, row));
             return;
           }
 
-          const placement = findNearestPlacementPreview(
-            cursorColumn,
-            cursorRow,
-            item.templateW,
-            item.templateH,
-            sections,
-            bounds,
-          );
+          const placement = findNearestPlacementPreview(column, row, item.templateW, item.templateH, sections, bounds);
 
           setNewSectionPreview(placement ? { mode: "place", ...placement } : null);
           return;
@@ -236,28 +214,13 @@ export function DashboardBuilderCanvas({
           setPendingPreviewClearTargetCount(null);
         }
 
-        const cursor = monitor.getClientOffset();
-        const container = containerRef.current;
-        if (!cursor || !container) {
+        const gridPosition = getGridPositionFromCursor(monitor.getClientOffset(), containerRef.current, bounds, gap);
+        if (!gridPosition) {
           return;
         }
 
-        const rect = container.getBoundingClientRect();
-        const usableWidth = rect.width - gap * (bounds.columns - 1);
-        const usableHeight = rect.height - gap * (bounds.rows - 1);
-        const columnStep = Math.max(1, usableWidth / bounds.columns + gap);
-        const rowStep = Math.max(1, usableHeight / bounds.rows + gap);
-        const cursorColumn = Math.min(Math.max(1, Math.floor((cursor.x - rect.left) / columnStep) + 1), bounds.columns);
-        const cursorRow = Math.min(Math.max(1, Math.floor((cursor.y - rect.top) / rowStep) + 1), bounds.rows);
-
-        const hoveredSection = sections.find(
-          (section) =>
-            section.id !== item.id &&
-            cursorColumn >= section.x &&
-            cursorColumn < section.x + section.w &&
-            cursorRow >= section.y &&
-            cursorRow < section.y + section.h,
-        );
+        const { column, row } = gridPosition;
+        const hoveredSection = findSectionAtGridPosition(sections, column, row, item.id);
 
         if (hoveredSection) {
           if (item.lastSwapTargetId !== hoveredSection.id) {
@@ -301,30 +264,16 @@ export function DashboardBuilderCanvas({
           return;
         }
 
-        const cursor = monitor.getClientOffset();
-        const container = containerRef.current;
-        if (!cursor || !container) {
+        const gridPosition = getGridPositionFromCursor(monitor.getClientOffset(), containerRef.current, bounds, gap);
+        if (!gridPosition) {
           return;
         }
 
-        const rect = container.getBoundingClientRect();
-        const usableWidth = rect.width - gap * (bounds.columns - 1);
-        const usableHeight = rect.height - gap * (bounds.rows - 1);
-        const columnStep = Math.max(1, usableWidth / bounds.columns + gap);
-        const rowStep = Math.max(1, usableHeight / bounds.rows + gap);
-        const cursorColumn = Math.min(Math.max(1, Math.floor((cursor.x - rect.left) / columnStep) + 1), bounds.columns);
-        const cursorRow = Math.min(Math.max(1, Math.floor((cursor.y - rect.top) / rowStep) + 1), bounds.rows);
-
-        const hoveredSection = sections.find(
-          (section) =>
-            cursorColumn >= section.x &&
-            cursorColumn < section.x + section.w &&
-            cursorRow >= section.y &&
-            cursorRow < section.y + section.h,
-        );
+        const { column, row } = gridPosition;
+        const hoveredSection = findSectionAtGridPosition(sections, column, row);
 
         if (hoveredSection) {
-          const splitPreview = buildSplitPreview(hoveredSection, cursorColumn, cursorRow);
+          const splitPreview = buildSplitPreview(hoveredSection, column, row);
           if (splitPreview?.mode !== "split") {
             return;
           }
@@ -335,7 +284,7 @@ export function DashboardBuilderCanvas({
         }
 
         setPendingPreviewClearTargetCount(sections.length + 1);
-        onAddSectionAt(cursorColumn, cursorRow, {
+        onAddSectionAt(column, row, {
           width: item.templateW,
           height: item.templateH,
         });
@@ -482,7 +431,7 @@ export function DashboardBuilderCanvas({
 
   return (
     <div className={cn("flex flex-col gap-3", className)}>
-      <div className="bg-card/70 flex items-center justify-end gap-2 rounded-md border px-2 py-2">
+      <div className="flex items-center justify-end gap-2 rounded-md border bg-card/70 px-2 py-2">
         <Button
           variant={isLayoutEditing ? "default" : "outline"}
           onClick={() => setIsLayoutEditing((previous) => !previous)}
@@ -496,7 +445,7 @@ export function DashboardBuilderCanvas({
 
       <div
         ref={setContainerRef}
-        className="bg-muted/20 relative grid w-full rounded-2xl border shadow-sm"
+        className="relative grid w-full rounded-2xl border bg-muted/20 shadow-sm"
         style={{
           height: canvasHeight,
           gap,
@@ -519,7 +468,7 @@ export function DashboardBuilderCanvas({
                 damping: 34,
                 mass: 0.65,
               }}
-              className="pointer-events-none bg-card/80 text-muted-foreground flex items-center justify-center rounded-lg border border-border/80 text-sm font-medium"
+              className="pointer-events-none flex items-center justify-center rounded-lg border border-border/80 bg-card/80 text-sm font-medium text-muted-foreground"
               style={{
                 gridColumn: `${newSectionPreview.x} / span ${newSectionPreview.w}`,
                 gridRow: `${newSectionPreview.y} / span ${newSectionPreview.h}`,

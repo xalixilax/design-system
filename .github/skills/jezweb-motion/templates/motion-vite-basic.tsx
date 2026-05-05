@@ -33,7 +33,7 @@ export function FadeInBox() {
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5 }}
-      className="p-6 bg-blue-100 rounded-lg"
+      className="rounded-lg bg-blue-100 p-6"
     >
       <h2 className="text-xl font-bold">I fade in and slide up!</h2>
       <p className="text-gray-700">Basic animation example</p>
@@ -50,7 +50,7 @@ export function InteractiveButton() {
     <motion.button
       whileHover={{ scale: 1.1 }}
       whileTap={{ scale: 0.95 }}
-      className="px-6 py-3 bg-blue-600 text-white rounded-lg font-semibold"
+      className="rounded-lg bg-blue-600 px-6 py-3 font-semibold text-white"
     >
       Hover and Click Me
     </motion.button>
@@ -92,7 +92,7 @@ export function StaggeredList() {
   return (
     <motion.ul variants={containerVariants} initial="hidden" animate="show" className="space-y-2">
       {items.map((item) => (
-        <motion.li key={item.id} variants={itemVariants} className="p-4 bg-white border rounded-lg shadow-sm">
+        <motion.li key={item.id} variants={itemVariants} className="rounded-lg border bg-white p-4 shadow-sm">
           {item.text}
         </motion.li>
       ))}
@@ -120,7 +120,7 @@ export function SpringButton() {
         mass: 1, // Higher = more lethargic
       }}
       onClick={() => setIsActive(!isActive)}
-      className="w-16 h-16 bg-purple-600 text-white rounded-full"
+      className="h-16 w-16 rounded-full bg-purple-600 text-white"
     >
       🎨
     </motion.button>
@@ -146,7 +146,7 @@ export function KeyframeAnimation() {
         repeat: Number.POSITIVE_INFINITY,
         repeatDelay: 1,
       }}
-      className="w-20 h-20 bg-gradient-to-br from-pink-500 to-purple-600"
+      className="h-20 w-20 bg-gradient-to-br from-pink-500 to-purple-600"
     />
   );
 }
@@ -157,13 +157,13 @@ export function KeyframeAnimation() {
  */
 export function DraggableBox() {
   return (
-    <div className="relative w-full h-64 bg-gray-100 rounded-lg overflow-hidden">
+    <div className="relative h-64 w-full overflow-hidden rounded-lg bg-gray-100">
       <motion.div
         drag
         dragConstraints={{ left: 0, right: 300, top: 0, bottom: 200 }}
         dragElastic={0.2} // Elasticity at constraints (0-1)
         dragMomentum={false} // Disable momentum/inertia
-        className="absolute w-16 h-16 bg-red-500 rounded-lg cursor-grab active:cursor-grabbing flex items-center justify-center text-white font-bold"
+        className="absolute flex h-16 w-16 cursor-grab items-center justify-center rounded-lg bg-red-500 font-bold text-white active:cursor-grabbing"
       >
         DRAG
       </motion.div>
@@ -183,7 +183,7 @@ export function ColorChangeCard() {
         color: "#ffffff",
       }}
       transition={{ duration: 0.3 }}
-      className="p-6 bg-gray-200 text-gray-900 rounded-lg cursor-pointer"
+      className="cursor-pointer rounded-lg bg-gray-200 p-6 text-gray-900"
     >
       <h3 className="text-lg font-bold">Hover me!</h3>
       <p>Background and text color change on hover</p>
@@ -207,9 +207,9 @@ export function AnimatedCard({ title, description, delay = 0 }: AnimatedCardProp
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ delay, duration: 0.5 }}
-      className="p-6 bg-white border rounded-lg shadow-sm"
+      className="rounded-lg border bg-white p-6 shadow-sm"
     >
-      <h3 className="text-xl font-bold mb-2">{title}</h3>
+      <h3 className="mb-2 text-xl font-bold">{title}</h3>
       <p className="text-gray-700">{description}</p>
     </motion.div>
   );
@@ -228,7 +228,7 @@ export function TailwindIntegration() {
       {/* ✅ Correct - Let Motion handle animations, Tailwind for styles */}
       <motion.div
         whileHover={{ scale: 1.05 }}
-        className="px-6 py-4 bg-gradient-to-r from-blue-500 to-purple-600 text-white rounded-lg"
+        className="rounded-lg bg-gradient-to-r from-blue-500 to-purple-600 px-6 py-4 text-white"
       >
         Tailwind styles + Motion animations (no transition classes)
       </motion.div>
@@ -242,48 +242,48 @@ export function TailwindIntegration() {
  */
 export function AnimatedExamples() {
   return (
-    <div className="max-w-4xl mx-auto p-8 space-y-8">
-      <h1 className="text-3xl font-bold mb-8">Motion Animation Examples</h1>
+    <div className="mx-auto max-w-4xl space-y-8 p-8">
+      <h1 className="mb-8 text-3xl font-bold">Motion Animation Examples</h1>
 
       <section>
-        <h2 className="text-2xl font-bold mb-4">1. Basic Animation</h2>
+        <h2 className="mb-4 text-2xl font-bold">1. Basic Animation</h2>
         <FadeInBox />
       </section>
 
       <section>
-        <h2 className="text-2xl font-bold mb-4">2. Hover & Tap Gestures</h2>
+        <h2 className="mb-4 text-2xl font-bold">2. Hover & Tap Gestures</h2>
         <InteractiveButton />
       </section>
 
       <section>
-        <h2 className="text-2xl font-bold mb-4">3. Staggered List (Variants)</h2>
+        <h2 className="mb-4 text-2xl font-bold">3. Staggered List (Variants)</h2>
         <StaggeredList />
       </section>
 
       <section>
-        <h2 className="text-2xl font-bold mb-4">4. Spring Physics</h2>
+        <h2 className="mb-4 text-2xl font-bold">4. Spring Physics</h2>
         <SpringButton />
-        <p className="text-sm text-gray-600 mt-2">Click to toggle</p>
+        <p className="mt-2 text-sm text-gray-600">Click to toggle</p>
       </section>
 
       <section>
-        <h2 className="text-2xl font-bold mb-4">5. Keyframe Animation</h2>
+        <h2 className="mb-4 text-2xl font-bold">5. Keyframe Animation</h2>
         <KeyframeAnimation />
       </section>
 
       <section>
-        <h2 className="text-2xl font-bold mb-4">6. Drag Gesture</h2>
+        <h2 className="mb-4 text-2xl font-bold">6. Drag Gesture</h2>
         <DraggableBox />
       </section>
 
       <section>
-        <h2 className="text-2xl font-bold mb-4">7. Color Change</h2>
+        <h2 className="mb-4 text-2xl font-bold">7. Color Change</h2>
         <ColorChangeCard />
       </section>
 
       <section>
-        <h2 className="text-2xl font-bold mb-4">8. TypeScript Example</h2>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <h2 className="mb-4 text-2xl font-bold">8. TypeScript Example</h2>
+        <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
           <AnimatedCard title="Card 1" description="First card with no delay" delay={0} />
           <AnimatedCard title="Card 2" description="Second card with 0.2s delay" delay={0.2} />
           <AnimatedCard title="Card 3" description="Third card with 0.4s delay" delay={0.4} />
@@ -291,7 +291,7 @@ export function AnimatedExamples() {
       </section>
 
       <section>
-        <h2 className="text-2xl font-bold mb-4">9. Tailwind Integration</h2>
+        <h2 className="mb-4 text-2xl font-bold">9. Tailwind Integration</h2>
         <TailwindIntegration />
       </section>
     </div>

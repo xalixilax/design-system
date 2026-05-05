@@ -1,9 +1,8 @@
 "use client";
 
 import { Drawer as DrawerPrimitive } from "@base-ui/react/drawer";
-import * as React from "react";
-
 import { cn } from "@design-system/lib/utils";
+import * as React from "react";
 
 type DrawerDirection = "top" | "bottom" | "left" | "right";
 
@@ -52,7 +51,7 @@ function DrawerOverlay({ className, ...props }: React.ComponentProps<typeof Draw
     <DrawerPrimitive.Backdrop
       data-slot="drawer-overlay"
       className={cn(
-        "fixed inset-0 z-50 bg-black/50 opacity-[calc(0.5*(1-var(--drawer-swipe-progress)))] transition-opacity duration-[450ms] ease-[cubic-bezier(0.32,0.72,0,1)] data-[swiping]:duration-0 data-[starting-style]:opacity-0 data-[ending-style]:opacity-0 data-[ending-style]:duration-[calc(var(--drawer-swipe-strength)*400ms)]",
+        "fixed inset-0 z-50 bg-black/50 opacity-[calc(0.5*(1-var(--drawer-swipe-progress)))] transition-opacity duration-[450ms] ease-[cubic-bezier(0.32,0.72,0,1)] data-[ending-style]:opacity-0 data-[ending-style]:duration-[calc(var(--drawer-swipe-strength)*400ms)] data-[starting-style]:opacity-0 data-[swiping]:duration-0",
         className,
       )}
       {...props}
@@ -89,10 +88,10 @@ function DrawerPopup({ className, children, ...props }: React.ComponentProps<typ
       data-direction={direction}
       className={cn(
         "group/drawer-content box-border flex shrink-0 bg-background outline-none",
-        "data-[direction=top]:inset-x-0 data-[direction=top]:-mt-[3rem] data-[direction=top]:max-h-[calc(80vh+3rem)] data-[direction=top]:w-full data-[direction=top]:flex-col data-[direction=top]:overflow-hidden data-[direction=top]:rounded-b-lg data-[direction=top]:[transform:translateY(var(--drawer-swipe-movement-y))] data-[direction=top]:transition-transform data-[direction=top]:duration-[450ms] data-[direction=top]:ease-[cubic-bezier(0.32,0.72,0,1)] data-[direction=top]:data-[swiping]:select-none data-[direction=top]:data-[starting-style]:[transform:translateY(calc(-100%+3rem-2px))] data-[direction=top]:data-[ending-style]:[transform:translateY(calc(-100%+3rem-2px))] data-[direction=top]:data-[ending-style]:duration-[calc(var(--drawer-swipe-strength)*400ms)]",
-        "data-[direction=bottom]:-mb-[3rem] data-[direction=bottom]:max-h-[calc(80vh+3rem)] data-[direction=bottom]:w-full data-[direction=bottom]:flex-col data-[direction=bottom]:overflow-hidden data-[direction=bottom]:rounded-t-lg data-[direction=bottom]:[transform:translateY(var(--drawer-swipe-movement-y))] data-[direction=bottom]:transition-transform data-[direction=bottom]:duration-[450ms] data-[direction=bottom]:ease-[cubic-bezier(0.32,0.72,0,1)] data-[direction=bottom]:data-[swiping]:select-none data-[direction=bottom]:data-[starting-style]:[transform:translateY(calc(100%-3rem+2px))] data-[direction=bottom]:data-[ending-style]:[transform:translateY(calc(100%-3rem+2px))] data-[direction=bottom]:data-[ending-style]:duration-[calc(var(--drawer-swipe-strength)*400ms)]",
-        "data-[direction=left]:h-full data-[direction=left]:overflow-y-auto data-[direction=left]:[transform:translateX(var(--drawer-swipe-movement-x))] data-[direction=left]:transition-transform data-[direction=left]:duration-[450ms] data-[direction=left]:ease-[cubic-bezier(0.32,0.72,0,1)] data-[direction=left]:data-[swiping]:select-none data-[direction=left]:data-[starting-style]:[transform:translateX(calc(-100%-2px))] data-[direction=left]:data-[ending-style]:[transform:translateX(calc(-100%-2px))] data-[direction=left]:data-[ending-style]:duration-[calc(var(--drawer-swipe-strength)*400ms)]",
-        "data-[direction=right]:h-full data-[direction=right]:overflow-y-auto data-[direction=right]:[transform:translateX(var(--drawer-swipe-movement-x))] data-[direction=right]:transition-transform data-[direction=right]:duration-[450ms] data-[direction=right]:ease-[cubic-bezier(0.32,0.72,0,1)] data-[direction=right]:data-[swiping]:select-none data-[direction=right]:data-[starting-style]:[transform:translateX(calc(100%+2px))] data-[direction=right]:data-[ending-style]:[transform:translateX(calc(100%+2px))] data-[direction=right]:data-[ending-style]:duration-[calc(var(--drawer-swipe-strength)*400ms)]",
+        "data-[direction=top]:inset-x-0 data-[direction=top]:-mt-[3rem] data-[direction=top]:max-h-[calc(80vh+3rem)] data-[direction=top]:w-full data-[direction=top]:[transform:translateY(var(--drawer-swipe-movement-y))] data-[direction=top]:flex-col data-[direction=top]:overflow-hidden data-[direction=top]:rounded-b-lg data-[direction=top]:transition-transform data-[direction=top]:duration-[450ms] data-[direction=top]:ease-[cubic-bezier(0.32,0.72,0,1)] data-[direction=top]:data-[ending-style]:[transform:translateY(calc(-100%+3rem-2px))] data-[direction=top]:data-[ending-style]:duration-[calc(var(--drawer-swipe-strength)*400ms)] data-[direction=top]:data-[starting-style]:[transform:translateY(calc(-100%+3rem-2px))] data-[direction=top]:data-[swiping]:select-none",
+        "data-[direction=bottom]:-mb-[3rem] data-[direction=bottom]:max-h-[calc(80vh+3rem)] data-[direction=bottom]:w-full data-[direction=bottom]:[transform:translateY(var(--drawer-swipe-movement-y))] data-[direction=bottom]:flex-col data-[direction=bottom]:overflow-hidden data-[direction=bottom]:rounded-t-lg data-[direction=bottom]:transition-transform data-[direction=bottom]:duration-[450ms] data-[direction=bottom]:ease-[cubic-bezier(0.32,0.72,0,1)] data-[direction=bottom]:data-[ending-style]:[transform:translateY(calc(100%-3rem+2px))] data-[direction=bottom]:data-[ending-style]:duration-[calc(var(--drawer-swipe-strength)*400ms)] data-[direction=bottom]:data-[starting-style]:[transform:translateY(calc(100%-3rem+2px))] data-[direction=bottom]:data-[swiping]:select-none",
+        "data-[direction=left]:h-full data-[direction=left]:[transform:translateX(var(--drawer-swipe-movement-x))] data-[direction=left]:overflow-y-auto data-[direction=left]:transition-transform data-[direction=left]:duration-[450ms] data-[direction=left]:ease-[cubic-bezier(0.32,0.72,0,1)] data-[direction=left]:data-[ending-style]:[transform:translateX(calc(-100%-2px))] data-[direction=left]:data-[ending-style]:duration-[calc(var(--drawer-swipe-strength)*400ms)] data-[direction=left]:data-[starting-style]:[transform:translateX(calc(-100%-2px))] data-[direction=left]:data-[swiping]:select-none",
+        "data-[direction=right]:h-full data-[direction=right]:[transform:translateX(var(--drawer-swipe-movement-x))] data-[direction=right]:overflow-y-auto data-[direction=right]:transition-transform data-[direction=right]:duration-[450ms] data-[direction=right]:ease-[cubic-bezier(0.32,0.72,0,1)] data-[direction=right]:data-[ending-style]:[transform:translateX(calc(100%+2px))] data-[direction=right]:data-[ending-style]:duration-[calc(var(--drawer-swipe-strength)*400ms)] data-[direction=right]:data-[starting-style]:[transform:translateX(calc(100%+2px))] data-[direction=right]:data-[swiping]:select-none",
         className,
       )}
       {...props}
@@ -115,7 +114,7 @@ function DrawerHeader({ className, ...props }: React.ComponentProps<"div">) {
       data-slot="drawer-header"
       data-direction={direction}
       className={cn(
-        "flex flex-col gap-0.5 p-4 md:gap-1.5 md:text-left data-[direction=bottom]:text-center data-[direction=top]:text-center",
+        "flex flex-col gap-0.5 p-4 data-[direction=bottom]:text-center data-[direction=top]:text-center md:gap-1.5 md:text-left",
         className,
       )}
       {...props}

@@ -19,31 +19,30 @@ The full `motion` component includes all animation features, resulting in ~34 KB
 LazyMotion loads animation features on-demand instead of bundling everything upfront.
 
 **Setup**:
+
 ```tsx
-import { LazyMotion, domAnimation, m } from "motion/react"
+import { LazyMotion, domAnimation, m } from "motion/react";
 
 function App() {
   return (
     <LazyMotion features={domAnimation}>
       {/* Use 'm' instead of 'motion' */}
-      <m.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        whileHover={{ scale: 1.1 }}
-      >
+      <m.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} whileHover={{ scale: 1.1 }}>
         Content
       </m.div>
     </LazyMotion>
-  )
+  );
 }
 ```
 
 **Key changes**:
+
 1. Wrap app in `<LazyMotion features={domAnimation}>`
 2. Use `m` component instead of `motion`
 3. Import `m` from `motion/react` (not `motion`)
 
 **Features included with `domAnimation`**:
+
 - ✅ Transform animations (x, y, scale, rotate, etc.)
 - ✅ Opacity animations
 - ✅ Gestures (hover, tap, drag, pan)
@@ -53,13 +52,14 @@ function App() {
 - ❌ Custom value types
 
 **When to use `domMax` instead of `domAnimation`**:
+
 ```tsx
-import { LazyMotion, domMax, m } from "motion/react"
+import { LazyMotion, domMax, m } from "motion/react";
 
 <LazyMotion features={domMax}>
   {/* Now includes SVG path animations */}
   <m.path d="..." animate={{ pathLength: 1 }} />
-</LazyMotion>
+</LazyMotion>;
 ```
 
 **Bundle size**: domAnimation (4.6 KB), domMax (~6 KB)
@@ -73,35 +73,39 @@ import { LazyMotion, domMax, m } from "motion/react"
 The `useAnimate` mini variant is the smallest React animation library available. Use for imperative animations.
 
 **Setup**:
+
 ```tsx
-import { useAnimate } from "motion/react"
-import { useEffect } from "react"
+import { useAnimate } from "motion/react";
+import { useEffect } from "react";
 
 function Component() {
-  const [scope, animate] = useAnimate()
+  const [scope, animate] = useAnimate();
 
   useEffect(() => {
-    animate(scope.current, { opacity: 1, x: 0 })
-  }, [])
+    animate(scope.current, { opacity: 1, x: 0 });
+  }, []);
 
   return (
     <div ref={scope} style={{ opacity: 0, transform: "translateX(-20px)" }}>
       Content
     </div>
-  )
+  );
 }
 ```
 
 **Pros**:
+
 - ✅ Smallest bundle size (2.3 KB)
 - ✅ Imperative API (full control)
 - ✅ No component overhead
 
 **Cons**:
+
 - ❌ More verbose than declarative API
 - ❌ Less ergonomic for complex animations
 
 **When to use**:
+
 - Bundle size is absolutely critical
 - You prefer imperative animations
 - Simple animations (fade in, slide in, etc.)
@@ -115,21 +119,24 @@ function Component() {
 The hybrid version includes more features than mini but less than full.
 
 **Setup**:
+
 ```tsx
-import { useAnimate, stagger } from "motion/react"
+import { useAnimate, stagger } from "motion/react";
 
 function Component() {
-  const [scope, animate] = useAnimate()
+  const [scope, animate] = useAnimate();
 
   const handleAnimate = () => {
-    animate("li", { opacity: 1, x: 0 }, { delay: stagger(0.1) })
-  }
+    animate("li", { opacity: 1, x: 0 }, { delay: stagger(0.1) });
+  };
 
   return (
     <ul ref={scope}>
-      {items.map(item => <li key={item.id}>{item.text}</li>)}
+      {items.map((item) => (
+        <li key={item.id}>{item.text}</li>
+      ))}
     </ul>
-  )
+  );
 }
 ```
 
@@ -142,20 +149,21 @@ function Component() {
 If you only use Motion for specific features, import only what you need:
 
 **Example - Only scroll animations**:
+
 ```tsx
-import { useScroll, useTransform } from "motion/react"
-import { useRef } from "react"
+import { useScroll, useTransform } from "motion/react";
+import { useRef } from "react";
 
 function Component() {
-  const ref = useRef(null)
-  const { scrollYProgress } = useScroll({ container: ref })
-  const y = useTransform(scrollYProgress, [0, 1], [0, -100])
+  const ref = useRef(null);
+  const { scrollYProgress } = useScroll({ container: ref });
+  const y = useTransform(scrollYProgress, [0, 1], [0, -100]);
 
   return (
     <div ref={ref} style={{ transform: `translateY(${y}px)` }}>
       Content
     </div>
-  )
+  );
 }
 ```
 
@@ -165,14 +173,14 @@ function Component() {
 
 ### Bundle Size Comparison
 
-| Approach | Bundle Size | Features | Best For |
-|----------|-------------|----------|----------|
-| **Full motion** | 34 KB | All features | Kitchen sink approach |
-| **LazyMotion + domAnimation** | 4.6 KB | Most features | **Recommended default** |
-| **LazyMotion + domMax** | ~6 KB | All features except custom | SVG animations |
-| **useAnimate hybrid** | 17 KB | Imperative + stagger | Imperative animations |
-| **useAnimate mini** | 2.3 KB | Basic imperative | **Smallest bundle** |
-| **Hooks only** | <5 KB | Specific features | Scroll/transform only |
+| Approach                      | Bundle Size | Features                   | Best For                |
+| ----------------------------- | ----------- | -------------------------- | ----------------------- |
+| **Full motion**               | 34 KB       | All features               | Kitchen sink approach   |
+| **LazyMotion + domAnimation** | 4.6 KB      | Most features              | **Recommended default** |
+| **LazyMotion + domMax**       | ~6 KB       | All features except custom | SVG animations          |
+| **useAnimate hybrid**         | 17 KB       | Imperative + stagger       | Imperative animations   |
+| **useAnimate mini**           | 2.3 KB      | Basic imperative           | **Smallest bundle**     |
+| **Hooks only**                | <5 KB       | Specific features          | Scroll/transform only   |
 
 **Recommendation**: Start with LazyMotion + domAnimation (4.6 KB) for 90% of use cases.
 
@@ -187,19 +195,18 @@ function Component() {
 **Solution**: Tell browser to optimize for animation.
 
 ```tsx
-<motion.div
-  style={{ willChange: "transform" }}
-  animate={{ x: 100, rotate: 45 }}
-/>
+<motion.div style={{ willChange: "transform" }} animate={{ x: 100, rotate: 45 }} />
 ```
 
 **Also add for**:
+
 - `opacity`
 - `backgroundColor`
 - `clipPath`
 - `filter`
 
 **How it works**:
+
 - Browser promotes element to its own layer
 - Uses GPU compositing
 - Avoids reflow/repaint during animation
@@ -211,16 +218,19 @@ function Component() {
 ### 2. Use Hardware-Accelerated Properties
 
 **Good properties** (GPU-accelerated):
+
 - ✅ `transform` (x, y, scale, rotate, skew)
 - ✅ `opacity`
 - ✅ `filter` (blur, brightness, etc.)
 
 **Bad properties** (causes reflow):
+
 - ❌ `width`, `height`
 - ❌ `top`, `left`, `right`, `bottom`
 - ❌ `padding`, `margin`
 
 **Example - Wrong**:
+
 ```tsx
 <motion.div
   animate={{ width: 300, height: 200 }} // ❌ Causes layout reflow
@@ -228,6 +238,7 @@ function Component() {
 ```
 
 **Example - Correct**:
+
 ```tsx
 <motion.div
   animate={{ scale: 1.5 }} // ✅ GPU-accelerated transform
@@ -245,12 +256,11 @@ function Component() {
 **Solution**: Use `layout` prop for FLIP technique (First, Last, Invert, Play).
 
 ```tsx
-<motion.div layout>
-  {isExpanded ? <LargeContent /> : <SmallContent />}
-</motion.div>
+<motion.div layout>{isExpanded ? <LargeContent /> : <SmallContent />}</motion.div>
 ```
 
 **How it works**:
+
 1. Measures element before change (First)
 2. Applies change immediately (Last)
 3. Inverts with transform to match first position
@@ -265,6 +275,7 @@ function Component() {
 Motion uses native ScrollTimeline API when available for hardware-accelerated scroll animations.
 
 **Setup**:
+
 ```tsx
 import { useScroll, useTransform } from "motion/react"
 
@@ -277,6 +288,7 @@ const y = useTransform(scrollYProgress, [0, 1], [0, -300])
 ```
 
 **Performance**:
+
 - ✅ Runs on compositor thread (not main thread)
 - ✅ 120fps on capable devices
 - ✅ No JavaScript execution on scroll
@@ -290,23 +302,25 @@ const y = useTransform(scrollYProgress, [0, 1], [0, -300])
 For expensive calculations in scroll/transform hooks, debounce updates:
 
 **Problem**:
+
 ```tsx
-const { scrollY } = useScroll()
+const { scrollY } = useScroll();
 
 // Recalculates on every pixel scrolled
 const complexValue = useTransform(scrollY, (value) => {
-  return expensiveCalculation(value) // ❌ Too frequent
-})
+  return expensiveCalculation(value); // ❌ Too frequent
+});
 ```
 
 **Solution**:
+
 ```tsx
-const { scrollY } = useScroll()
+const { scrollY } = useScroll();
 
 // Only update when scroll changes by 10px
 const complexValue = useTransform(scrollY, (value) => {
-  return Math.floor(value / 10) * 10
-})
+  return Math.floor(value / 10) * 10;
+});
 ```
 
 ---
@@ -316,16 +330,20 @@ const complexValue = useTransform(scrollY, (value) => {
 Different transition types have different performance characteristics:
 
 **Spring** (default):
+
 ```tsx
 transition={{ type: "spring", stiffness: 100, damping: 10 }}
 ```
+
 - ✅ Natural, physics-based motion
 - ❌ More JavaScript calculation
 
 **Tween**:
+
 ```tsx
 transition={{ type: "tween", duration: 0.3, ease: "easeOut" }}
 ```
+
 - ✅ Predictable timing
 - ✅ Less JavaScript calculation
 - ❌ Less natural than spring
@@ -347,6 +365,7 @@ Animating many items simultaneously overwhelms the browser.
 Only render visible items.
 
 **Install**:
+
 ```bash
 pnpm add react-window
 # or
@@ -356,34 +375,26 @@ pnpm add @tanstack/react-virtual
 ```
 
 **Example with react-window**:
+
 ```tsx
-import { FixedSizeList } from 'react-window'
-import { motion } from 'motion/react'
+import { FixedSizeList } from "react-window";
+import { motion } from "motion/react";
 
 function VirtualizedList({ items }) {
   return (
-    <FixedSizeList
-      height={600}
-      itemCount={items.length}
-      itemSize={50}
-      width="100%"
-    >
+    <FixedSizeList height={600} itemCount={items.length} itemSize={50} width="100%">
       {({ index, style }) => (
-        <motion.div
-          style={style}
-          layout
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-        >
+        <motion.div style={style} layout initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
           {items[index].text}
         </motion.div>
       )}
     </FixedSizeList>
-  )
+  );
 }
 ```
 
 **Benefits**:
+
 - ✅ Only renders ~20 items at a time (instead of 1000+)
 - ✅ Dramatically reduces DOM nodes
 - ✅ Maintains smooth 60fps
@@ -423,6 +434,7 @@ const item = {
 ```
 
 **Benefits**:
+
 - ✅ Avoids animating all items simultaneously
 - ✅ Creates pleasing wave effect
 - ✅ Reduces performance spike
@@ -436,19 +448,22 @@ const item = {
 Only animate items when they enter viewport:
 
 ```tsx
-{items.map(item => (
-  <motion.div
-    key={item.id}
-    initial={{ opacity: 0, y: 20 }}
-    whileInView={{ opacity: 1, y: 0 }}
-    viewport={{ once: true, margin: "-100px" }}
-  >
-    {item.content}
-  </motion.div>
-))}
+{
+  items.map((item) => (
+    <motion.div
+      key={item.id}
+      initial={{ opacity: 0, y: 20 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, margin: "-100px" }}
+    >
+      {item.content}
+    </motion.div>
+  ));
+}
 ```
 
 **Benefits**:
+
 - ✅ Only animates visible items
 - ✅ Spreads performance cost over time
 - ✅ No virtualization library needed
@@ -477,13 +492,13 @@ const useReducedAnimations = items.length > 50
 
 ### Performance Comparison (1000 Items)
 
-| Approach | FPS | DOM Nodes | User Experience |
-|----------|-----|-----------|-----------------|
-| **No optimization** | 5-10 fps | 1000+ | Unusable, browser hangs |
-| **Stagger only** | 15-20 fps | 1000+ | Laggy, still poor |
-| **Virtualization** | 60 fps | ~20 | Smooth, production-ready |
-| **whileInView** | 40-50 fps | 1000+ | Acceptable for long lists |
-| **Simplified animations** | 50-60 fps | 1000+ | Smooth but less polished |
+| Approach                  | FPS       | DOM Nodes | User Experience           |
+| ------------------------- | --------- | --------- | ------------------------- |
+| **No optimization**       | 5-10 fps  | 1000+     | Unusable, browser hangs   |
+| **Stagger only**          | 15-20 fps | 1000+     | Laggy, still poor         |
+| **Virtualization**        | 60 fps    | ~20       | Smooth, production-ready  |
+| **whileInView**           | 40-50 fps | 1000+     | Acceptable for long lists |
+| **Simplified animations** | 50-60 fps | 1000+     | Smooth but less polished  |
 
 **Recommendation**: Use virtualization for lists with 50+ items.
 
@@ -494,10 +509,9 @@ const useReducedAnimations = items.length > 50
 ### 1. Use `mode` Prop
 
 **Wait mode** (sequential):
+
 ```tsx
-<AnimatePresence mode="wait">
-  {isVisible && <motion.div key="content">Content</motion.div>}
-</AnimatePresence>
+<AnimatePresence mode="wait">{isVisible && <motion.div key="content">Content</motion.div>}</AnimatePresence>
 ```
 
 - Waits for exit animation to complete before entering
@@ -505,10 +519,9 @@ const useReducedAnimations = items.length > 50
 - Better performance
 
 **Sync mode** (simultaneous):
+
 ```tsx
-<AnimatePresence mode="sync">
-  {isVisible && <motion.div key="content">Content</motion.div>}
-</AnimatePresence>
+<AnimatePresence mode="sync">{isVisible && <motion.div key="content">Content</motion.div>}</AnimatePresence>
 ```
 
 - Enter and exit happen simultaneously
@@ -526,6 +539,7 @@ const useReducedAnimations = items.length > 50
 **Solution**: Only wrap components that actually exit:
 
 **Bad**:
+
 ```tsx
 <AnimatePresence>
   <Layout>
@@ -537,6 +551,7 @@ const useReducedAnimations = items.length > 50
 ```
 
 **Good**:
+
 ```tsx
 <Layout>
   <StaticHeader />
@@ -580,11 +595,7 @@ const useReducedAnimations = items.length > 50
 **Solution**: Mark as layout root to isolate calculations:
 
 ```tsx
-<motion.div
-  layoutRoot
-  layout
-  className="fixed top-0 left-0"
->
+<motion.div layoutRoot layout className="fixed top-0 left-0">
   Fixed content
 </motion.div>
 ```
@@ -598,11 +609,8 @@ const useReducedAnimations = items.length > 50
 **Solution**: Add `layoutScroll` to account for scroll offset:
 
 ```tsx
-<motion.div
-  layoutScroll
-  className="overflow-auto h-96"
->
-  {items.map(item => (
+<motion.div layoutScroll className="overflow-auto h-96">
+  {items.map((item) => (
     <motion.div key={item.id} layout>
       {item.content}
     </motion.div>
@@ -660,6 +668,7 @@ const useReducedAnimations = items.length > 50
 ### 1. React DevTools Profiler
 
 **Enable**:
+
 1. Install React DevTools
 2. Open "Profiler" tab
 3. Click record
@@ -667,6 +676,7 @@ const useReducedAnimations = items.length > 50
 5. Stop recording
 
 **Look for**:
+
 - Flame graph spikes during animations
 - Components re-rendering unnecessarily
 - Long commit times
@@ -676,6 +686,7 @@ const useReducedAnimations = items.length > 50
 ### 2. Browser Performance Tab
 
 **Enable**:
+
 1. Open Chrome DevTools
 2. "Performance" tab
 3. Click record
@@ -683,6 +694,7 @@ const useReducedAnimations = items.length > 50
 5. Stop recording
 
 **Look for**:
+
 - Frame rate (should be 60fps or 120fps)
 - Long JavaScript tasks (should be <16ms)
 - Layout reflows (should be minimal)
@@ -695,34 +707,30 @@ const useReducedAnimations = items.length > 50
 Add visual FPS counter during development:
 
 ```tsx
-import { useState, useEffect } from "react"
+import { useState, useEffect } from "react";
 
 function FPSMonitor() {
-  const [fps, setFps] = useState(0)
+  const [fps, setFps] = useState(0);
 
   useEffect(() => {
-    let lastTime = performance.now()
-    let frames = 0
+    let lastTime = performance.now();
+    let frames = 0;
 
     function loop() {
-      frames++
-      const now = performance.now()
+      frames++;
+      const now = performance.now();
       if (now >= lastTime + 1000) {
-        setFps(Math.round((frames * 1000) / (now - lastTime)))
-        lastTime = now
-        frames = 0
+        setFps(Math.round((frames * 1000) / (now - lastTime)));
+        lastTime = now;
+        frames = 0;
       }
-      requestAnimationFrame(loop)
+      requestAnimationFrame(loop);
     }
 
-    loop()
-  }, [])
+    loop();
+  }, []);
 
-  return (
-    <div className="fixed top-4 right-4 bg-black text-white p-2 rounded text-sm">
-      {fps} FPS
-    </div>
-  )
+  return <div className="fixed top-4 right-4 bg-black text-white p-2 rounded text-sm">{fps} FPS</div>;
 }
 ```
 
@@ -755,14 +763,14 @@ Before deploying Motion animations, verify:
 
 Recommended limits for production:
 
-| Metric | Target | Maximum |
-|--------|--------|---------|
-| **Bundle size (Motion)** | <5 KB | 10 KB |
-| **Total JavaScript** | <200 KB | 300 KB |
-| **Frame rate** | 60 FPS | 40 FPS minimum |
-| **Animated elements (simultaneous)** | <20 | <50 |
-| **AnimatePresence wrappers** | <5 | <10 |
-| **Layout animations (simultaneous)** | <10 | <20 |
+| Metric                               | Target  | Maximum        |
+| ------------------------------------ | ------- | -------------- |
+| **Bundle size (Motion)**             | <5 KB   | 10 KB          |
+| **Total JavaScript**                 | <200 KB | 300 KB         |
+| **Frame rate**                       | 60 FPS  | 40 FPS minimum |
+| **Animated elements (simultaneous)** | <20     | <50            |
+| **AnimatePresence wrappers**         | <5      | <10            |
+| **Layout animations (simultaneous)** | <10     | <20            |
 
 ---
 
@@ -771,18 +779,21 @@ Recommended limits for production:
 ### ❌ Anti-Pattern 1: Animating All List Items on Mount
 
 ```tsx
-{items.map(item => (
-  <motion.div
-    key={item.id}
-    initial={{ opacity: 0 }}
-    animate={{ opacity: 1 }} // ❌ All 100 items animate at once
-  >
-    {item.content}
-  </motion.div>
-))}
+{
+  items.map((item) => (
+    <motion.div
+      key={item.id}
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }} // ❌ All 100 items animate at once
+    >
+      {item.content}
+    </motion.div>
+  ));
+}
 ```
 
 **Fix**: Use stagger or `whileInView`:
+
 ```tsx
 const container = {
   hidden: {},
@@ -806,8 +817,10 @@ const container = {
 
 ```tsx
 <AnimatePresence>
-  {items.map(item => (
-    <motion.div> {/* ❌ Missing key */}
+  {items.map((item) => (
+    <motion.div>
+      {" "}
+      {/* ❌ Missing key */}
       {item.content}
     </motion.div>
   ))}
@@ -815,10 +828,13 @@ const container = {
 ```
 
 **Fix**: Always add unique `key` props:
+
 ```tsx
 <AnimatePresence>
-  {items.map(item => (
-    <motion.div key={item.id}> {/* ✅ Unique key */}
+  {items.map((item) => (
+    <motion.div key={item.id}>
+      {" "}
+      {/* ✅ Unique key */}
       {item.content}
     </motion.div>
   ))}
@@ -836,6 +852,7 @@ const container = {
 ```
 
 **Fix**: Use transforms:
+
 ```tsx
 <motion.div
   animate={{ scale: 1.5, y: 100 }} // ✅ GPU-accelerated
@@ -847,18 +864,19 @@ const container = {
 ### ❌ Anti-Pattern 4: Full Motion Bundle for Simple Use Case
 
 ```tsx
-import { motion } from "motion/react" // ❌ 34 KB for simple fade
+import { motion } from "motion/react"; // ❌ 34 KB for simple fade
 
-<motion.div animate={{ opacity: 1 }}>Content</motion.div>
+<motion.div animate={{ opacity: 1 }}>Content</motion.div>;
 ```
 
 **Fix**: Use LazyMotion or useAnimate:
+
 ```tsx
-import { LazyMotion, domAnimation, m } from "motion/react"
+import { LazyMotion, domAnimation, m } from "motion/react";
 
 <LazyMotion features={domAnimation}>
   <m.div animate={{ opacity: 1 }}>Content</m.div>
-</LazyMotion>
+</LazyMotion>;
 ```
 
 ---

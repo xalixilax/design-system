@@ -8,8 +8,10 @@ Common anti-patterns with useEffect that should never be used.
 // BAD
 function Modal() {
   useEffect(() => {
-    document.body.style.overflow = 'hidden';
-    return () => { document.body.style.overflow = ''; };
+    document.body.style.overflow = "hidden";
+    return () => {
+      document.body.style.overflow = "";
+    };
   }, []);
 }
 ```
@@ -22,7 +24,7 @@ function Modal() {
 // BAD
 function App({ data }) {
   useEffect(() => {
-    console.log('Data changed:', data);
+    console.log("Data changed:", data);
   }, [data]);
 }
 ```
@@ -79,8 +81,8 @@ function ProductList() {
   return (
     <ul>
       {products.map(product => (
-        <li 
-          key={product.id} 
+        <li
+          key={product.id}
           onMouseEnter={() => prefetchProduct(product.id)}
         >
           {product.name}
@@ -92,11 +94,13 @@ function ProductList() {
 ```
 
 **When `void` is appropriate:**
+
 - Preloading/prefetching data for anticipated navigation
 - Fire-and-forget logging/analytics
 - Voiding promises you intentionally don't want to await
 
 **When `void` is NOT appropriate:**
+
 - Suppressing promise errors in event handlers (handle errors properly)
 - Masking bugs where you should be awaiting
 
@@ -109,9 +113,9 @@ In React Query, `mutateAsync` returns a promise and should rarely be used:
 const handleSubmit = async () => {
   try {
     await createMutation.mutateAsync(formData);
-    toast.success('Created!');
+    toast.success("Created!");
   } catch (error) {
-    toast.error('Failed');
+    toast.error("Failed");
   }
 };
 ```
@@ -122,7 +126,7 @@ const handleSubmit = async () => {
 // GOOD - use mutate with onSuccess/onError
 const { mutate } = useMutation({
   mutationFn: createItem,
-  onSuccess: () => toast.success('Created!'),
+  onSuccess: () => toast.success("Created!"),
   onError: (error) => toast.error(error.message),
 });
 
@@ -132,6 +136,7 @@ const handleSubmit = () => {
 ```
 
 **Why `mutate` is preferred:**
+
 - React Query handles the promise internally
 - Callbacks are cleaner and more declarative
 - Avoids async/await boilerplate in handlers

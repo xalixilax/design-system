@@ -11,6 +11,7 @@
 Claude Code automatically discovers this skill when you mention:
 
 ### Primary Keywords
+
 - motion
 - framer-motion
 - framer motion
@@ -23,6 +24,7 @@ Claude Code automatically discovers this skill when you mention:
 - declarative animations
 
 ### Feature Keywords (Gestures)
+
 - gestures
 - drag
 - drag and drop
@@ -38,6 +40,7 @@ Claude Code automatically discovers this skill when you mention:
 - drag constraints
 
 ### Feature Keywords (Scroll)
+
 - scroll animation
 - scroll animations
 - scroll-based animation
@@ -52,6 +55,7 @@ Claude Code automatically discovers this skill when you mention:
 - scroll indicator
 
 ### Feature Keywords (Layout)
+
 - layout animation
 - layout animations
 - FLIP animation
@@ -65,6 +69,7 @@ Claude Code automatically discovers this skill when you mention:
 - LayoutGroup
 
 ### Feature Keywords (SVG)
+
 - SVG animation
 - SVG path
 - path morphing
@@ -75,6 +80,7 @@ Claude Code automatically discovers this skill when you mention:
 - draw SVG
 
 ### Feature Keywords (Physics)
+
 - spring physics
 - spring animation
 - bounce animation
@@ -84,6 +90,7 @@ Claude Code automatically discovers this skill when you mention:
 - damping
 
 ### Component Keywords
+
 - modal animation
 - dialog animation
 - accordion animation
@@ -98,6 +105,7 @@ Claude Code automatically discovers this skill when you mention:
 - route transition
 
 ### Integration Keywords
+
 - tailwind animation
 - shadcn animation
 - radix animation
@@ -107,6 +115,7 @@ Claude Code automatically discovers this skill when you mention:
 - typescript animation
 
 ### Problem Keywords
+
 - AnimatePresence not working
 - AnimatePresence exit not working
 - layout animation bug
@@ -120,6 +129,7 @@ Claude Code automatically discovers this skill when you mention:
 - stuttering animations
 
 ### Error-Based Keywords
+
 - "motion is not defined"
 - "Cannot find module motion"
 - "AnimatePresence children must have key"
@@ -130,6 +140,7 @@ Claude Code automatically discovers this skill when you mention:
 - "build error motion"
 
 ### Use Case Keywords
+
 - hero parallax
 - landing page animation
 - scroll reveal
@@ -145,6 +156,7 @@ Claude Code automatically discovers this skill when you mention:
 - smooth scroll
 
 ### Comparison Keywords
+
 - motion vs auto-animate
 - framer motion alternative
 - motion vs framer
@@ -154,6 +166,7 @@ Claude Code automatically discovers this skill when you mention:
 - motion bundle size
 
 ### Migration Keywords
+
 - migrate to motion
 - upgrade framer motion
 - replace framer motion
@@ -187,21 +200,25 @@ Production-ready setup for Motion (formerly Framer Motion) - the industry-standa
 ### ✅ Use Motion When:
 
 **Complex Interactions**:
+
 - Drag-and-drop interfaces (sortable lists, kanban boards)
 - Hover states with scale/rotation/color changes
 - Tap feedback with bounce/squeeze effects
 
 **Scroll-Based Animations**:
+
 - Hero sections with parallax layers
 - Scroll-triggered reveals (fade in as elements enter viewport)
 - Progress bars linked to scroll position
 
 **Layout Transitions**:
+
 - Shared element transitions between routes (card → detail page)
 - Expand/collapse with automatic height animation
 - Grid/list view switching
 
 **Advanced Features**:
+
 - SVG line drawing, path morphing
 - Spring physics for natural bounce
 - Orchestrated sequences (staggered reveals)
@@ -209,11 +226,13 @@ Production-ready setup for Motion (formerly Framer Motion) - the industry-standa
 ### ❌ Don't Use Motion When:
 
 **Simple List Animations** → Use `auto-animate` skill instead:
+
 - Todo list add/remove (Motion: 34 KB vs AutoAnimate: 3.28 KB)
 - Search results filtering
 - Basic accordions without gestures
 
 **Cloudflare Workers Deployment** → ✅ **Fixed (Dec 2024)**:
+
 - Previous build issues resolved (GitHub issue #2918 closed)
 - Motion now works directly with Wrangler
 
@@ -221,23 +240,23 @@ Production-ready setup for Motion (formerly Framer Motion) - the industry-standa
 
 ## Known Issues This Skill Prevents
 
-| Issue | Why It Happens | Source | How Skill Fixes It |
-|-------|---------------|---------|-------------------|
-| AnimatePresence Exit Not Working | AnimatePresence wrapped in conditional or missing keys | Common mistake | Template shows correct placement pattern |
-| Large List Performance | 50-100+ items cause browser freeze | GitHub issues | Virtualization guide with react-window examples |
-| Tailwind Transitions Conflict | CSS transitions conflict with Motion | Official docs | Template shows correct pattern (remove transition classes) |
-| Next.js "use client" Missing | Motion uses DOM APIs unavailable in Server Components | Next.js App Router | Next.js template with "use client" directive |
-| Scrollable Container Broken | Layout animations incomplete in scrolled containers | Issue #1471 | layoutScroll prop documented |
-| Fixed Element Positioning | Layout animations incorrect in fixed elements | Official docs | layoutRoot prop documented |
-| layoutId + AnimatePresence Unmounting | Elements fail to unmount | Issue #1619 | LayoutGroup wrapper pattern |
-| Reduced Motion with AnimatePresence (RESOLVED Jan 2023) | MotionConfig didn't apply to AnimatePresence | Issue #1567 (closed) | Fixed via PR #1891 - works correctly now |
-| Reorder Component in Next.js | Incompatible with Next.js routing | Issues #2183, #2101 | Alternative drag implementations |
-| Cloudflare Workers Build Errors (RESOLVED Dec 2024) | Wrangler ESM resolution issue | Issue #2918 (closed) | Fixed - Motion now works directly |
-| Non-Accelerated Animations | Animating width/height causes reflow | Best practices | layout prop for FLIP technique |
-| Missing willChange Hint | No GPU optimization | Performance guide | Template examples include willChange |
-| Full Bundle for Simple Use | 34 KB for fade animation | Bundle size | LazyMotion setup guide (34 KB → 4.6 KB) |
-| No Unique Keys on List | React can't track changes | React docs | Template shows key prop pattern |
-| Stagger Without Variants | Manual delay calculation complex | Best practices | Variants pattern with staggerChildren |
+| Issue                                                   | Why It Happens                                         | Source               | How Skill Fixes It                                         |
+| ------------------------------------------------------- | ------------------------------------------------------ | -------------------- | ---------------------------------------------------------- |
+| AnimatePresence Exit Not Working                        | AnimatePresence wrapped in conditional or missing keys | Common mistake       | Template shows correct placement pattern                   |
+| Large List Performance                                  | 50-100+ items cause browser freeze                     | GitHub issues        | Virtualization guide with react-window examples            |
+| Tailwind Transitions Conflict                           | CSS transitions conflict with Motion                   | Official docs        | Template shows correct pattern (remove transition classes) |
+| Next.js "use client" Missing                            | Motion uses DOM APIs unavailable in Server Components  | Next.js App Router   | Next.js template with "use client" directive               |
+| Scrollable Container Broken                             | Layout animations incomplete in scrolled containers    | Issue #1471          | layoutScroll prop documented                               |
+| Fixed Element Positioning                               | Layout animations incorrect in fixed elements          | Official docs        | layoutRoot prop documented                                 |
+| layoutId + AnimatePresence Unmounting                   | Elements fail to unmount                               | Issue #1619          | LayoutGroup wrapper pattern                                |
+| Reduced Motion with AnimatePresence (RESOLVED Jan 2023) | MotionConfig didn't apply to AnimatePresence           | Issue #1567 (closed) | Fixed via PR #1891 - works correctly now                   |
+| Reorder Component in Next.js                            | Incompatible with Next.js routing                      | Issues #2183, #2101  | Alternative drag implementations                           |
+| Cloudflare Workers Build Errors (RESOLVED Dec 2024)     | Wrangler ESM resolution issue                          | Issue #2918 (closed) | Fixed - Motion now works directly                          |
+| Non-Accelerated Animations                              | Animating width/height causes reflow                   | Best practices       | layout prop for FLIP technique                             |
+| Missing willChange Hint                                 | No GPU optimization                                    | Performance guide    | Template examples include willChange                       |
+| Full Bundle for Simple Use                              | 34 KB for fade animation                               | Bundle size          | LazyMotion setup guide (34 KB → 4.6 KB)                    |
+| No Unique Keys on List                                  | React can't track changes                              | React docs           | Template shows key prop pattern                            |
+| Stagger Without Variants                                | Manual delay calculation complex                       | Best practices       | Variants pattern with staggerChildren                      |
 
 **Total**: 29+ documented errors prevented
 
@@ -245,23 +264,23 @@ Production-ready setup for Motion (formerly Framer Motion) - the industry-standa
 
 ## Token Efficiency Metrics
 
-| Approach | Tokens Used | Errors Encountered | Time to Complete |
-|----------|------------|-------------------|------------------|
-| **Manual Setup** | ~30,000 | 3-5 (AnimatePresence, Next.js, performance) | ~2-3 hours |
-| **With This Skill** | ~5,000 | 0 ✅ | ~20-30 min |
-| **Savings** | **~83%** | **100%** | **~85%** |
+| Approach            | Tokens Used | Errors Encountered                          | Time to Complete |
+| ------------------- | ----------- | ------------------------------------------- | ---------------- |
+| **Manual Setup**    | ~30,000     | 3-5 (AnimatePresence, Next.js, performance) | ~2-3 hours       |
+| **With This Skill** | ~5,000      | 0 ✅                                        | ~20-30 min       |
+| **Savings**         | **~83%**    | **100%**                                    | **~85%**         |
 
 ---
 
 ## Package Versions (Verified 2025-11-09)
 
-| Package | Version | Status |
-|---------|---------|--------|
-| motion | 12.23.24 | ✅ Latest stable |
+| Package       | Version  | Status                    |
+| ------------- | -------- | ------------------------- |
+| motion        | 12.23.24 | ✅ Latest stable          |
 | framer-motion | 12.23.24 | ✅ Same version as motion |
-| react | 19.2.0 | ✅ Latest stable |
-| next | 16.0.1 | ✅ Latest stable |
-| vite | 7.2.2 | ✅ Latest stable |
+| react         | 19.2.0   | ✅ Latest stable          |
+| next          | 16.0.1   | ✅ Latest stable          |
+| vite          | 7.2.2    | ✅ Latest stable          |
 
 ---
 
@@ -270,6 +289,7 @@ Production-ready setup for Motion (formerly Framer Motion) - the industry-standa
 **Prerequisites**: React 18+ or React 19+
 
 **Integrates With**:
+
 - tailwind-v4-shadcn (styling)
 - nextjs (if using Next.js)
 - auto-animate (complementary for simple animations)
@@ -322,16 +342,16 @@ motion/
 
 ## Motion vs AutoAnimate Quick Comparison
 
-| Aspect | AutoAnimate | Motion | Winner |
-|--------|-------------|--------|--------|
-| **Bundle Size** | 3.28 KB | 2.3-34 KB | AutoAnimate |
-| **API Simplicity** | 3 lines | 12+ lines | AutoAnimate |
-| **Gesture Controls** | ❌ | ✅ | Motion |
-| **Scroll Animations** | ❌ | ✅ | Motion |
-| **Layout Animations** | ❌ | ✅ | Motion |
-| **SVG Animations** | ❌ | ✅ | Motion |
-| **List Animations** | ✅ Auto | ✅ Manual | AutoAnimate |
-| **Cloudflare Workers** | ✅ | ⚠️ | AutoAnimate |
+| Aspect                 | AutoAnimate | Motion    | Winner      |
+| ---------------------- | ----------- | --------- | ----------- |
+| **Bundle Size**        | 3.28 KB     | 2.3-34 KB | AutoAnimate |
+| **API Simplicity**     | 3 lines     | 12+ lines | AutoAnimate |
+| **Gesture Controls**   | ❌          | ✅        | Motion      |
+| **Scroll Animations**  | ❌          | ✅        | Motion      |
+| **Layout Animations**  | ❌          | ✅        | Motion      |
+| **SVG Animations**     | ❌          | ✅        | Motion      |
+| **List Animations**    | ✅ Auto     | ✅ Manual | AutoAnimate |
+| **Cloudflare Workers** | ✅          | ⚠️        | AutoAnimate |
 
 **Rule of Thumb**: Use AutoAnimate for 90% of cases (list animations), Motion for 10% (gestures, scroll, layout).
 
@@ -342,6 +362,7 @@ See `references/motion-vs-auto-animate.md` for detailed comparison.
 ## Contributing
 
 Found an issue or have a suggestion?
+
 - Open an issue: https://github.com/jezweb/claude-skills/issues
 - See templates and references for detailed examples
 

@@ -1,11 +1,30 @@
 {
   "$schema": "https://raw.githubusercontent.com/fallow-rs/fallow/main/schema.json",
-  "publicPackages": ["design-system"],
+  "publicPackages": [
+    "@design-system/components"
+  ],
+  "ignorePatterns": [
+    ".github/skills/**",
+    "packages/shared copy/**",
+    "packages/shared/src/lib/utils.ts",
+    "packages/ui/**"
+  ],
   "overrides": [
     {
-      "files": ["packages/design-system/src/**/*.{ts,tsx}"],
+      "files": [
+        "packages/design-system/src/**/*.{ts,tsx}"
+      ],
       "rules": {
         "unused-files": "off"
+      }
+    },
+    {
+      "files": [
+        "packages/design-system/src/components/proto/**/*.{ts,tsx}"
+      ],
+      "rules": {
+        "unused-exports": "off",
+        "unused-types": "off"
       }
     }
   ],

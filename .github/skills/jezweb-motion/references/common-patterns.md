@@ -7,7 +7,7 @@ Production-tested animation patterns with code examples. Copy-paste ready.
 ## 1. Modal Dialog
 
 ```tsx
-import { motion, AnimatePresence } from "motion/react"
+import { motion, AnimatePresence } from "motion/react";
 
 <AnimatePresence>
   {isOpen && (
@@ -31,7 +31,7 @@ import { motion, AnimatePresence } from "motion/react"
       </motion.dialog>
     </>
   )}
-</AnimatePresence>
+</AnimatePresence>;
 ```
 
 ---
@@ -39,11 +39,7 @@ import { motion, AnimatePresence } from "motion/react"
 ## 2. Accordion
 
 ```tsx
-<motion.div
-  animate={{ height: isOpen ? "auto" : 0 }}
-  style={{ overflow: "hidden" }}
-  transition={{ duration: 0.3 }}
->
+<motion.div animate={{ height: isOpen ? "auto" : 0 }} style={{ overflow: "hidden" }} transition={{ duration: 0.3 }}>
   <div className="p-4">Content</div>
 </motion.div>
 ```
@@ -54,15 +50,10 @@ import { motion, AnimatePresence } from "motion/react"
 
 ```tsx
 <div className="flex gap-4 border-b">
-  {tabs.map(tab => (
+  {tabs.map((tab) => (
     <button key={tab.id} onClick={() => setActive(tab.id)}>
       {tab.label}
-      {active === tab.id && (
-        <motion.div
-          layoutId="underline"
-          className="absolute bottom-0 h-0.5 bg-blue-600"
-        />
-      )}
+      {active === tab.id && <motion.div layoutId="underline" className="absolute bottom-0 h-0.5 bg-blue-600" />}
     </button>
   ))}
 </div>
@@ -137,12 +128,7 @@ const { scrollYProgress } = useScroll()
 ## 8. Drag to Reorder
 
 ```tsx
-<motion.div
-  drag="y"
-  dragConstraints={{ top: 0, bottom: 0 }}
-  dragElastic={0.1}
-  whileDrag={{ scale: 1.05 }}
->
+<motion.div drag="y" dragConstraints={{ top: 0, bottom: 0 }} dragElastic={0.1} whileDrag={{ scale: 1.05 }}>
   Drag me
 </motion.div>
 ```
@@ -178,12 +164,10 @@ const { scrollYProgress } = useScroll()
 ## 11. Carousel
 
 ```tsx
-<motion.div
-  drag="x"
-  dragConstraints={{ left: -width, right: 0 }}
-  className="flex"
->
-  {images.map(img => <img key={img.id} src={img.url} />)}
+<motion.div drag="x" dragConstraints={{ left: -width, right: 0 }} className="flex">
+  {images.map((img) => (
+    <img key={img.id} src={img.url} />
+  ))}
 </motion.div>
 ```
 
@@ -192,10 +176,7 @@ const { scrollYProgress } = useScroll()
 ## 12. Hover & Tap Button
 
 ```tsx
-<motion.button
-  whileHover={{ scale: 1.1 }}
-  whileTap={{ scale: 0.95 }}
->
+<motion.button whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.95 }}>
   Click me
 </motion.button>
 ```
@@ -245,7 +226,7 @@ const { scrollYProgress } = useScroll()
   transition={{
     type: "spring",
     stiffness: 300,
-    damping: 10
+    damping: 10,
   }}
 />
 ```
